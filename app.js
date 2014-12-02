@@ -8,8 +8,9 @@
   app.use(express['static'](path.join(__dirname, '')));
   app.set('view engine', 'jade');
   app.set('views', __dirname);
-  app.listen(8080, '0.0.0.0');
-  console.log('Listening on port 8080');
+  app.set('port', process.env.PORT || 5000);
+  app.listen(app.get('port'), '0.0.0.0');
+  console.log('Listening on port ' + app.get('port'));
   get_index = function(req, res){
     return res.render('index', {});
   };
