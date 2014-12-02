@@ -27,3 +27,9 @@ get_index = (req, res) ->
 app.get '/', get_index
 app.get '/index.html', get_index
 
+get_control = (req, res) ->
+  res.render 'control', {}
+
+app.get '/control', get_control
+app.get '/control.html', get_control
+

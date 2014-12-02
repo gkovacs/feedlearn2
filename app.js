@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, app, get_index;
+  var express, path, bodyParser, app, get_index, get_control;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -16,4 +16,9 @@
   };
   app.get('/', get_index);
   app.get('/index.html', get_index);
+  get_control = function(req, res){
+    return res.render('control', {});
+  };
+  app.get('/control', get_control);
+  app.get('/control.html', get_control);
 }).call(this);

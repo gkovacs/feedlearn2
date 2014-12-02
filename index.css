@@ -5,3 +5,30 @@
   padding-right: 5px;
   background-color: #fff;
 }
+.bluebackgroundcontrol {
+  width: 495px;
+  height: 295px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+.titlelink {
+  font-size: 40px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  color: #000;
+}
+/*
+.titlelink
+  font-size 40px
+  text-align: center
+  width: 100%
+  cursor pointer
+  color black
+
+.titlelink:hover
+  color black
+  text-decoration none
+*/

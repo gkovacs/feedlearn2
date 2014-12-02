@@ -1,0 +1,26 @@
+doctype html
+html(lang='en')
+  head
+    title FeedLearn
+    meta(name='viewport' content='user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1')
+    link(href='index.css' rel='stylesheet')
+    link(href='bower_components/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(href='bower_components/bootstrap/dist/css/bootstrap-theme.min.css' rel='stylesheet')
+  body
+    script(src='bower_components/jquery/dist/jquery.min.js')
+    script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='bower_components/jadeDom/jquery.jadedom.js')
+    script(src='bower_components/underscore/underscore.js')
+    script(src='bower_components/prelude-browser-min/index.js')
+    script(src='bower_components/jquery-cookie/jquery.cookie.js')
+    script(src='bower_components/async/lib/async.js')
+    script(src='control.js')
+    .bluebackgroundcontrol(style='background-color: white' onclick='openfeedlearnlink()')
+      div.titlelink(href='https://feedlearn.herokuapp.com' target='_blank') Study Vocabulary at FeedLearn
+      div(style='display: table-row')
+        img(src='preview.png' style='width: 290px; display: table-cell')
+        div(style='display: table-cell; vertical-align: middle; text-align: left; padding-left: 10px')
+          div(style='font-size: 16px') Your friends are studying vocabulary in Chinese at FeedLearn, go join them!
+          div(style='color: grey; font-size: 12px; margin-top: 20px') FEEDLEARN.HEROKUAPP.COM
+
+
