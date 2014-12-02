@@ -18,9 +18,14 @@ html(lang='en')
     .bluebackgroundcontrol(style='background-color: white' onclick='openfeedlearnlink()')
       div.titlelink(href='https://feedlearn.herokuapp.com' target='_blank') Study Vocabulary at FeedLearn
       div(style='display: table-row')
-        img(src='preview.png' style='width: 290px; display: table-cell')
+        img#previewdisplay(src='preview.png' style='width: 290px; display: table-cell')
         div(style='display: table-cell; vertical-align: middle; text-align: left; padding-left: 10px')
-          div(style='font-size: 16px') Your friends are studying vocabulary in Chinese at FeedLearn, go join them!
+          div(style='font-size: 16px')
+            span Your friends are studying vocabulary in
+            span 
+            span#langdisplay Chinese
+            span 
+            span at FeedLearn, go join them!
           div(style='color: grey; font-size: 12px; margin-top: 20px') FEEDLEARN.HEROKUAPP.COM
 
 
