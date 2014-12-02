@@ -15,23 +15,43 @@ html(lang='en')
     script(src='bower_components/jquery-cookie/jquery.cookie.js')
     script(src='bower_components/async/lib/async.js')
     script(src='index.js')
-    #quizpage.mainpage(style='display: none')
-      .bluebackground(style='background-color: white')
+    audio(style='display: none' src='error.mp3')
+    .bluebackground(style='background-color: white')
+      #quizpage.mainpage(style='display: none')
         //- #scorebox(style='position: absolute; right: 5px; border-radius: 10px; width: 50px; height: 50px; background-color: blue')
         //-  div(style='font-size: 12px') Score:
         //-  div 
         #questionmessage(style='font-size: 18px; text-align: center')
         #questionworddiv(style='font-size: 30px; text-align: center')
           span#questionword
-          span#questionwordaudio.glyphicon.glyphicon-volume-up(style='cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px')
+          span#questionwordaudio.glyphicon.glyphicon-volume-up(onclick='playSoundCurrentWord()' style='cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px')
         #answeroptions
         button.btn.btn-default(onclick='gotoChatPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
           span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
-          span Questions + Answers
+          span Answer + Discussion
         button.btn.btn-default(onclick='gotoOptionPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
           span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
           span Options
-    #optionpage.mainpage(style='display: none')
-      div options page goes here
-    #chatpage.mainpage(style='display: none')
-      div chat page goes here
+      #optionpage.mainpage(style='display: none')
+        div(style='overflow: hidden')
+          span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
+          span(style='font-size: 26px') Options
+          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right')
+            span.glyphicon.glyphicon-backward(style='margin-right: 7px; font-size: 18px')
+            span Back to Quiz
+        div(style='margin-top: 20px')
+          div(style='float: left; font-size: 20px; width: 40%') Currently Studying:
+          select#langselect.form-control(onchange='changeLang()' style='width: auto; display; font-size: 20px; float: right; width: 60%')
+            option Chinese
+            option Japanese
+            option Korean
+            option Vietnamese
+      #chatpage.mainpage(style='display: none')
+        div(style='overflow: hidden')
+          span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
+          span(style='font-size: 26px') Answer + Discussion
+          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right')
+            span.glyphicon.glyphicon-backward(style='margin-right: 7px; font-size: 18px')
+            span Back to Quiz
+        #currentanswer(style='font-size: 30px; text-align: center; margin-top: 20px')
+        div(style='margin-top: 20px') TODO discussion forum goes here

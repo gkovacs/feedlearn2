@@ -160,8 +160,9 @@ first-non-null = (...args) ->
       return x
 
 set-flashcard-set = (new_flashcard_set) ->
-  new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set], new_flashcard_set
-  console.log new_flashcard_set
+  new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set
+  if new_flashcard_set != $.cookie('lang')
+    $.cookie('lang', new_flashcard_set)
   root.current_flashcard_set = new_flashcard_set
   root.current_language_name = language_names[new_flashcard_set]
   root.vocabulary = flashcard_sets[new_flashcard_set]
@@ -209,15 +210,31 @@ shuffle-list = (origlist) ->
 deep-copy = (elem) ->
   return elem |> JSON.stringify |> JSON.parse
 
+root.current-word = null
+
 export new-question = ->
   word = select-elem root.vocabulary |> deep-copy
   word.correct = true
+  root.current-word = word
   otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
   for let elem in otherwords
     elem.correct = false
   allwords = [word] ++ otherwords |> shuffle-list
   langname = ['English', current_language_name ]|> select-elem
   question-with-words allwords, langname
+
+export play-sound = ->
+  $('audio')[0].pause()
+  $('audio').attr('src', 'error.mp3')
+  $('audio')[0].currentTime = 0
+  $('audio')[0].play()
+
+export play-sound-current-word = ->
+  $('audio')[0].pause()
+  $('audio').attr('src', 'error.mp3')
+  $('audio')[0].currentTime = 0
+  $('audio')[0].play()
+
 
 question-with-words = (allwords, langname) ->
   word-idx = find-index (.correct), allwords
@@ -258,7 +275,8 @@ question-with-words = (allwords, langname) ->
         vertical-align: \middle
         cursor: \pointer
         top: \5px
-      })
+      }).click ->
+        play-sound()
     $('#answeroptions').append outeroptiondiv
     #if idx == 1
     #  $('#answeroptions').append '<br>'
@@ -282,20 +300,36 @@ getUrlParameters = root.getUrlParameters = ->
   )
   return map
 
-export goto-quiz-page = ->
+export goto-new-quiz-page = ->
   $('.mainpage').hide()
   $('#quizpage').show()
   param = getUrlParameters()
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, 'vietnamese1'
+  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'
   new-question()
+  return
+
+export goto-quiz-page = ->
+  $('.mainpage').hide()
+  $('#quizpage').show()
+  return
 
 export goto-option-page = ->
   $('.mainpage').hide()
   $('#optionpage').show()
+  $('#langselect').val(root.current_language_name)
+  return
 
 export goto-chat-page = ->
   $('.mainpage').hide()
   $('#chatpage').show()
+  $('#currentanswer').text current-word.romaji + ' = ' + current-word.english
+  return
+
+export change-lang = ->
+  newlang = $('#langselect').val()
+  set-flashcard-set newlang
+  new-question()
+  return
 
 goto-page = (page) ->
   switch page
@@ -306,6 +340,8 @@ goto-page = (page) ->
 $(document).ready ->
   console.log 'hello world!'
   param = getUrlParameters()
-  goto-page <| first-non-null param.page, 'quiz'
-  
-
+  targetpage = first-non-null param.page, 'quiz'
+  if targetpage == 'quiz'
+    goto-new-quiz-page()
+  else
+    goto-page targetpage

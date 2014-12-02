@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, japanese1_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese1_vocabulary_text, parseVocab, flashcard_sets, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, japanese1_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese1_vocabulary_text, parseVocab, flashcard_sets, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoNewQuizPage, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -62,8 +62,10 @@
     }
   };
   setFlashcardSet = function(new_flashcard_set){
-    new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set], new_flashcard_set);
-    console.log(new_flashcard_set);
+    new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
+    if (new_flashcard_set !== $.cookie('lang')) {
+      $.cookie('lang', new_flashcard_set);
+    }
     root.current_flashcard_set = new_flashcard_set;
     root.current_language_name = language_names[new_flashcard_set];
     return root.vocabulary = flashcard_sets[new_flashcard_set];
@@ -130,11 +132,13 @@
     JSON.stringify(
     elem));
   };
+  root.currentWord = null;
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;
     word = deepCopy(
     selectElem(root.vocabulary));
     word.correct = true;
+    root.currentWord = word;
     otherwords = deepCopy(
     selectNElemExceptElem(root.vocabulary, word, 3));
     for (i$ = 0, len$ = otherwords.length; i$ < len$; ++i$) {
@@ -148,6 +152,18 @@
     function fn$(elem){
       elem.correct = false;
     }
+  };
+  out$.playSound = playSound = function(){
+    $('audio')[0].pause();
+    $('audio').attr('src', 'error.mp3');
+    $('audio')[0].currentTime = 0;
+    return $('audio')[0].play();
+  };
+  out$.playSoundCurrentWord = playSoundCurrentWord = function(){
+    $('audio')[0].pause();
+    $('audio').attr('src', 'error.mp3');
+    $('audio')[0].currentTime = 0;
+    return $('audio')[0].play();
   };
   questionWithWords = function(allwords, langname){
     var wordIdx, word, i$, len$, results$ = [];
@@ -199,6 +215,8 @@
           verticalAlign: 'middle',
           cursor: 'pointer',
           top: '5px'
+        }).click(function(){
+          return playSound();
         }));
       }
       $('#answeroptions').append(outeroptiondiv);
@@ -228,21 +246,33 @@
     });
     return map;
   };
-  out$.gotoQuizPage = gotoQuizPage = function(){
+  out$.gotoNewQuizPage = gotoNewQuizPage = function(){
     var param;
     $('.mainpage').hide();
     $('#quizpage').show();
     param = getUrlParameters();
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, 'vietnamese1'));
-    return newQuestion();
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'));
+    newQuestion();
+  };
+  out$.gotoQuizPage = gotoQuizPage = function(){
+    $('.mainpage').hide();
+    $('#quizpage').show();
   };
   out$.gotoOptionPage = gotoOptionPage = function(){
     $('.mainpage').hide();
-    return $('#optionpage').show();
+    $('#optionpage').show();
+    $('#langselect').val(root.current_language_name);
   };
   out$.gotoChatPage = gotoChatPage = function(){
     $('.mainpage').hide();
-    return $('#chatpage').show();
+    $('#chatpage').show();
+    $('#currentanswer').text(currentWord.romaji + ' = ' + currentWord.english);
+  };
+  out$.changeLang = changeLang = function(){
+    var newlang;
+    newlang = $('#langselect').val();
+    setFlashcardSet(newlang);
+    newQuestion();
   };
   gotoPage = function(page){
     switch (page) {
@@ -255,9 +285,14 @@
     }
   };
   $(document).ready(function(){
-    var param;
+    var param, targetpage;
     console.log('hello world!');
     param = getUrlParameters();
-    return gotoPage(firstNonNull(param.page, 'quiz'));
+    targetpage = firstNonNull(param.page, 'quiz');
+    if (targetpage === 'quiz') {
+      return gotoNewQuizPage();
+    } else {
+      return gotoPage(targetpage);
+    }
   });
 }).call(this);
