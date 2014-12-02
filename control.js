@@ -16,6 +16,10 @@
     if (lang != null && language_names[lang] != null) {
       langname = language_names[lang];
       $('#previewdisplay').attr('src', 'preview-' + langname.toLowerCase() + '.png');
+      $('#previewdisplay').css({
+        width: '290px',
+        display: 'table-cell'
+      });
       return $('#langdisplay').text(langname);
     }
   });
