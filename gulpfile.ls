@@ -24,10 +24,10 @@ gulp.task 'stylus', ->
 gulp.task 'build', ['ls', 'lsjson', 'stylus']
 
 gulp.task 'watch', ->
-  gulp.watch ['*.ls', '!gulpfile.ls', '*.styl'], ['build']
+  gulp.watch ['*.ls', '!gulpfile.ls', '*.stylus'], ['build']
 
 gulp.task 'develop', ->
-  gulp-nodemon {script: 'app.js', ext: 'jade ls styl'}
+  gulp-nodemon {script: 'app.js', ext: 'jade ls stylus'}
   .on 'restart', ['build']
 
 gulp.task 'default', ['build', 'develop']
