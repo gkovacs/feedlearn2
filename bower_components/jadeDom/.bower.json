@@ -1,0 +1,14 @@
+{
+  "name": "jadeDom",
+  "homepage": "https://github.com/robertmesserle/jadeDom",
+  "_release": "391abac22b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "391abac22be35168d623cd253d3e7352ed960a79"
+  },
+  "_source": "git://github.com/robertmesserle/jadeDom.git",
+  "_target": "*",
+  "_originalSource": "robertmesserle/jadeDom",
+  "_direct": true
+}
