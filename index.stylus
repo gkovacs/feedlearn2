@@ -1,7 +1,7 @@
 .bluebackground
-  width 495px
+  width 485px
   height 295px
-  margin-left: 5px
-  margin-right: 5px
-  background-color lightblue
+  padding-left: 5px
+  padding-right: 5px
+  background-color white
 
