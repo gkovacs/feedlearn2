@@ -36,21 +36,31 @@ html(lang='en')
         div(style='overflow: hidden')
           span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
           span(style='font-size: 26px') Options
-          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right')
+          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right; width: 50%')
             span.glyphicon.glyphicon-backward(style='margin-right: 7px; font-size: 18px')
             span Back to Quiz
         div(style='margin-top: 20px')
-          div(style='float: left; font-size: 20px; width: 40%') Currently Studying:
-          select#langselect.form-control(onchange='changeLang()' style='width: auto; display; font-size: 20px; float: right; width: 60%')
-            option Chinese
-            option Japanese
-            option Korean
-            option Vietnamese
+          span(style='font-size: 20px; width: 50%') Your Full Name:
+          input#fullnameinput.form-control(onkeyup='changeFullName()' style='width: auto; display; font-size: 20px; float: right; width: 50%')
+        div(style='margin-top: 20px')
+          span(style='font-size: 20px; width: 50%') Currently Studying:
+          select#langselect.form-control(onchange='changeLang()' style='width: auto; display; font-size: 20px; float: right; width: 50%')
+            option japanese1
+            option japanese2
+            option japanese3
+            option chinese1
+            option korean1
+            option vietnamese1
+        div(style='margin-top: 20px')
+          span(style='font-size: 20px; width: 50%') Feed Insertion Format:
+          select#formatselect.form-control(onchange='changeFeedInsertionFormat()' style='width: auto; display; font-size: 20px; float: right; width: 50%')
+            option interactive
+            option link
       #chatpage.mainpage(style='display: none')
         div(style='overflow: hidden')
           span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
           span(style='font-size: 26px') Answer + Discussion
-          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right')
+          button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right; width: 50%')
             span.glyphicon.glyphicon-backward(style='margin-right: 7px; font-size: 18px')
             span Back to Quiz
         #currentanswer(style='font-size: 30px; text-align: center; margin-top: 20px')
