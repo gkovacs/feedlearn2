@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, parseVocab, japanese_all_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese1_vocabulary_text, japanese_vocab_all, flashcard_sets, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, parseVocab, japanese_all_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese1_vocabulary_text, japanese_vocab_all, flashcard_sets, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -231,12 +231,12 @@
       if (langname !== 'English') {
         optiondivwidth = 'calc(100% - 40px)';
       }
-      optiondiv = J('button.btn.btn-default#option' + idx).css({
+      optiondiv = J('button.btn.btn-default.answeroption#option' + idx).css({
         width: optiondivwidth,
         'font-size': '20px'
       }).attr('type', 'button');
-      worddiv = J('span#optionword' + idx);
-      notediv = J('span#optionnote' + idx);
+      worddiv = J('span.answeroptionword#optionword' + idx);
+      notediv = J('span.answeroptionnote#optionnote' + idx);
       optiondiv.append([worddiv, notediv]);
       if (langname === 'English') {
         worddiv.text(elem.english);
@@ -257,15 +257,16 @@
         }));
       }
       $('#answeroptions').append(outeroptiondiv);
+      $('#option' + idx).data({
+        wordinfo: elem,
+        langname: langname,
+        idx: idx
+      });
       return optiondiv.click(function(){
         if (elem.correct) {
           return newQuestion();
         } else {
-          if (langname === 'English') {
-            return notediv.html(' = ' + '<b>' + elem.romaji + '</b>');
-          } else {
-            return notediv.html(' = ' + '<b>' + elem.english + '</b>');
-          }
+          return showAnswer(optiondiv);
         }
       });
     }
@@ -327,6 +328,24 @@
     var newfullname;
     newfullname = $('#fullnameinput').val();
     setFullName(newfullname);
+  };
+  showAnswer = function(optiondiv){
+    var langname, elem, notediv;
+    langname = optiondiv.data('langname');
+    elem = optiondiv.data('wordinfo');
+    notediv = optiondiv.find('.answeroptionnote');
+    if (langname === 'English') {
+      notediv.html(' = ' + '<b>' + elem.romaji + '</b>');
+    } else {
+      notediv.html(' = ' + '<b>' + elem.english + '</b>');
+    }
+  };
+  out$.showAnswers = showAnswers = function(){
+    var i$, ref$, len$, option;
+    for (i$ = 0, len$ = (ref$ = $('.answeroption')).length; i$ < len$; ++i$) {
+      option = ref$[i$];
+      showAnswer($(option));
+    }
   };
   gotoPage = function(page){
     switch (page) {

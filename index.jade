@@ -26,9 +26,9 @@ html(lang='en')
           span#questionword
           span#questionwordaudio.glyphicon.glyphicon-volume-up(onclick='playSoundCurrentWord()' style='cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px')
         #answeroptions
-        button.btn.btn-default(onclick='gotoChatPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
+        button.btn.btn-default(onclick='showAnswers()' style='font-size: 20px; margin-top: 15px; width: 50%')
           span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
-          span Answer + Discussion
+          span Show Answers
         button.btn.btn-default(onclick='gotoOptionPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
           span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
           span Options
@@ -59,7 +59,7 @@ html(lang='en')
       #chatpage.mainpage(style='display: none')
         div(style='overflow: hidden')
           span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
-          span(style='font-size: 26px') Answer + Discussion
+          span(style='font-size: 26px') Answer + Discuss
           button.btn.btn-default(onclick='gotoQuizPage()' style='font-size: 20px; float: right; width: 50%')
             span.glyphicon.glyphicon-backward(style='margin-right: 7px; font-size: 18px')
             span Back to Quiz

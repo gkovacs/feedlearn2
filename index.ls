@@ -505,12 +505,12 @@ question-with-words = (allwords, langname) ->
     optiondivwidth = '100%'
     if langname != 'English'
       optiondivwidth = 'calc(100% - 40px)'
-    optiondiv = J('button.btn.btn-default#option' + idx).css({
+    optiondiv = J('button.btn.btn-default.answeroption#option' + idx).css({
       width: optiondivwidth
       'font-size': \20px
     }).attr('type', 'button')
-    worddiv = J('span#optionword' + idx)
-    notediv = J('span#optionnote' + idx)
+    worddiv = J('span.answeroptionword#optionword' + idx)
+    notediv = J('span.answeroptionnote#optionnote' + idx)
     optiondiv.append [ worddiv, notediv ]
     if langname == 'English'
       worddiv.text(elem.english)
@@ -530,14 +530,16 @@ question-with-words = (allwords, langname) ->
     $('#answeroptions').append outeroptiondiv
     #if idx == 1
     #  $('#answeroptions').append '<br>'
+    $('#option' + idx).data({
+      wordinfo: elem
+      langname: langname
+      idx: idx
+    })
     optiondiv.click ->
       if elem.correct
         new-question()
       else
-        if langname == 'English'
-          notediv.html(' = ' + '<b>' + elem.romaji + '</b>')
-        else
-          notediv.html(' = ' + '<b>' + elem.english + '</b>')
+        show-answer optiondiv
 
 getUrlParameters = root.getUrlParameters = ->
   url = window.location.href
@@ -595,6 +597,21 @@ export set-full-name = (newfullname) ->
 export change-full-name = ->
   newfullname = $('#fullnameinput').val()
   set-full-name newfullname
+  return
+
+show-answer = (optiondiv) ->
+  langname = optiondiv.data 'langname'
+  elem = optiondiv.data 'wordinfo'
+  notediv = optiondiv.find '.answeroptionnote'
+  if langname == 'English'
+    notediv.html(' = ' + '<b>' + elem.romaji + '</b>')
+  else
+    notediv.html(' = ' + '<b>' + elem.english + '</b>')
+  return
+
+export show-answers = ->
+  for option in $('.answeroption')
+    show-answer $(option)
   return
 
 goto-page = (page) ->
