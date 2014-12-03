@@ -343,6 +343,7 @@ autumn | ga-eul
 winter | gyeoul
 '''
 
+/*
 vietnamese1_vocabulary_text = '''
 dog | chó
 cat | con mèo
@@ -370,8 +371,98 @@ summer | mùa hè
 autumn | mùa thu
 winter | mùa đông
 '''
+*/
+
+vietnamese_all_vocabulary_text = '''
+# time
+
+week | tuần
+year | năm
+today | hôm nay
+tomorrow | ngày mai
+yesterday | hôm qua
+calendar | lịch
+# second | giây
+# hour | giờ
+# minute | phút
+clock | đồng hồ
+
+# seasons
+
+spring | mùa xuân
+summer | mùa hè
+autumn | mùa thu
+winter | mùa đông
+
+# time of day
+
+morning | buổi sáng
+night | đêm
+
+# students
+
+university | trường đại học
+student | sinh viên
+
+# numbers
+
+one | một
+two | hai
+three | ba
+four | bốn
+five | năm
+six | sáu
+seven | bảy
+eight | tám
+nine | chín
+ten | mười
+
+# body parts
+
+leg | chân
+head | đầu
+hand | tay
+
+# employment
+
+nurse | y tá
+employee | nhân viên
+police officer | cảnh sát
+chef | đầu bếp
+engineer | kỹ sư
+doctor | bác sĩ
+manager | người quản lý
+teacher | giáo sư
+
+# animals
+
+dog | chó
+cat | con mèo
+horse | ngựa
+mouse | chuột
+bird | chim
+cow | bò
+fish | cá
+
+# people
+
+man | đàn ông
+woman | đàn bà
+
+# colors
+
+red | đỏ
+blue | xanh lam
+green | xanh lá cây
+yellow | vàng
+purple | màu đỏ tía
+'''
 
 japanese_vocab_all = parse-vocab japanese_all_vocabulary_text
+
+vietnamese_vocab_all = parse-vocab vietnamese_all_vocabulary_text
+
+console.log vietnamese_vocab_all.length
 
 flashcard_sets = {
   #'japanese1': parse-vocab japanese1_vocabulary_text
@@ -380,7 +471,8 @@ flashcard_sets = {
   'japanese3': japanese_vocab_all[100 til 150]
   'chinese1': parse-vocab chinese1_vocabulary_text
   'korean1': parse-vocab korean1_vocabulary_text
-  'vietnamese1': parse-vocab vietnamese1_vocabulary_text
+  #'vietnamese1': parse-vocab vietnamese1_vocabulary_text
+  'vietnamese1': vietnamese_vocab_all[0 til 50]
 }
 
 language_names = {
