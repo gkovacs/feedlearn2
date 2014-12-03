@@ -4,13 +4,12 @@
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
   parseVocab = function(){
-    var vocab_text_list, output, i$, len$, vocab_text, j$, ref$, len1$, idx, line, ref1$, english, romaji;
+    var vocab_text_list, output, i$, len$, vocab_text, j$, ref$, len1$, line, ref1$, english, romaji;
     vocab_text_list = slice$.call(arguments);
     output = [];
     for (i$ = 0, len$ = vocab_text_list.length; i$ < len$; ++i$) {
       vocab_text = vocab_text_list[i$];
       for (j$ = 0, len1$ = (ref$ = vocab_text.split('\n')).length; j$ < len1$; ++j$) {
-        idx = j$;
         line = ref$[j$];
         line = line.trim();
         if (line.length > 0 && line[0] !== '#') {
@@ -20,7 +19,7 @@
           output.push({
             english: english,
             romaji: romaji,
-            idx: idx
+            idx: output.length
           });
         }
       }

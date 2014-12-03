@@ -7,13 +7,13 @@ J = $.jade
 parse-vocab = (...vocab_text_list) ->
   output = []
   for vocab_text in vocab_text_list
-    for line,idx in vocab_text.split('\n')
+    for line in vocab_text.split('\n')
       line = line.trim()
       if line.length > 0 and line[0] != '#'
         [english,romaji] = line.split('|')
         english = english.trim()
         romaji = romaji.trim()
-        output.push {english: english, romaji: romaji, idx: idx}
+        output.push {english: english, romaji: romaji, idx: output.length}
   return output
 
 /*
