@@ -14,9 +14,9 @@
   cursor pointer
 
 .titlelink
-  font-size 32px
-  margin-top: 13px
-  margin-bottom: 13px
+  font-size 30px
+  margin-top: 10px
+  margin-bottom: 10px
   text-align: center
   width: 100%
   cursor pointer
