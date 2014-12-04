@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, parseVocab, japanese_all_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese_all_vocabulary_text, japanese_vocab_all, vietnamese_vocab_all, flashcard_sets, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, parseVocab, japanese_all_vocabulary_text, chinese1_vocabulary_text, korean1_vocabulary_text, vietnamese_all_vocabulary_text, japanese_vocab_all, vietnamese_vocab_all, flashcard_sets, i$, ref$, len$, x, language_names, flashcard_name_aliases, firstNonNull, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -99,6 +99,10 @@
     'korean1': parseVocab(korean1_vocabulary_text),
     'vietnamese1': [vietnamese_vocab_all[0], vietnamese_vocab_all[1], vietnamese_vocab_all[2], vietnamese_vocab_all[3], vietnamese_vocab_all[4], vietnamese_vocab_all[5], vietnamese_vocab_all[6], vietnamese_vocab_all[7], vietnamese_vocab_all[8], vietnamese_vocab_all[9], vietnamese_vocab_all[10], vietnamese_vocab_all[11], vietnamese_vocab_all[12], vietnamese_vocab_all[13], vietnamese_vocab_all[14], vietnamese_vocab_all[15], vietnamese_vocab_all[16], vietnamese_vocab_all[17], vietnamese_vocab_all[18], vietnamese_vocab_all[19], vietnamese_vocab_all[20], vietnamese_vocab_all[21], vietnamese_vocab_all[22], vietnamese_vocab_all[23], vietnamese_vocab_all[24], vietnamese_vocab_all[25], vietnamese_vocab_all[26], vietnamese_vocab_all[27], vietnamese_vocab_all[28], vietnamese_vocab_all[29], vietnamese_vocab_all[30], vietnamese_vocab_all[31], vietnamese_vocab_all[32], vietnamese_vocab_all[33], vietnamese_vocab_all[34], vietnamese_vocab_all[35], vietnamese_vocab_all[36], vietnamese_vocab_all[37], vietnamese_vocab_all[38], vietnamese_vocab_all[39], vietnamese_vocab_all[40], vietnamese_vocab_all[41], vietnamese_vocab_all[42], vietnamese_vocab_all[43], vietnamese_vocab_all[44], vietnamese_vocab_all[45], vietnamese_vocab_all[46], vietnamese_vocab_all[47], vietnamese_vocab_all[48], vietnamese_vocab_all[49]]
   };
+  for (i$ = 0, len$ = (ref$ = flashcard_sets['vietnamese1']).length; i$ < len$; ++i$) {
+    x = ref$[i$];
+    console.log(x.romaji);
+  }
   language_names = {
     'japanese1': 'Japanese',
     'japanese2': 'Japanese',
@@ -239,7 +243,7 @@
     }, allwords);
     word = allwords[wordIdx];
     if (langname === 'English') {
-      $('#questionmessage').html("What does this word mean in " + current_language_name + ":");
+      $('#questionmessage').html("What does this word mean");
       $('#questionword').html("<b>" + word.romaji + "</b>");
       $('#questionwordaudio').show();
     } else {

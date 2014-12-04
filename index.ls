@@ -475,6 +475,9 @@ flashcard_sets = {
   'vietnamese1': vietnamese_vocab_all[0 til 50]
 }
 
+for x in flashcard_sets['vietnamese1']
+  console.log x.romaji
+
 language_names = {
   'japanese1': 'Japanese'
   'japanese2': 'Japanese'
@@ -582,7 +585,7 @@ question-with-words = (allwords, langname) ->
   word-idx = find-index (.correct), allwords
   word = allwords[word-idx]
   if langname == 'English'
-    $('#questionmessage').html "What does this word mean in #{current_language_name}:"
+    $('#questionmessage').html "What does this word mean" # in #{current_language_name}:
     $('#questionword').html "<b>#{word.romaji}</b>"
     $('#questionwordaudio').show()
   else
