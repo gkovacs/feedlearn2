@@ -15,8 +15,8 @@ $(document).ready ->
   if lang? and language_names[lang]?
     langname = language_names[lang]
     $('#previewdisplay').attr 'src', 'preview-' + langname.toLowerCase() + '.png'
-    $('#previewdisplay').css({
-      width: \290px
-      display: \table-cell
-    })
+    #$('#previewdisplay').css({
+    #  width: \290px
+    #  display: \table-cell
+    #})
     $('#langdisplay').text langname
