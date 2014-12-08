@@ -1,0 +1,37 @@
+doctype html
+html(lang='en')
+  head
+    title FeedLearn
+    meta(name='viewport' content='user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1')
+    link(href='index.css' rel='stylesheet')
+    link(href='bower_components/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(href='bower_components/bootstrap/dist/css/bootstrap-theme.min.css' rel='stylesheet')
+    link(href='bower_components/select2/select2.css' rel='stylesheet')
+  body
+    script(src='bower_components/jquery/dist/jquery.min.js')
+    script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='bower_components/jadeDom/jquery.jadedom.js')
+    script(src='bower_components/underscore/underscore.js')
+    script(src='bower_components/prelude-browser-min/index.js')
+    script(src='bower_components/jquery-cookie/jquery.cookie.js')
+    script(src='bower_components/async/lib/async.js')
+    script(src='bower_components/select2/select2.min.js')
+    script(src='commonlib.js')
+    script(src='flashcards.js')
+    script(src='matching.js')
+    div(style='padding-left: 10px')
+      span Please enter the English meaning for each Japanese word below
+      div(style='height: 20px')
+    datalist#englishwords
+    div
+      #foreignwordlist(style='padding-left: 10px; background-color: white; display: inline-block')
+        div
+          span(style='font-weight: bold; height: 30px') Japanese
+          div(style='height: 10px')
+          //- span(style='font-weight: bold; float: right; margin-right: 110px; height: 30px') Your Answer
+      //-#inputbarlist(style='padding-left: 10px; background-color: white; display: inline-block')
+      //-  div(style='font-weight: bold') Your answer
+      #englishwordlist(style='position: fixed; padding-left: 30px; background-color: white; display: inline-block; vertical-align: top; padding-right: 10px')
+        div
+          span(style='font-weight: bold; height: 30px') Possible Options
+          div(style='height: 10px')
