@@ -33,3 +33,9 @@ get_control = (req, res) ->
 app.get '/control', get_control
 app.get '/control.html', get_control
 
+get_matching = (req, res) ->
+  res.render 'matching', {}
+
+app.get '/matching', get_matching
+app.get '/matching.html', get_matching
+

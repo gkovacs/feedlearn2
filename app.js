@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, app, get_index, get_control;
+  var express, path, bodyParser, app, get_index, get_control, get_matching;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -21,4 +21,9 @@
   };
   app.get('/control', get_control);
   app.get('/control.html', get_control);
+  get_matching = function(req, res){
+    return res.render('matching', {});
+  };
+  app.get('/matching', get_matching);
+  app.get('/matching.html', get_matching);
 }).call(this);
