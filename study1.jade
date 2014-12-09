@@ -16,6 +16,8 @@ html(lang='en')
     script(src='bower_components/async/lib/async.js')
     script(src='study1.js')
     #accordion.panel-group(role='tablist' aria-multiselectable='true')
+
+
       .panel.panel-default
         #headingOne.panel-heading(role='tab')
           h4.panel-title
@@ -44,12 +46,50 @@ html(lang='en')
             p
               b The extra copy of this consent form is for you to keep. Please print a copy of this page for your records.
             button.btn.btn-lg.btn-primary(onclick='consentAgreed()') I agree to these conditions
+
+
       .panel.panel-default
         #headingTwo.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='true' aria-controls='collapseTwo').
-              Pretest for First Week Vocabulary (50 Japanese words)
-        #collapseTwo.panel-collapse.collapse.in(role='tabpanel' aria-labelledby='headingTwo')
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo').
+              Pre-test for First Week Vocabulary (50 Japanese words)
+        #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
           .panel-body
             p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
             button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
+
+
+      .panel.panel-default
+        #headingThree.panel-heading(role='tab')
+          h4.panel-title
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseThree' aria-expanded='false' aria-controls='collapseThree').
+              Install Chrome Extension
+        #collapseThree.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
+          .panel-body
+            p Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
+            button.btn.btn-lg.btn-primary(onclick='installChromeExtension()') Install FeedLearn Chrome Extension
+
+
+      .panel.panel-default
+        #headingFour.panel-heading(role='tab')
+          h4.panel-title
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFour' aria-expanded='false' aria-controls='collapseFour').
+              Study First Week Vocabulary (for 7 days)
+        #collapseFour.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
+          .panel-body
+            p During the first week, you will be shown notifications directly inside the feed.
+            p Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
+
+
+      .panel.panel-default
+        #headingFive.panel-heading(role='tab')
+          h4.panel-title
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFive' aria-expanded='false' aria-controls='collapseFive').
+              Post-test for First Week Vocabulary (50 Japanese words)
+        #collapseFive.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingFive')
+          .panel-body
+            p Please follow this link to take a post-test on the 50 words you studied during the first week.
+            button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the pre-test for Week 1 Japanese Vocabulary
+
+
