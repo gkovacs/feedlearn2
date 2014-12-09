@@ -236,7 +236,7 @@
     newQuestion();
   };
   out$.setInsertionFormat = setInsertionFormat = function(newformat){
-    if (newformat === 'interactive' || newformat === 'link') {
+    if (newformat === 'interactive' || newformat === 'link' || newformat === 'none') {
       $.cookie('format', newformat);
     }
   };

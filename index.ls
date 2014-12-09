@@ -201,7 +201,7 @@ export change-lang = ->
   return
 
 export set-insertion-format = (newformat) ->
-  if newformat == 'interactive' or newformat == 'link'
+  if newformat == 'interactive' or newformat == 'link' or newformat == 'none'
     $.cookie('format', newformat)
   return
 
