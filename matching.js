@@ -1,13 +1,12 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, flashcard_sets, language_names, flashcard_name_aliases, selectChanged, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, selectChanged, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
-  firstNonNull = root.firstNonNull;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
   out$.selectChanged = selectChanged = function(){
     var selected_words, i$, ref$, len$, idx, x, curword, newidx, results$ = [];
-    console.log('select changed');
     selected_words = {};
     for (i$ = 0, len$ = (ref$ = $('select.engselect')).length; i$ < len$; ++i$) {
       idx = i$;
@@ -27,8 +26,6 @@
         $(x).parent().css({
           backgroundColor: 'yellow'
         });
-        console.log(curword);
-        console.log(JSON.stringify(selected_words));
       } else {
         $(x).parent().css({
           backgroundColor: 'white'
@@ -55,9 +52,10 @@
     return results$;
   };
   $(document).ready(function(){
-    var flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
-    console.log('foobar');
-    flashcards = flashcard_sets.japanese1;
+    var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    param = getUrlParameters();
+    flashcard_set = firstNonNull(param.vocab, 'japanese1');
+    flashcards = flashcard_sets[flashcard_set];
     selectOptions = ['--- select a word ---'].concat(sort(
     map(function(it){
       return it.english;

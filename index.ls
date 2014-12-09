@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null} = root # commonlib.ls
+{first-non-null, getUrlParameters} = root # commonlib.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
 set-flashcard-set = (new_flashcard_set) ->
@@ -166,17 +166,6 @@ question-with-words = (allwords, langname) ->
         #optiondiv.remove-class 'btn-default'
         #optiondiv.add-class 'btn-danger'
         show-answer optiondiv
-
-getUrlParameters = root.getUrlParameters = ->
-  url = window.location.href
-  hash = url.lastIndexOf('#')
-  if hash != -1
-    url = url.slice(0, hash)
-  map = {}
-  parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m,key,value) ->
-    map[key] = decodeURI(value)
-  )
-  return map
 
 export goto-quiz-page = ->
   $('.mainpage').hide()

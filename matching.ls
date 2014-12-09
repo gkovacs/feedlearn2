@@ -4,11 +4,11 @@ J = $.jade
 
 {find-index, map, sort, sort-by} = require \prelude-ls
 
-{first-non-null} = root # commonlib.ls
+{first-non-null, getUrlParameters} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
 
 export select-changed = ->
-  console.log 'select changed'
+  #console.log 'select changed'
   selected_words = {}
   for x,idx in $('select.engselect')
     #console.log $(x).val().trim()
@@ -20,8 +20,8 @@ export select-changed = ->
       newidx = selected_words[curword]
       $('.engselect' + newidx).parent().css({background-color: 'yellow'})
       $(x).parent().css({background-color: 'yellow'})
-      console.log curword
-      console.log <| JSON.stringify selected_words
+      #console.log curword
+      #console.log <| JSON.stringify selected_words
     else
       $(x).parent().css({background-color: 'white'})
     selected_words[curword] = idx # true
@@ -31,9 +31,12 @@ export select-changed = ->
     else
       $(x).css({background-color: 'lightblue', color: 'black', text-decoration: 'none'})
 
+
+
 $(document).ready ->
-  console.log 'foobar'
-  flashcards = flashcard_sets.japanese1
+  param = getUrlParameters()
+  flashcard_set = first-non-null param.vocab, 'japanese1'
+  flashcards = flashcard_sets[flashcard_set]
   select-options = [ '--- select a word ---' ].concat <| map (.english), flashcards |> sort
   for wordinfo,idx in sort-by (.romaji), flashcards
     #console.log wordinfo.romaji

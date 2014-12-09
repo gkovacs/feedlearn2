@@ -1,9 +1,9 @@
 (function(){
-  var root, J, findIndex, firstNonNull, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, firstNonNull, getUrlParameters, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
-  firstNonNull = root.firstNonNull;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
   setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
@@ -199,19 +199,6 @@
         }
       });
     }
-  };
-  getUrlParameters = root.getUrlParameters = function(){
-    var url, hash, map, parts;
-    url = window.location.href;
-    hash = url.lastIndexOf('#');
-    if (hash !== -1) {
-      url = url.slice(0, hash);
-    }
-    map = {};
-    parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value){
-      return map[key] = decodeURI(value);
-    });
-    return map;
   };
   out$.gotoQuizPage = gotoQuizPage = function(){
     var hideoption;
