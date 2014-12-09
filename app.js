@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, app, get_index, get_control, get_matching;
+  var express, path, bodyParser, app, get_index, get_control, get_matching, get_study1;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -26,6 +26,11 @@
   };
   app.get('/matching', get_matching);
   app.get('/matching.html', get_matching);
+  get_study1 = function(req, res){
+    return res.render('study1', {});
+  };
+  app.get('/study1', get_study1);
+  app.get('/study1.html', get_study1);
   app.post('/addlog', function(req, res){
     var username;
     username = req.body.username;

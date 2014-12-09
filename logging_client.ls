@@ -1,0 +1,35 @@
+root = exports ? this
+
+export post-json = (url, jsondata, callback) ->
+  $.ajax {
+    type: 'POST'
+    url: url
+    data: JSON.stringify(jsondata)
+    success: (data) ->
+      if callback?
+        callback data
+      #else
+      #  console.log data
+    contentType: 'application/json'
+    #dataType: 'json'
+  }
+
+get-user-name = ->
+  if root.fullname?
+    return root.fullname
+  else
+    root.fullname = $.cookie('fullname')
+    if root.fullname?
+      return root.fullname
+    else
+      return 'Anonymous User'
+
+#get-format = ->
+#
+
+export addlog = (logdata) ->
+  data = $.extend {}, logdata
+  data.username = get-user-name()
+  date.time = Date.now()
+  date.timeloc = new Date().toString()
+  post-json '/addlog', data

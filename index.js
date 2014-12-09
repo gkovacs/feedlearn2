@@ -109,7 +109,7 @@
   out$.playSound = playSound = function(word){
     var srcurl;
     $('#speechsynth')[0].pause();
-    srcurl = 'http://speechsynth.herokuapp.com/speechsynth?' + $.param({
+    srcurl = 'https://speechsynth.herokuapp.com/speechsynth?' + $.param({
       lang: root.current_language_code,
       word: word
     });
@@ -187,7 +187,13 @@
       });
       return optiondiv.click(function(){
         if (elem.correct) {
-          return newQuestion();
+          optiondiv.removeClass('btn-default');
+          optiondiv.addClass('btn-success');
+          showAnswer(optiondiv);
+          playSoundCurrentWord();
+          return setTimeout(function(){
+            return newQuestion();
+          }, 1300);
         } else {
           return showAnswer(optiondiv);
         }

@@ -39,6 +39,12 @@ get_matching = (req, res) ->
 app.get '/matching', get_matching
 app.get '/matching.html', get_matching
 
+get_study1 = (req, res) ->
+  res.render 'study1', {}
+
+app.get '/study1', get_study1
+app.get '/study1.html', get_study1
+
 # POST statements
 
 app.post '/addlog', (req, res) ->

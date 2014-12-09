@@ -83,7 +83,7 @@ export refresh-question = ->
 export play-sound = (word) ->
   #srcurl = 'http://translate.google.com/translate_tts?ie=UTF-8&q=' + word + '&tl=' + root.current_language_code
   $('#speechsynth')[0].pause()
-  srcurl = 'http://speechsynth.herokuapp.com/speechsynth?' + $.param({lang: root.current_language_code, word: word})
+  srcurl = 'https://speechsynth.herokuapp.com/speechsynth?' + $.param({lang: root.current_language_code, word: word})
   $('#speechsynth').attr('src', srcurl)
   #$('audio').attr('src', 'error.mp3')
   #$('#speechsynth').unbind('canplay')
@@ -155,8 +155,16 @@ question-with-words = (allwords, langname) ->
     })
     optiondiv.click ->
       if elem.correct
-        new-question()
+        optiondiv.remove-class 'btn-default'
+        optiondiv.add-class 'btn-success'
+        show-answer optiondiv
+        play-sound-current-word()
+        set-timeout ->
+          new-question()
+        , 1300
       else
+        #optiondiv.remove-class 'btn-default'
+        #optiondiv.add-class 'btn-danger'
         show-answer optiondiv
 
 getUrlParameters = root.getUrlParameters = ->
