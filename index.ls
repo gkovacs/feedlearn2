@@ -60,6 +60,8 @@ deep-copy = (elem) ->
   return elem |> JSON.stringify |> JSON.parse
 
 root.current-word = null
+root.curq-allwords = null
+root.curq-langname = null
 
 export new-question = ->
   word = select-elem root.vocabulary |> deep-copy
@@ -70,15 +72,24 @@ export new-question = ->
     elem.correct = false
   allwords = [word] ++ otherwords |> shuffle-list
   langname = ['English', current_language_name ]|> select-elem
-  question-with-words allwords, langname
+  root.curq-allwords = allwords
+  root.curq-langname = langname
+  refresh-question()
+
+export refresh-question = ->
+  $('#showanswersbutton').attr('disabled', false)
+  question-with-words root.curq-allwords, root.curq-langname
 
 export play-sound = (word) ->
-  $('audio')[0].pause()
-  srcurl = 'http://translate.google.com/translate_tts?ie=UTF-8&q=' + word + '&tl=' + root.current_language_code
-  $('audio').attr('src', srcurl)
+  #srcurl = 'http://translate.google.com/translate_tts?ie=UTF-8&q=' + word + '&tl=' + root.current_language_code
+  $('#speechsynth')[0].pause()
+  srcurl = 'http://speechsynth.herokuapp.com/speechsynth?' + $.param({lang: root.current_language_code, word: word})
+  $('#speechsynth').attr('src', srcurl)
   #$('audio').attr('src', 'error.mp3')
-  $('audio')[0].currentTime = 0
-  $('audio')[0].play()
+  #$('#speechsynth').unbind('canplay')
+  #$('#speechsynth').bind 'canplay', ->
+  #$('#speechsynth')[0].currentTime = 0
+  $('#speechsynth')[0].play()
 
 export play-sound-current-word = ->
   play-sound root.current-word.kanji
@@ -93,10 +104,13 @@ question-with-words = (allwords, langname) ->
   word = allwords[word-idx]
   if langname == 'English'
     $('#questionmessage').html "What does this word mean" # in #{current_language_name}:
-    $('#questionword').html "<b>#{word.romaji}</b>"
+    if root.scriptformat == 'show romanized only' or word.romaji == word.kanji
+      $('#questionword').html "<b>#{word.romaji}</b>"
+    else
+      $('#questionword').html "<b>#{word.romaji} (#{word.kanji})</b>"
     $('#questionwordaudio').show()
   else
-    $('#questionmessage').html "How would you say this in #{current_language_name}:"
+    $('#questionmessage').html "How would you say this in #{current_language_name}"
     $('#questionword').html "<b>#{word.english}</b>"
     $('#questionwordaudio').hide()
   $('#answeroptions').html('')
@@ -116,8 +130,10 @@ question-with-words = (allwords, langname) ->
     optiondiv.append [ worddiv, notediv ]
     if langname == 'English'
       worddiv.text(elem.english)
-    else
+    else if root.scriptformat == 'show romanized only' or word.romaji == word.kanji
       worddiv.text(elem.romaji)
+    else
+      worddiv.text(elem.romaji + ' (' + elem.kanji + ')')
     outeroptiondiv.append optiondiv
     if langname != 'English'
       outeroptiondiv.append J('div.glyphicon.glyphicon-volume-up').css({
@@ -159,6 +175,8 @@ export goto-quiz-page = ->
   $('#quizpage').show()
   if not root.current-word?
     new-question()
+  else
+    refresh-question()
   return
 
 export goto-option-page = ->
@@ -167,6 +185,7 @@ export goto-option-page = ->
   $('#langselect').val(root.current_flashcard_set)
   $('#formatselect').val($.cookie('format'))
   $('#fullnameinput').val($.cookie('fullname'))
+  $('#scriptselect').val($.cookie('scriptformat'))
   return
 
 export goto-chat-page = ->
@@ -201,17 +220,29 @@ export change-full-name = ->
   set-full-name newfullname
   return
 
+export set-script-format = (scriptformat) ->
+  $('#scriptselect').val(scriptformat)
+  $.cookie 'scriptformat', scriptformat
+  root.scriptformat = scriptformat
+  return
+
+export change-script-format = ->
+  scriptformat = $('#scriptselect').val()
+  set-script-format scriptformat
+  return
+
 show-answer = (optiondiv) ->
   langname = optiondiv.data 'langname'
   elem = optiondiv.data 'wordinfo'
   notediv = optiondiv.find '.answeroptionnote'
   if langname == 'English'
-    notediv.html(' = ' + '<b>' + elem.romaji + '</b>')
+    notediv.html(' = ' + elem.romaji)
   else
-    notediv.html(' = ' + '<b>' + elem.english + '</b>')
+    notediv.html(' = ' + elem.english)
   return
 
 export show-answers = ->
+  $('#showanswersbutton').attr('disabled', true)
   for option in $('.answeroption')
     show-answer $(option)
   return
@@ -232,4 +263,5 @@ $(document).ready ->
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'
   set-insertion-format <| first-non-null param.format, param.condition, $.cookie('format'), 'interactive'
   set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
+  set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
   goto-page <| first-non-null param.page, 'quiz'

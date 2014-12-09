@@ -68,279 +68,327 @@ dentist | shikai | 歯科医
 politician | seijika | 政治家
 lawyer | bengoshi | 弁護士
 firefighter | shōbōshi | 消防士
-soldier | heishi
-architect | kenchikuka
-teacher | sensei
-singer | kashu
+soldier | heishi | 兵士
+architect | kenchikuka | 建築家
+teacher | sensei | 先生
+singer | kashu | 歌手
 
 # body
 
-foot | ashi
-head | atama
-face | kao
-mouth | kuchi
-lips | kuchibiru
-hair | kami
-ear | mimi
-arm | ude
-finger | yubi
-neck | kubi
-heart | shinzō
-chest | mune
-illness | byōki
+foot | ashi | 足
+head | atama | 頭
+face | kao | 顔
+mouth | kuchi | 口
+lips | kuchibiru | 唇
+hair | kami | 髪
+ear | mimi | 耳
+arm | ude | 腕
+finger | yubi | 指
+neck | kubi | 首
+heart | shinzō | 心臓
+chest | mune | 胸
+illness | byōki | 病気
 
 # family
 
-parents | oya
-father | chichi
-mother | haha
-wife | tsuma
-husband | otto
-# older brother | ani
-# older sister | ane
-younger brother | otōto
-younger sister | imōto
-# siblings | kyōdai
-grandfather | sofu
-grandmother | sobo
-grandchild | mago
-uncle | oji
-aunt | oba
+parents | oya | 親
+father | chichi | 父
+mother | haha | 母
+wife | tsuma | 妻
+husband | otto | 夫
+# older brother | ani | 兄
+# older sister | ane | 姉
+younger brother | otōto | 弟
+younger sister | imōto | 妹
+# siblings | kyōdai | 兄弟
+grandfather | sofu | 祖父
+grandmother | sobo | 祖母
+grandchild | mago | 孫
+uncle | oji | 叔父
+aunt | oba | 叔母
 
 # life
 
-# living creatures | ikimono
-monster | bakemono
+# living creatures | ikimono | 生き物
+monster | bakemono | 化け物
 
 # animals
 
-animal | dōbutsu
-dog | inu
-cat | neko
-cow | ushi
-pig | buta
-horse | uma
-sheep | hitsuji
-monkey | saru
-mouse | nezumi
-tiger | tora
-wolf | ōkami
-rabbit | usagi
-dragon | ryū
-deer | shika
-frog | kaeru
-toad | gama
-lion | shishi
-giraffe | kirin
-elephant | zō
-bird | tori
-chicken | niwatori
-sparrow | suzume
-crow | karasu
-eagle | washi
-hawk, falcon | taka
-fish | sakana
-shrimp | ebi
-tuna | maguro
-octopus | tako
-insect | mushi
-butterfly | chō
-spider | kumo
-firefly | hotaru
-cockroach | gokiburi
-earthworm | mimizu
-lizard | tokage
-snake | hebi
+animal | dōbutsu | 動物
+dog | inu | 犬
+cat | neko | 猫
+cow | ushi | 牛
+pig | buta | 豚
+horse | uma | 馬
+sheep | hitsuji | 羊
+monkey | saru | 猿
+mouse | nezumi | 鼠
+tiger | tora | 虎
+wolf | ōkami | 狼
+rabbit | usagi | 兎
+dragon | ryū | 竜
+deer | shika | 鹿
+frog | kaeru | カエル
+# toad | hikigaeru | ヒキガエル
+lion | shishi | 獅子
+giraffe | kirin | キリン
+elephant | zō | 像
+bird | tori | 鳥
+chicken | niwatori | 鶏
+sparrow | suzume | 雀
+crow | karasu | 烏
+eagle | washi | 鷲
+# hawk, falcon | taka | 鷹
+fish | sakana | 魚
+shrimp | ebi | 蝦
+tuna | maguro | 鮪
+octopus | tako | タコ
+insect | mushi | 虫
+butterfly | chō | 蝶
+spider | kumo | クモ
+firefly | hotaru | 蛍
+cockroach | gokiburi | ゴキブリ
+earthworm | mimizu | ミミズ
+lizard | tokage | トカゲ
+snake | hebi | 蛇
 
 # plants
 
-plants | shokubutsu
-grass | kusa
-flower | hana
-tree | ki
-mushroom | kinoko
+plants | shokubutsu | 植物
+grass | kusa | 草
+flower | hana | 花
+tree | ki | 木
+mushroom | kinoko | キノコ
 
 # crops
 
-uncooked rice | kome
-wheat, oats | mugi
-vegetable | yasai
-yam, potato | imo
-beans | mame
-fruit | kudamono
-carrot | ninjin
-apple | ringo
-orange | mikan
-pear | nashi
-chestnut | kuri
-peach | momo
-tomato | banka
-watermelon | suika
+uncooked rice | kome | コメ
+wheat, oats | mugi | 麦
+vegetable | yasai | 野菜
+yam, potato | imo | 芋
+beans | mame | 豆
+fruit | kudamono | 果物
+carrot | ninjin | 人参
+apple | ringo | リンゴ
+orange | mikan | ミカン
+pear | nashi | 梨
+chestnut | kuri | 栗
+peach | momo | 桃
+# tomato | banka | バンカ
+watermelon | suika | 水瓜
 
 # food
 
-breakfast | asagohan
-lunch | hirugohan
-supper | bangohan
-cooked rice, food | gohan
-cooking | ryōri
+breakfast | asagohan | 朝ご飯
+lunch | hirugohan | 昼ご飯
+supper | bangohan | 晩ご飯
+cooked rice, food | gohan | ご飯
+cooking | ryōri | 料理
 
 # drink
 
-beverage | nomimono
-milk | gyūnyū
+beverage | nomimono | 飲み物
+milk | gyūnyū | 牛乳
 
 # seasoning
 
-sugar | satō
-salt | shio
-soy sauce | shōyu
+sugar | satō | 砂糖
+salt | shio | 塩
+soy sauce | shōyu | 醤油
 
 # time and space
 
-time | jikan
-day | nichi
-month | gatsu
-year | toshi
-# last year | kyōnen
-# this year | kotoshi
-# next year | rainen
-today | kyō
-yesterday | kinō
-tomorrow | ashita
-morning | asa
-night | yoru
-moon | tsuki
-star | hoshi
-weather | tenki
-rain | ame
-cloudy | kumori
-snow | yuki
-wind | kaze
-thunder | kaminari
-storm | arashi
-sky | sora
+time | jikan | 時間
+day | nichi | 日
+month | gatsu | ガツ
+year | toshi | トシ
+# last year | kyōnen | 
+# this year | kotoshi | 
+# next year | rainen | 
+today | kyō | 今日
+yesterday | kinō | 昨日
+tomorrow | ashita | 明日
+morning | asa | 朝
+night | yoru | 夜
+moon | tsuki | ツキ
+star | hoshi | 星
+weather | tenki | 天気
+rain | ame | 雨
+cloudy | kumori | 曇り
+snow | yuki | 雪
+wind | kaze | 風
+thunder | kaminari | 雷
+storm | arashi | 嵐
+sky | sora | 空
 
 # directions and positions
 
-east | higashi
-west | nishi
-south | minami
-north | kita
-# here | koko
-# there | soko
-# over there | asoko
-right (direction) | migi
-left | hidari
-above, up | ue
-below, down | shita
-in front of | mae
-behind | ushiro
+east | higashi | ヒガシ
+west | nishi | 西
+south | minami | 南
+north | kita | 北
+# here | koko | ここ
+# there | soko | そこ
+# over there | asoko | あそこ
+right (direction) | migi | 右
+left (direction) | hidari | 左
+above, up | ue | うえ
+below, down | shita | した
+in front of | mae | 前
+behind | ushiro | 後ろ
 
 # materials
 
-water | mizu
-ice | kōri
-earth, ground | tsuchi
+water | mizu | 水
+ice | kōri | 氷
+earth, ground | tsuchi | 土
 
 # society
 
-society | shakai
-economy | keizai
-company | kaisha
-meeting | kaigi
-school | gakkō
-store | mise
-factory | kōjō
-money | okane
-ticket | kippu
+society | shakai | 社会
+economy | keizai | 経済
+company | kaisha | 会社
+meeting | kaigi | 会議
+school | gakkō | 学校
+store | mise | 店
+factory | kōjō | 工場
+money | okane | お金
+ticket | kippu | 切符
 
 # man made objects
 
 # home
 
-desk | tsukue
-window | mado
-electricity | denki
+desk | tsukue | 机
+window | mado | 窓
+electricity | denki | 電気
 
 # tools
 
+bag | fukuro | 袋
+umbrella | kasa | 傘
+
 # stationery
 
-diary | nikki
-pencil | enpitsu
-eraser | keshigomu
-scissors | hasami
+diary | nikki | 日記
+pencil | enpitsu | 鉛筆
+eraser | keshigomu | 消しゴム
+scissors | hasami | ハサミ
 
 # clothes
 
-clothes | fuku
-shoes | kutsu
-glasses | megane
+clothes | fuku | 服
+shoes | kutsu | 靴
+glasses | megane | 眼鏡
 
 # transport 
 
-airplane | hikōki
-street | michi
-train | densha
-car | jidōsha
+railway | tetsudō | 鉄道
+airplane | hikōki | 飛行機
+street | michi | 道
+train | densha | 電車
+car | jidōsha | 自動車
+
+# language
+
+letter | tegami | 手紙
+english | eigo | 英語
+newspaper | shinbun | 新聞
+dictionary | jisho | 辞書
+
+# colors
+
+color | iro | 色
+red | aka | 赤
+yellow | kiiro | 黄色
+green | midori | 緑
+blue | ao | 青
+purple | murasaki | 紫
+white | shiro | 白
+black | kuro | 黒
+brown | chairo | 茶色
+grey | haiiro | 灰色
+
+# others
+
+music | ongaku | 音楽
+history | rekishi | 歴史
+geography | chiri | 地理
+physical education | taiiku | 体育
+information | jōhō | 情報
+study | benkyō | 勉強
+
+# numbers
+
+# zero | rei | レイ
+one | ichi | 一
+two | ni | 二
+three | san | 三
+four | yon | 四
+five | go | 五
+six | roku | 六
+seven | nana | 七
+eight | hachi | 八
+nine | kyū | 九
+ten | jū | 十
+hundred | hyaku | 百
 
 '''
 
 chinese1_vocabulary_text = '''
-dog | gǒu
-cat | māo
-horse | mǎ
-mouse | lǎoshǔ
-bird | niǎo
-cow | niú
-fish | yú
-man | nánrén
-woman | nǚrén
-red | hóng sè
-blue | lán sè
-green | lǜ sè
-yellow | huáng sè
-purple | zǐ sè
-university | dàxué
-student | xuéshēng
-morning | zǎoshàng
-night | yèwǎn
-yesterday | zuótiān
-today | jīntiān
-tomorrow | míngtiān
-spring | chūntiān
-summer | xiàtiān
-autumn | qiūtiān
-winter | dōngtiān
+dog | gǒu | 狗
+cat | māo | 猫
+horse | mǎ | 马
+mouse | lǎoshǔ | 老鼠
+bird | niǎo | 鸟
+cow | niú | 牛
+fish | yú | 鱼
+man | nánrén | 男人
+woman | nǚrén | 女人
+red | hóng sè | 红色
+blue | lán sè | 蓝色
+green | lǜ sè | 绿色
+yellow | huáng sè | 黄色
+purple | zǐ sè | 紫色
+university | dàxué | 大学
+student | xuéshēng | 学生
+morning | zǎoshàng | 早上
+night | yèwǎn | 夜晚
+yesterday | zuótiān | 昨天
+today | jīntiān | 今天
+tomorrow | míngtiān | 明天
+spring | chūntiān | 春天
+summer | xiàtiān | 夏天
+autumn | qiūtiān | 秋天
+winter | dōngtiān | 冬天
 '''
 
 korean1_vocabulary_text = '''
-dog | gae
-cat | goyang-i
-horse | mal
-mouse | jwi
-bird | sae
-cow | so
-fish | mulgogi
-man | namja
-woman | yeoja
-red | ppalgansaeg
-blue | puleunsaeg
-green | nogsaeg
-yellow | hwangsaeg
-purple | bolasaeg
-university | daehag
-student | hagsaeng
-morning | achim
-night | bam
-yesterday | eoje
-today | oneul
-tomorrow | naeil
-spring | bom
-summer | yeoleum
-autumn | ga-eul
-winter | gyeoul
+dog | gae | 개
+cat | goyang-i | 고양이
+horse | mal | 말
+mouse | jwi | 쥐
+bird | sae | 새
+cow | so | 소
+fish | mulgogi | 물고기
+man | namja | 남자
+woman | yeoja | 여자
+red | ppalgansaeg | 빨간색
+blue | puleunsaeg | 푸른색
+green | nogsaeg | 녹색
+yellow | hwangsaeg | 황색
+purple | bolasaeg | 보라색
+university | daehag | 대학
+student | hagsaeng | 학생
+morning | achim | 아침
+night | bam | 밤
+yesterday | eoje | 어제
+today | oneul | 오늘
+tomorrow | naeil | 내일
+spring | bom | 봄
+summer | yeoleum | 여름
+autumn | ga-eul | 가을
+winter | gyeoul | 겨울
 '''
 
 /*
@@ -459,6 +507,8 @@ purple | màu đỏ tía
 '''
 
 japanese_vocab_all = parse-vocab japanese_all_vocabulary_text
+
+console.log 'num japanese words: ' + japanese_vocab_all.length
 
 vietnamese_vocab_all = parse-vocab vietnamese_all_vocabulary_text
 

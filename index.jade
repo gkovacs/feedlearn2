@@ -17,7 +17,8 @@ html(lang='en')
     script(src='commonlib.js')
     script(src='flashcards.js')
     script(src='index.js')
-    audio(style='display: none' src='error.mp3')
+    //- audio(style='display: none' src='error.mp3')
+    audio#speechsynth(style='display: none' src='error.mp3')
     .bluebackground(style='background-color: white')
       #quizpage.mainpage(style='display: none')
         //- #scorebox(style='position: absolute; right: 5px; border-radius: 10px; width: 50px; height: 50px; background-color: blue')
@@ -28,12 +29,12 @@ html(lang='en')
           span#questionword
           span#questionwordaudio.glyphicon.glyphicon-volume-up(onclick='playSoundCurrentWord()' style='cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px')
         #answeroptions
-        button.btn.btn-default(onclick='showAnswers()' style='font-size: 20px; margin-top: 15px; width: 50%')
+        button#showanswersbutton.btn.btn-default(onclick='showAnswers()' style='font-size: 20px; margin-top: 15px; width: 100%')
           span.glyphicon.glyphicon-question-sign(style='margin-right: 7px; font-size: 18px')
           span Show Answers
-        button.btn.btn-default(onclick='gotoOptionPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
-          span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
-          span Options
+        //- button.btn.btn-default(onclick='gotoOptionPage()' style='font-size: 20px; margin-top: 15px; width: 50%')
+        //-   span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
+        //-   span Options
       #optionpage.mainpage(style='display: none')
         div(style='overflow: hidden')
           span.glyphicon.glyphicon-wrench(style='margin-right: 7px; font-size: 18px')
@@ -53,6 +54,11 @@ html(lang='en')
             option chinese1
             option korean1
             option vietnamese1
+        div(style='margin-top: 20px')
+          span(style='font-size: 20px; width: 50%') Display Romanizations:
+          select#scriptselect.form-control(onchange='changeScriptFormat()' style='width: auto; display; font-size: 20px; float: right; width: 50%')
+            option show romanized only
+            option show both scripts
         div(style='margin-top: 20px')
           span(style='font-size: 20px; width: 50%') Feed Insertion Format:
           select#formatselect.form-control(onchange='changeFeedInsertionFormat()' style='width: auto; display; font-size: 20px; float: right; width: 50%')

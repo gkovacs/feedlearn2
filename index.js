@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, firstNonNull, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, getUrlParameters, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -78,6 +78,8 @@
     elem));
   };
   root.currentWord = null;
+  root.curqAllwords = null;
+  root.curqLangname = null;
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;
     word = deepCopy(
@@ -93,18 +95,26 @@
     [word].concat(otherwords));
     langname = selectElem(
     ['English', current_language_name]);
-    return questionWithWords(allwords, langname);
+    root.curqAllwords = allwords;
+    root.curqLangname = langname;
+    return refreshQuestion();
     function fn$(elem){
       elem.correct = false;
     }
   };
+  out$.refreshQuestion = refreshQuestion = function(){
+    $('#showanswersbutton').attr('disabled', false);
+    return questionWithWords(root.curqAllwords, root.curqLangname);
+  };
   out$.playSound = playSound = function(word){
     var srcurl;
-    $('audio')[0].pause();
-    srcurl = 'http://translate.google.com/translate_tts?ie=UTF-8&q=' + word + '&tl=' + root.current_language_code;
-    $('audio').attr('src', srcurl);
-    $('audio')[0].currentTime = 0;
-    return $('audio')[0].play();
+    $('#speechsynth')[0].pause();
+    srcurl = 'http://speechsynth.herokuapp.com/speechsynth?' + $.param({
+      lang: root.current_language_code,
+      word: word
+    });
+    $('#speechsynth').attr('src', srcurl);
+    return $('#speechsynth')[0].play();
   };
   out$.playSoundCurrentWord = playSoundCurrentWord = function(){
     return playSound(root.currentWord.kanji);
@@ -117,10 +127,14 @@
     word = allwords[wordIdx];
     if (langname === 'English') {
       $('#questionmessage').html("What does this word mean");
-      $('#questionword').html("<b>" + word.romaji + "</b>");
+      if (root.scriptformat === 'show romanized only' || word.romaji === word.kanji) {
+        $('#questionword').html("<b>" + word.romaji + "</b>");
+      } else {
+        $('#questionword').html("<b>" + word.romaji + " (" + word.kanji + ")</b>");
+      }
       $('#questionwordaudio').show();
     } else {
-      $('#questionmessage').html("How would you say this in " + current_language_name + ":");
+      $('#questionmessage').html("How would you say this in " + current_language_name);
       $('#questionword').html("<b>" + word.english + "</b>");
       $('#questionwordaudio').hide();
     }
@@ -147,8 +161,10 @@
       optiondiv.append([worddiv, notediv]);
       if (langname === 'English') {
         worddiv.text(elem.english);
-      } else {
+      } else if (root.scriptformat === 'show romanized only' || word.romaji === word.kanji) {
         worddiv.text(elem.romaji);
+      } else {
+        worddiv.text(elem.romaji + ' (' + elem.kanji + ')');
       }
       outeroptiondiv.append(optiondiv);
       if (langname !== 'English') {
@@ -196,6 +212,8 @@
     $('#quizpage').show();
     if (root.currentWord == null) {
       newQuestion();
+    } else {
+      refreshQuestion();
     }
   };
   out$.gotoOptionPage = gotoOptionPage = function(){
@@ -204,6 +222,7 @@
     $('#langselect').val(root.current_flashcard_set);
     $('#formatselect').val($.cookie('format'));
     $('#fullnameinput').val($.cookie('fullname'));
+    $('#scriptselect').val($.cookie('scriptformat'));
   };
   out$.gotoChatPage = gotoChatPage = function(){
     $('.mainpage').hide();
@@ -236,19 +255,30 @@
     newfullname = $('#fullnameinput').val();
     setFullName(newfullname);
   };
+  out$.setScriptFormat = setScriptFormat = function(scriptformat){
+    $('#scriptselect').val(scriptformat);
+    $.cookie('scriptformat', scriptformat);
+    root.scriptformat = scriptformat;
+  };
+  out$.changeScriptFormat = changeScriptFormat = function(){
+    var scriptformat;
+    scriptformat = $('#scriptselect').val();
+    setScriptFormat(scriptformat);
+  };
   showAnswer = function(optiondiv){
     var langname, elem, notediv;
     langname = optiondiv.data('langname');
     elem = optiondiv.data('wordinfo');
     notediv = optiondiv.find('.answeroptionnote');
     if (langname === 'English') {
-      notediv.html(' = ' + '<b>' + elem.romaji + '</b>');
+      notediv.html(' = ' + elem.romaji);
     } else {
-      notediv.html(' = ' + '<b>' + elem.english + '</b>');
+      notediv.html(' = ' + elem.english);
     }
   };
   out$.showAnswers = showAnswers = function(){
     var i$, ref$, len$, option;
+    $('#showanswersbutton').attr('disabled', true);
     for (i$ = 0, len$ = (ref$ = $('.answeroption')).length; i$ < len$; ++i$) {
       option = ref$[i$];
       showAnswer($(option));
@@ -277,6 +307,7 @@
     setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'));
     setInsertionFormat(firstNonNull(param.format, param.condition, $.cookie('format'), 'interactive'));
     setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
+    setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
     return gotoPage(firstNonNull(param.page, 'quiz'));
   });
 }).call(this);
