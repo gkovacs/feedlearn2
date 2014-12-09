@@ -308,7 +308,6 @@
         return;
       } else if (condition === 'interactive') {
         console.log('interactive accessed');
-        return;
       }
     }
     return gotoPage(firstNonNull(param.page, 'quiz'));

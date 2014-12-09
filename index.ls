@@ -266,5 +266,4 @@ $(document).ready ->
       return
     else if condition == 'interactive'
       console.log 'interactive accessed'
-      return
   goto-page <| first-non-null param.page, 'quiz'
