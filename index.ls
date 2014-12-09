@@ -267,7 +267,7 @@ goto-page = (page) ->
 
 $(document).ready ->
   param = getUrlParameters()
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'
+  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'chinese1'
   set-insertion-format <| first-non-null param.format, param.condition, $.cookie('format'), 'interactive'
   set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
   set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'

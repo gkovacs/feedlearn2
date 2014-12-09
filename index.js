@@ -312,7 +312,7 @@
   $(document).ready(function(){
     var param, condition;
     param = getUrlParameters();
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'));
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'chinese1'));
     setInsertionFormat(firstNonNull(param.format, param.condition, $.cookie('format'), 'interactive'));
     setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
     setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
