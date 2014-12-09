@@ -26,4 +26,13 @@
   };
   app.get('/matching', get_matching);
   app.get('/matching.html', get_matching);
+  app.post('/addlog', function(req, res){
+    var username;
+    username = req.body.username;
+    if (username == null) {
+      res.send('need to provide username');
+      return;
+    }
+    return console.log(req.body);
+  });
 }).call(this);

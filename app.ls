@@ -39,3 +39,11 @@ get_matching = (req, res) ->
 app.get '/matching', get_matching
 app.get '/matching.html', get_matching
 
+# POST statements
+
+app.post '/addlog', (req, res) ->
+  username = req.body.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  console.log req.body

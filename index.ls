@@ -255,13 +255,16 @@ goto-page = (page) ->
 
 $(document).ready ->
   param = getUrlParameters()
+  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'
+  set-insertion-format <| first-non-null param.format, param.condition, $.cookie('format'), 'interactive'
+  set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
+  set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
   if param.facebook? and param.facebook != 'false' and param.facebook != false
     condition = $.cookie('format')
     if condition? and condition == 'link'
       window.location = '/control'
       return
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'
-  set-insertion-format <| first-non-null param.format, param.condition, $.cookie('format'), 'interactive'
-  set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
-  set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
+    else if condition == 'interactive'
+      console.log 'interactive accessed'
+      return
   goto-page <| first-non-null param.page, 'quiz'

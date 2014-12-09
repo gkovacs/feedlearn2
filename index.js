@@ -297,17 +297,20 @@
   $(document).ready(function(){
     var param, condition;
     param = getUrlParameters();
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'));
+    setInsertionFormat(firstNonNull(param.format, param.condition, $.cookie('format'), 'interactive'));
+    setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
+    setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
       condition = $.cookie('format');
       if (condition != null && condition === 'link') {
         window.location = '/control';
         return;
+      } else if (condition === 'interactive') {
+        console.log('interactive accessed');
+        return;
       }
     }
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'vietnamese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, $.cookie('format'), 'interactive'));
-    setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
-    setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
     return gotoPage(firstNonNull(param.page, 'quiz'));
   });
 }).call(this);
