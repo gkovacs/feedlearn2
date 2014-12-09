@@ -508,7 +508,7 @@ purple | màu đỏ tía
 
 japanese_vocab_all = parse-vocab japanese_all_vocabulary_text
 
-console.log 'num japanese words: ' + japanese_vocab_all.length
+# console.log 'num japanese words: ' + japanese_vocab_all.length
 
 vietnamese_vocab_all = parse-vocab vietnamese_all_vocabulary_text
 

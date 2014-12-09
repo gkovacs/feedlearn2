@@ -181,6 +181,10 @@ getUrlParameters = root.getUrlParameters = ->
 export goto-quiz-page = ->
   $('.mainpage').hide()
   $('#quizpage').show()
+  hideoption = $.cookie('hideoption')
+  if hideoption? and hideoption != 'false' and hideoption != false
+    $('#optionbutton').hide()
+    $('#showanswersbutton').css({margin-right: '0px', width: '100%'})
   if not root.current-word?
     new-question()
   else

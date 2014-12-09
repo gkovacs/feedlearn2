@@ -214,8 +214,17 @@
     return map;
   };
   out$.gotoQuizPage = gotoQuizPage = function(){
+    var hideoption;
     $('.mainpage').hide();
     $('#quizpage').show();
+    hideoption = $.cookie('hideoption');
+    if (hideoption != null && hideoption !== 'false' && hideoption !== false) {
+      $('#optionbutton').hide();
+      $('#showanswersbutton').css({
+        marginRight: '0px',
+        width: '100%'
+      });
+    }
     if (root.currentWord == null) {
       newQuestion();
     } else {
