@@ -58,35 +58,50 @@ export install-chrome-extension = ->
 export start-week1 = ->
   if not alert-prereqs ['pretest1']
     return
+  config-week1()
+  $('#startweek1button').attr 'disabled', true
+  post-start-event 'week1startstudy'
+
+export config-week1 = ->
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese1'
   #setvar 'format', 'link'
   setvar 'format', root.studyorder[0]
-  $('#startweek1button').attr 'disabled', true
-  post-start-event 'week1startstudy'
 
 export start-week2 = ->
   if not alert-prereqs ['pretest2']
     return
+  config-week2()
+  $('#startweek2button').attr 'disabled', true
+  post-start-event 'week2startstudy'
+
+export config-week2 = ->
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese2'
   #setvar 'format', 'interactive'
   setvar 'format', root.studyorder[1]
-  $('#startweek2button').attr 'disabled', true
-  post-start-event 'week2startstudy'
 
 export start-week3 = ->
   if not alert-prereqs ['pretest3']
     return
+  config-week3()
+  $('#startweek3button').attr 'disabled', true
+  post-start-event 'week3startstudy'
+
+export config-week3 = ->
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese3'
   #setvar 'format', 'none'
   setvar 'format', root.studyorder[2]
-  $('#startweek3button').attr 'disabled', true
-  post-start-event 'week3startstudy'
+
+export config-week = (num) ->
+  switch num
+  | 1 => config-week1()
+  | 2 => config-week2()
+  | 3 => config-week3()
 
 export full-name-submitted = ->
   newfullname = $('#fullnameinput').val().trim()
@@ -163,7 +178,7 @@ show-studyperiod-started = (num, timesamp) ->
   $('#startweek' + num + 'check').css 'visibility', 'visible'
   $('#startweek' + num + 'button').attr 'disabled', true
   message1 = $('<div>').text 'You started the week ' +  num + ' study period at ' + readable
-  message2 = $('<div>').text 'Please return one week later at ' + oneweeklater + ' to take post-test ' + num
+  message2 = $('<div>').text 'Please return one week later to take post-test ' + num + ' at ' + oneweeklater
   $('#startweek' + num + 'donedisplay').attr('color', 'green').html $('<div>').append([message1, message2])
 
 root.completed-parts = {}
@@ -184,6 +199,10 @@ refresh-completed-parts = ->
         show-posttest-done(num, events['posttest' + num])
       if events['week' + num + 'startstudy']?
         show-studyperiod-started(num, events['week' + num + 'startstudy'])
+    for num in [3,2,1]
+      if events['week' + num + 'startstudy']?
+        config-week(num)
+        break
 
 export have-full-name = ->
   setvar 'fullname', root.fullname

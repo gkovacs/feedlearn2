@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, startWeek2, startWeek3, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition;
   postJson = root.postJson, postStartEvent = root.postStartEvent;
@@ -63,34 +63,53 @@
     if (!alertPrereqs(['pretest1'])) {
       return;
     }
+    configWeek1();
+    $('#startweek1button').attr('disabled', true);
+    return postStartEvent('week1startstudy');
+  };
+  out$.configWeek1 = configWeek1 = function(){
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese1');
-    setvar('format', root.studyorder[0]);
-    $('#startweek1button').attr('disabled', true);
-    return postStartEvent('week1startstudy');
+    return setvar('format', root.studyorder[0]);
   };
   out$.startWeek2 = startWeek2 = function(){
     if (!alertPrereqs(['pretest2'])) {
       return;
     }
+    configWeek2();
+    $('#startweek2button').attr('disabled', true);
+    return postStartEvent('week2startstudy');
+  };
+  out$.configWeek2 = configWeek2 = function(){
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese2');
-    setvar('format', root.studyorder[1]);
-    $('#startweek2button').attr('disabled', true);
-    return postStartEvent('week2startstudy');
+    return setvar('format', root.studyorder[1]);
   };
   out$.startWeek3 = startWeek3 = function(){
     if (!alertPrereqs(['pretest3'])) {
       return;
     }
+    configWeek3();
+    $('#startweek3button').attr('disabled', true);
+    return postStartEvent('week3startstudy');
+  };
+  out$.configWeek3 = configWeek3 = function(){
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese3');
-    setvar('format', root.studyorder[2]);
-    $('#startweek3button').attr('disabled', true);
-    return postStartEvent('week3startstudy');
+    return setvar('format', root.studyorder[2]);
+  };
+  out$.configWeek = configWeek = function(num){
+    switch (num) {
+    case 1:
+      return configWeek1();
+    case 2:
+      return configWeek2();
+    case 3:
+      return configWeek3();
+    }
   };
   out$.fullNameSubmitted = fullNameSubmitted = function(){
     var newfullname;
@@ -188,7 +207,7 @@
     $('#startweek' + num + 'check').css('visibility', 'visible');
     $('#startweek' + num + 'button').attr('disabled', true);
     message1 = $('<div>').text('You started the week ' + num + ' study period at ' + readable);
-    message2 = $('<div>').text('Please return one week later at ' + oneweeklater + ' to take post-test ' + num);
+    message2 = $('<div>').text('Please return one week later to take post-test ' + num + ' at ' + oneweeklater);
     return $('#startweek' + num + 'donedisplay').attr('color', 'green').html($('<div>').append([message1, message2]));
   };
   root.completedParts = {};
@@ -214,7 +233,14 @@
           showPosttestDone(num, events['posttest' + num]);
         }
         if (events['week' + num + 'startstudy'] != null) {
-          results$.push(showStudyperiodStarted(num, events['week' + num + 'startstudy']));
+          showStudyperiodStarted(num, events['week' + num + 'startstudy']);
+        }
+      }
+      for (i$ = 0, len$ = (ref$ = [3, 2, 1]).length; i$ < len$; ++i$) {
+        num = ref$[i$];
+        if (events['week' + num + 'startstudy'] != null) {
+          configWeek(num);
+          break;
         }
       }
       return results$;
