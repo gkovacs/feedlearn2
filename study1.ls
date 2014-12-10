@@ -168,6 +168,7 @@ export have-full-name = ->
   , 2000
 
 $(document).ready ->
+  setvar 'hideoption', true
   param = getUrlParameters()
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname') #, 'Anonymous User'
   if root.fullname?

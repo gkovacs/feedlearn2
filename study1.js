@@ -200,6 +200,7 @@
   };
   $(document).ready(function(){
     var param;
+    setvar('hideoption', true);
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, getvar('fullname'));
     if (root.fullname != null) {
