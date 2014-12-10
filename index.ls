@@ -63,8 +63,8 @@ deep-copy = (elem) ->
 root.current-word = null
 root.curq-allwords = null
 root.curq-langname = null
-
-root.isfirstquestion = true
+root.qnum = 0
+root.numtries = 0
 
 export new-question = ->
   word = select-elem root.vocabulary |> deep-copy
@@ -77,8 +77,10 @@ export new-question = ->
   langname = ['English', current_language_name ]|> select-elem
   root.curq-allwords = allwords
   root.curq-langname = langname
-  addlog {type: 'newquestion', questiontype: langname, allwords: allwords, word: word, isfirstquestion: root.isfirstquestion}
-  root.isfirstquestion = false
+  addlog {type: 'newquestion', questiontype: root.curq-langname, allwords: root.curq-allwords, word: root.current-word, qnum: root.qnum}
+  root.qnum += 1
+  root.numtries = 0
+  root.showedanswers = false
   refresh-question()
 
 export refresh-question = ->
@@ -159,7 +161,8 @@ question-with-words = (allwords, langname) ->
       idx: idx
     })
     optiondiv.click ->
-      addlog {type: 'answered', iscorrect: elem.correct, wordclicked: elem, wordtested: word, allwords: allwords}
+      if not (!elem.correct and optiondiv.data('showed'))
+        addlog {type: 'answered', iscorrect: elem.correct, wordclicked: elem, questiontype: root.curq-langname, wordtested: word, allwords: allwords, qnum: root.qnum, numtries: root.numtries, showedanswers: root.showedanswers}
       if elem.correct
         optiondiv.remove-class 'btn-default'
         optiondiv.add-class 'btn-success'
@@ -171,7 +174,9 @@ question-with-words = (allwords, langname) ->
       else
         #optiondiv.remove-class 'btn-default'
         #optiondiv.add-class 'btn-danger'
-        show-answer optiondiv
+        if not optiondiv.data('showed')
+          show-answer optiondiv
+          root.numtries += 1
 
 export goto-quiz-page = ->
   $('.mainpage').hide()
@@ -239,6 +244,7 @@ export change-script-format = ->
   return
 
 show-answer = (optiondiv) ->
+  optiondiv.data 'showed', true
   langname = optiondiv.data 'langname'
   elem = optiondiv.data 'wordinfo'
   notediv = optiondiv.find '.answeroptionnote'
@@ -248,10 +254,14 @@ show-answer = (optiondiv) ->
     notediv.html(' = ' + elem.english)
   return
 
+root.showedanswers = false
+
 export show-answers = ->
   $('#showanswersbutton').attr('disabled', true)
   for option in $('.answeroption')
     show-answer $(option)
+  root.showedanswers = true
+  addlog {type: 'showanswers', wordtested: root.current-word, langname: root.curq-langname, allwords: root.curq-allwords, qnum: root.qnum, numtries: root.numtries}
   return
 
 goto-page = (page) ->

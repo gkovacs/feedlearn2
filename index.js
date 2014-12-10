@@ -81,7 +81,8 @@
   root.currentWord = null;
   root.curqAllwords = null;
   root.curqLangname = null;
-  root.isfirstquestion = true;
+  root.qnum = 0;
+  root.numtries = 0;
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;
     word = deepCopy(
@@ -101,12 +102,14 @@
     root.curqLangname = langname;
     addlog({
       type: 'newquestion',
-      questiontype: langname,
-      allwords: allwords,
-      word: word,
-      isfirstquestion: root.isfirstquestion
+      questiontype: root.curqLangname,
+      allwords: root.curqAllwords,
+      word: root.currentWord,
+      qnum: root.qnum
     });
-    root.isfirstquestion = false;
+    root.qnum += 1;
+    root.numtries = 0;
+    root.showedanswers = false;
     return refreshQuestion();
     function fn$(elem){
       elem.correct = false;
@@ -196,13 +199,19 @@
         idx: idx
       });
       return optiondiv.click(function(){
-        addlog({
-          type: 'answered',
-          iscorrect: elem.correct,
-          wordclicked: elem,
-          wordtested: word,
-          allwords: allwords
-        });
+        if (!(!elem.correct && optiondiv.data('showed'))) {
+          addlog({
+            type: 'answered',
+            iscorrect: elem.correct,
+            wordclicked: elem,
+            questiontype: root.curqLangname,
+            wordtested: word,
+            allwords: allwords,
+            qnum: root.qnum,
+            numtries: root.numtries,
+            showedanswers: root.showedanswers
+          });
+        }
         if (elem.correct) {
           optiondiv.removeClass('btn-default');
           optiondiv.addClass('btn-success');
@@ -212,7 +221,10 @@
             return newQuestion();
           }, 1300);
         } else {
-          return showAnswer(optiondiv);
+          if (!optiondiv.data('showed')) {
+            showAnswer(optiondiv);
+            return root.numtries += 1;
+          }
         }
       });
     }
@@ -286,6 +298,7 @@
   };
   showAnswer = function(optiondiv){
     var langname, elem, notediv;
+    optiondiv.data('showed', true);
     langname = optiondiv.data('langname');
     elem = optiondiv.data('wordinfo');
     notediv = optiondiv.find('.answeroptionnote');
@@ -295,6 +308,7 @@
       notediv.html(' = ' + elem.english);
     }
   };
+  root.showedanswers = false;
   out$.showAnswers = showAnswers = function(){
     var i$, ref$, len$, option;
     $('#showanswersbutton').attr('disabled', true);
@@ -302,6 +316,15 @@
       option = ref$[i$];
       showAnswer($(option));
     }
+    root.showedanswers = true;
+    addlog({
+      type: 'showanswers',
+      wordtested: root.currentWord,
+      langname: root.curqLangname,
+      allwords: root.curqAllwords,
+      qnum: root.qnum,
+      numtries: root.numtries
+    });
   };
   gotoPage = function(page){
     switch (page) {
