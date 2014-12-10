@@ -5,6 +5,7 @@ require! {
   \gulp-stylus
   \nib
   \gulp-shell
+  \gulp-jade
 }
 
 gulp.task 'ls', ->
@@ -21,10 +22,15 @@ gulp.task 'stylus', ->
   .pipe gulp-stylus({use: nib()})
   .pipe gulp.dest('.')
 
-gulp.task 'build', ['ls', 'lsjson', 'stylus']
+gulp.task 'jade', ->
+  return gulp.src '*.jade'
+  .pipe gulp-jade({pretty: true})
+  .pipe gulp.dest('.')
+
+gulp.task 'build', ['ls', 'lsjson', 'stylus', 'jade']
 
 gulp.task 'watch', ->
-  gulp.watch ['*.ls', '!gulpfile.ls', '*.stylus'], ['build']
+  gulp.watch ['*.ls', '!gulpfile.ls', '*.stylus', '*.jade'], ['build']
 
 gulp.task 'develop', ->
   gulp-nodemon {script: 'app.js', ext: 'jade ls stylus'}

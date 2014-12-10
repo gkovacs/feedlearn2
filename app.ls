@@ -64,25 +64,29 @@ console.log 'Listening on port ' + app.get('port')
 # GET statements
 
 get_index = (req, res) ->
-  res.render 'index', {}
+  #res.render 'index', {}
+  res.sendfile 'index.html'
 
 app.get '/', get_index
 app.get '/index.html', get_index
 
 get_control = (req, res) ->
-  res.render 'control', {}
+  #res.render 'control', {}
+  res.sendfile 'control.html'
 
 app.get '/control', get_control
 app.get '/control.html', get_control
 
 get_matching = (req, res) ->
-  res.render 'matching', {}
+  #res.render 'matching', {}
+  res.sendfile 'matching.html'
 
 app.get '/matching', get_matching
 app.get '/matching.html', get_matching
 
 get_study1 = (req, res) ->
-  res.render 'study1', {}
+  #res.render 'study1', {}
+  res.sendfile 'study1.html'
 
 app.get '/study1', get_study1
 app.get '/study1.html', get_study1
@@ -128,8 +132,8 @@ setvar = (varname, body, callback) ->
 
 getvardict = (varname, callback) ->
   getvar varname, (output) ->
-    console.log varname
-    console.log output
+    #console.log varname
+    #console.log output
     if output?
       callback JSON.parse(output)
     else
@@ -151,14 +155,52 @@ app.get '/getvar', (req, res) ->
   getvar varname, (varval) ->
     res.send varval
 
-app.get '/setvar', (req, res) ->
-  {varname, varval} = req.query
+postify = (f) -> # f takes data, res
+  return (req, res) -> f(req.body, res)
+
+getify = (f) -> # f takes data, res
+  return (req, res) -> f(req.query, res)
+
+setvar_express = (data, res) ->
+  {varname, varval} = data
   if not varname? or not varval?
     res.send 'need to provide varname and varval'
     return
   setvar varname, varval, ->
     res.send 'done'
     return
+
+app.get '/setvar_get', getify(setvar_express)
+
+app.get '/getuserevents', (req, res) ->
+  {username} = req.query
+  getvardict ('evts|' + username), (events) ->
+    #console.log 'getuserevents'
+    #console.log events
+    #console.log JSON.stringify events
+    res.send <| JSON.stringify events
+    return
+
+settimestampforuserevent_express = (data, res) ->
+  {username, eventname} = data
+  #console.log 'settimestampforuserevent_express'
+  #console.log username
+  #console.log eventname
+  if not username? or not eventname?
+    res.send 'need username and eventname'
+    return
+  getvardict ('evts|' + username), (events) ->
+    if events[eventname]?
+      res.send 'already set timestamp for event'
+      return
+    else
+      events[eventname] = Date.now()
+      setvardict ('evts|' + username), events, ->
+        res.send 'done'
+        return
+
+app.get '/settimestampforuserevent_get', getify(settimestampforuserevent_express)
+
 
 minidx = (list) ->
   minval = Infinity
@@ -180,7 +222,9 @@ app.get '/conditions', (req, res) ->
   getvardict 'conditions', (conditions) ->
     res.send <| JSON.stringify conditions
 
-app.get '/setconditionforuser', (req, res) ->
+
+
+app.get '/setconditionforuser_get', (req, res) ->
   {username, condition} = req.query
   if not username? or not condition?
     res.send 'need to provide username and condition'
@@ -236,6 +280,10 @@ app.get '/addlogfb_get', (req, res) ->
 #  req.
 
 # POST statements
+
+app.post '/setvar', postify(setvar_express)
+
+app.post '/settimestampforuserevent', postify(settimestampforuserevent_express)
 
 app.post '/addlog', (req, res) ->
   username = req.body.username

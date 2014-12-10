@@ -1,13 +1,14 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, addlog, selectChanged, getCurrentAnswers, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
-  addlog = root.addlog;
+  addlog = root.addlog, postStartEvent = root.postStartEvent;
   out$.selectChanged = selectChanged = function(){
     var selected_words, i$, ref$, len$, idx, x, curword, newidx, results$ = [];
+    $('#submitmessage').text('');
     selected_words = {};
     for (i$ = 0, len$ = (ref$ = $('select.engselect')).length; i$ < len$; ++i$) {
       idx = i$;
@@ -73,6 +74,23 @@
     }
     return output;
   };
+  getFlashcardSet = function(){
+    var param;
+    param = getUrlParameters();
+    return firstNonNull(param.vocab, 'japanese1');
+  };
+  getPretestNum = function(){
+    switch (getFlashcardSet()) {
+    case 'japanese1':
+      return 1;
+    case 'japanese2':
+      return 2;
+    case 'japanese3':
+      return 3;
+    default:
+      return 0;
+    }
+  };
   out$.submitAnswers = submitAnswers = function(){
     var param;
     param = getUrlParameters();
@@ -82,12 +100,12 @@
       lang: param.vocab,
       answers: getCurrentAnswers()
     });
-    return alert('Answers submitted!');
+    $('#submitmessage').css('color', 'green').text('Answers submitted!');
+    return postStartEvent(param.type + getPretestNum());
   };
   $(document).ready(function(){
-    var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
-    param = getUrlParameters();
-    flashcard_set = firstNonNull(param.vocab, 'japanese1');
+    var flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    flashcard_set = getFlashcardSet();
     flashcards = flashcard_sets[flashcard_set];
     selectOptions = ['--- select a word ---'].concat(sort(
     map(function(it){

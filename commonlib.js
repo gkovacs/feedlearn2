@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, setvar, getvar, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, firstNonNull, getUrlParameters, setvar, getvar, getUserEvents, getCondition, getUserName, printcb, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.firstNonNull = firstNonNull = function(){
     var args, i$, len$, x;
@@ -39,5 +39,38 @@
       }
     }
     return $.cookie(varname);
+  };
+  out$.getUserEvents = getUserEvents = function(callback){
+    return $.get('/getuserevents?' + $.param({
+      username: getUserName()
+    }), function(events){
+      return callback(JSON.parse(events));
+    });
+  };
+  out$.getCondition = getCondition = function(callback){
+    return $.get('/conditionforuser?' + $.param({
+      username: getUserName()
+    }), function(condition){
+      return callback(parseInt(condition));
+    });
+  };
+  out$.getUserName = getUserName = function(){
+    if (root.fullname != null) {
+      return root.fullname;
+    }
+    root.fullname = getvar('fullname');
+    if (root.fullname != null) {
+      return root.fullname;
+    }
+    return 'Anonymous User';
+  };
+  out$.printcb = printcb = function(){
+    var args, i$, len$, x, results$ = [];
+    args = slice$.call(arguments);
+    for (i$ = 0, len$ = args.length; i$ < len$; ++i$) {
+      x = args[i$];
+      results$.push(console.log(x));
+    }
+    return results$;
   };
 }).call(this);

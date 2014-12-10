@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, minidx, nextAssignedCondition;
+  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, settimestampforuserevent_express, minidx, nextAssignedCondition;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -55,22 +55,22 @@
   app.listen(app.get('port'), '0.0.0.0');
   console.log('Listening on port ' + app.get('port'));
   get_index = function(req, res){
-    return res.render('index', {});
+    return res.sendfile('index.html');
   };
   app.get('/', get_index);
   app.get('/index.html', get_index);
   get_control = function(req, res){
-    return res.render('control', {});
+    return res.sendfile('control.html');
   };
   app.get('/control', get_control);
   app.get('/control.html', get_control);
   get_matching = function(req, res){
-    return res.render('matching', {});
+    return res.sendfile('matching.html');
   };
   app.get('/matching', get_matching);
   app.get('/matching.html', get_matching);
   get_study1 = function(req, res){
-    return res.render('study1', {});
+    return res.sendfile('study1.html');
   };
   app.get('/study1', get_study1);
   app.get('/study1.html', get_study1);
@@ -120,8 +120,6 @@
   };
   getvardict = function(varname, callback){
     return getvar(varname, function(output){
-      console.log(varname);
-      console.log(output);
       if (output != null) {
         return callback(JSON.parse(output));
       } else {
@@ -143,9 +141,19 @@
       return res.send(varval);
     });
   });
-  app.get('/setvar', function(req, res){
-    var ref$, varname, varval;
-    ref$ = req.query, varname = ref$.varname, varval = ref$.varval;
+  postify = function(f){
+    return function(req, res){
+      return f(req.body, res);
+    };
+  };
+  getify = function(f){
+    return function(req, res){
+      return f(req.query, res);
+    };
+  };
+  setvar_express = function(data, res){
+    var varname, varval;
+    varname = data.varname, varval = data.varval;
     if (varname == null || varval == null) {
       res.send('need to provide varname and varval');
       return;
@@ -153,7 +161,34 @@
     return setvar(varname, varval, function(){
       res.send('done');
     });
+  };
+  app.get('/setvar_get', getify(setvar_express));
+  app.get('/getuserevents', function(req, res){
+    var username;
+    username = req.query.username;
+    return getvardict('evts|' + username, function(events){
+      res.send(JSON.stringify(events));
+    });
   });
+  settimestampforuserevent_express = function(data, res){
+    var username, eventname;
+    username = data.username, eventname = data.eventname;
+    if (username == null || eventname == null) {
+      res.send('need username and eventname');
+      return;
+    }
+    return getvardict('evts|' + username, function(events){
+      if (events[eventname] != null) {
+        res.send('already set timestamp for event');
+      } else {
+        events[eventname] = Date.now();
+        return setvardict('evts|' + username, events, function(){
+          res.send('done');
+        });
+      }
+    });
+  };
+  app.get('/settimestampforuserevent_get', getify(settimestampforuserevent_express));
   minidx = function(list){
     var minval, minidx, i$, len$, i, x;
     minval = Infinity;
@@ -184,7 +219,7 @@
       return res.send(JSON.stringify(conditions));
     });
   });
-  app.get('/setconditionforuser', function(req, res){
+  app.get('/setconditionforuser_get', function(req, res){
     var ref$, username, condition;
     ref$ = req.query, username = ref$.username, condition = ref$.condition;
     if (username == null || condition == null) {
@@ -252,6 +287,8 @@
       });
     });
   });
+  app.post('/setvar', postify(setvar_express));
+  app.post('/settimestampforuserevent', postify(settimestampforuserevent_express));
   app.post('/addlog', function(req, res){
     var username;
     username = req.body.username;

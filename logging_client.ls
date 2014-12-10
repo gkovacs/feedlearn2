@@ -1,5 +1,7 @@
 root = exports ? this
 
+{getvar, get-user-name} = root # commonlib.ls
+
 export post-json = (url, jsondata, callback) ->
   $.ajax {
     type: 'POST'
@@ -14,23 +16,8 @@ export post-json = (url, jsondata, callback) ->
     #dataType: 'json'
   }
 
-getvar = (varname) ->
-  if localStorage?
-    output = localStorage.getItem varname
-    if output?
-      return output
-  return $.cookie varname
-
-get-user-name = ->
-  if root.fullname?
-    return root.fullname
-  root.fullname = getvar 'fullname'
-  if root.fullname?
-    return root.fullname
-  return 'Anonymous User'
-
-#get-format = ->
-#
+export post-start-event = (eventname) ->
+  post-json '/settimestampforuserevent', {username: get-user-name(), eventname: eventname}
 
 export addlog = (logdata) ->
   data = $.extend {}, logdata
@@ -39,6 +26,7 @@ export addlog = (logdata) ->
   data.format = getvar('format')
   data.scriptformat = getvar('scriptformat')
   data.qcontext = root.qcontext
+  data.condition = getvar('condition')
   data.time = Date.now()
   data.timeloc = new Date().toString()
   post-json '/addlog', data

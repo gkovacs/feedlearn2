@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FeedLearn</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="index.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="bower_components/select2/select2.css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/jadeDom/jquery.jadedom.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/prelude-browser-min/index.js"></script>
+    <script src="bower_components/jquery-cookie/jquery.cookie.js"></script>
+    <script src="bower_components/async/lib/async.js"></script>
+    <script src="bower_components/select2/select2.min.js"></script>
+    <script src="commonlib.js"></script>
+    <script src="flashcards.js"></script>
+    <script src="logging_client.js"></script>
+    <script src="matching.js"></script>
+    <div style="padding-left: 10px"><span>Please enter the English meaning for each Japanese word below</span>
+      <div style="height: 20px"></div>
+    </div>
+    <datalist id="englishwords"></datalist>
+    <div>
+      <div id="foreignwordlist" style="padding-left: 10px; background-color: white; display: inline-block">
+        <div><span style="font-weight: bold; height: 30px">Japanese</span>
+          <div style="height: 10px"></div>
+        </div>
+      </div>
+      <div id="englishwordlist" style="position: fixed; padding-left: 30px; background-color: white; display: inline-block; vertical-align: top; padding-right: 10px">
+        <div><span style="font-weight: bold; height: 30px">Possible Options</span>
+          <div style="height: 10px"></div>
+        </div>
+      </div>
+      <div style="margin-left: 10px">
+        <div id="submitmessage" style="height: 20px"></div>
+        <button id="submitbutton" onclick="submitAnswers()" class="btn btn-lg btn-primary">Submit Answers</button>
+      </div>
+    </div>
+  </body>
+</html>

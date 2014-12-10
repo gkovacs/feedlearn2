@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FeedLearn</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="index.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/jadeDom/jquery.jadedom.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/prelude-browser-min/index.js"></script>
+    <script src="bower_components/jquery-cookie/jquery.cookie.js"></script>
+    <script src="bower_components/async/lib/async.js"></script>
+    <script src="commonlib.js"></script>
+    <script src="logging_client.js"></script>
+    <script src="study1.js"></script>
+    <div id="getfullname">
+      <div style="font-size: 20px">Welcome to the FeedLearn study! What is your full name?</div>
+      <input id="fullnameinput" onkeyup="console.log(event.keyCode); if (event.keyCode == 13) document.getElementById(&quot;fullnamesubmitbutton&quot;).click()" style="width: 350px; display: inline-block; margin-right: 10px" class="form-control">
+      <button id="fullnamesubmitbutton" style="width: 100px" onclick="fullNameSubmitted()" class="btn btn-primary">Submit</button>
+    </div>
+    <div id="accordion" role="tablist" aria-multiselectable="true" style="display: none" class="panel-group">
+      <div class="panel panel-default">
+        <div id="headingOne" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><span id="consentcheck" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Welcome to the FeedLearn study</span><span id="fullnamedisplay"> </span><span>! Please read and agree to this consent form</span></a></h4>
+        </div>
+        <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please read the following consent form and agree to it:</p>
+            <h4>Description</h4>
+            <p>You are invited to participate in a research study on seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream. You will be asked to take a vocabulary pretest in Japanese. Then, you will install our Chrome extension, and use it for 3 weeks. Our extension will occasionally display vocabulary flashcards while you view your Facebook news feed. It will not access your Facebook data or post anything on your wall. After each week, you will be sent another vocabulary test to see what you have learned that week.</p>
+            <h4>Time Involvement</h4>
+            <p> Your participation will take approximately 1 hour of time total, across a duration of 3 weeks.</p>
+            <h4>Risks and Benefits</h4>
+            <p>There are no foreseen risks associated with this study. The benefits are that you might learn a few new foreign-language words. We cannot and do not guarantee or promise that you will receive any benefits from this study.</p>
+            <h4>Payments</h4>
+            <p>You will receive a $25 Amazon gift card as payment for your participation.</p>
+            <h4>Subject's Rights</h4>
+            <p>If you have read this form and have decided to participate in this project, please understand your participation is voluntary and you have the right to withdraw your consent or discontinue participation at any time without penalty or loss of benefits to which you are otherwise entitled.  The alternative is not to participate.  You have the right to refuse to answer particular questions.  Your individual privacy will be maintained in all published and written data resulting from the study.</p>
+            <h4>Contact Information</h4><i>Questions</i>
+            <p>If you have any questions, concerns or complaints about this research, its procedures, risks and benefits, contact the Protocol Director, Geza Kovacs<span> </span><a href="mailto:geza@cs.stanford.edu">&lt;geza@cs.stanford.edu&gt;</a></p><i>Independent Contact</i>
+            <p>If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906.  You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306.</p>
+            <p><b>The extra copy of this consent form is for you to keep. Please print a copy of this page for your records.</b></p>
+            <div id="consentdisplay"></div>
+            <button id="consentbutton" onclick="consentAgreed()" class="btn btn-lg btn-primary">I agree to these conditions</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingTwo" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><span id="pretest1check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Pre-test for First Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseTwo" role="tabpanel" aria-labelledby="headingTwo" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.</p>
+            <div id="pretest1donedisplay"></div>
+            <button id="pretest1button" onclick="openPretest1()" class="btn btn-lg btn-primary">Take the pre-test for Week 1 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingThree" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><span id="extensioninstalledcheck" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Install Chrome Extension</span></a></h4>
+        </div>
+        <div id="collapseThree" role="tabpanel" aria-labelledby="headingThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.</p>
+            <button onclick="installChromeExtension()" class="btn btn-lg btn-primary">Install FeedLearn Chrome Extension</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingFour" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour"><span id="startweek1check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Study First Week Vocabulary (for 7 days)</span></a></h4>
+        </div>
+        <div id="collapseFour" role="tabpanel" aria-labelledby="headingThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p id="week1desc">WEEK1</p>
+            <p>Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.</p>
+            <div id="startweek1donedisplay"></div>
+            <button id="startweek1button" onclick="startWeek1()" class="btn btn-lg btn-primary">Start Week 1 Study Period</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingFive" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive"><span id="posttest1check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Post-test for First Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseFive" role="tabpanel" aria-labelledby="headingFive" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a post-test on the 50 words you studied during the first week.</p>
+            <div id="posttest1donedisplay"></div>
+            <button id="posttest1button" onclick="openPosttest1()" class="btn btn-lg btn-primary">Take the post-test for Week 1 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingSix" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix"><span id="pretest2check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Pre-test for Second Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseSix" role="tabpanel" aria-labelledby="headingSix" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.</p>
+            <div id="pretest2donedisplay"></div>
+            <button id="pretest2button" onclick="openPretest2()" class="btn btn-lg btn-primary">Take the pre-test for Week 2 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingSeven" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven"><span id="startweek2check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Study Second Week Vocabulary (for 7 days)</span></a></h4>
+        </div>
+        <div id="collapseSeven" role="tabpanel" aria-labelledby="headingSeven" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p id="week2desc">WEEK2</p>
+            <p>Click the button below to automatically configure the chrome extension and start the Week 2 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.</p>
+            <div id="startweek2donedisplay"></div>
+            <button id="startweek2button" onclick="startWeek2()" class="btn btn-lg btn-primary">Start Week 2 Study Period</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingEight" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight"><span id="posttest2check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Post-test for Second Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseEight" role="tabpanel" aria-labelledby="headingEight" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a post-test on the 50 words you studied during the second week.</p>
+            <div id="posttest2donedisplay"></div>
+            <button id="posttest2button" onclick="openPosttest2()" class="btn btn-lg btn-primary">Take the post-test for Week 2 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingNine" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine"><span id="pretest3check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Pre-test for Third Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseNine" role="tabpanel" aria-labelledby="headingNine" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.</p>
+            <div id="pretest3donedisplay"></div>
+            <button id="pretest3button" onclick="openPretest3()" class="btn btn-lg btn-primary">Take the pre-test for Week 3 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingTen" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen"><span id="startweek3check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Study Third Week Vocabulary (for 7 days)</span></a></h4>
+        </div>
+        <div id="collapseTen" role="tabpanel" aria-labelledby="headingTen" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p id="week3desc">WEEK3</p>
+            <p>Click the button below to automatically configure the chrome extension and start the Week 3 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.</p>
+            <div id="startweek3donedisplay"></div>
+            <button id="startweek3button" onclick="startWeek3()" class="btn btn-lg btn-primary">Start Week 3 Study Period</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div id="headingEleven" role="tab" class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven"><span id="posttest3check" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Post-test for Third Week Vocabulary (50 Japanese words)</span></a></h4>
+        </div>
+        <div id="collapseEleven" role="tabpanel" aria-labelledby="headingEleven" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Please follow this link to take a post-test on the 50 words you studied during the second week.</p>
+            <div id="posttest3donedisplay"></div>
+            <button id="posttest3button" onclick="openPosttest3()" class="btn btn-lg btn-primary">Take the post-test for Week 3 Japanese Vocabulary</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

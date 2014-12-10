@@ -29,3 +29,22 @@ export getvar = (varname) ->
       return output
   return $.cookie varname
 
+export get-user-events = (callback) ->
+  $.get '/getuserevents?' + $.param({username: get-user-name()}), (events) ->
+    callback <| JSON.parse events
+
+export get-condition = (callback) ->
+  $.get '/conditionforuser?' + $.param({username: get-user-name()}), (condition) ->
+    callback <| parseInt condition
+
+export get-user-name = ->
+  if root.fullname?
+    return root.fullname
+  root.fullname = getvar 'fullname'
+  if root.fullname?
+    return root.fullname
+  return 'Anonymous User'
+
+export printcb = (...args) ->
+  for x in args
+    console.log x

@@ -6,10 +6,11 @@ J = $.jade
 
 {first-non-null, getUrlParameters} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
-{addlog} = root # logging_client.ls
+{addlog, post-start-event} = root # logging_client.ls
 
 export select-changed = ->
   #console.log 'select changed'
+  $('#submitmessage').text ''
   selected_words = {}
   for x,idx in $('select.engselect')
     #console.log $(x).val().trim()
@@ -44,14 +45,26 @@ export getCurrentAnswers = ->
     output.push {myanswer, iscorrect, english, romaji, kanji}
   return output
 
+get-flashcard-set = ->
+  param = getUrlParameters()
+  return first-non-null param.vocab, 'japanese1'
+
+get-pretest-num = ->
+  switch get-flashcard-set()
+  | 'japanese1' => 1
+  | 'japanese2' => 2
+  | 'japanese3' => 3
+  | _ => 0
+
 export submit-answers = ->
   param = getUrlParameters()
   addlog {type: 'vocabquiz', quiztype: param.type, lang: param.vocab, answers: getCurrentAnswers()}
-  alert 'Answers submitted!'
+  #alert 'Answers submitted!'
+  $('#submitmessage').css('color', 'green').text 'Answers submitted!'
+  post-start-event(param.type + get-pretest-num())
 
 $(document).ready ->
-  param = getUrlParameters()
-  flashcard_set = first-non-null param.vocab, 'japanese1'
+  flashcard_set = get-flashcard-set()
   flashcards = flashcard_sets[flashcard_set]
   select-options = [ '--- select a word ---' ].concat <| map (.english), flashcards |> sort
   for wordinfo,idx in sort-by (.romaji), flashcards

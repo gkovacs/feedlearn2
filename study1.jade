@@ -17,17 +17,26 @@ html(lang='en')
     script(src='commonlib.js')
     script(src='logging_client.js')
     script(src='study1.js')
-    #accordion.panel-group(role='tablist' aria-multiselectable='true')
+
+
+    #getfullname
+      div(style='font-size: 20px') Welcome to the FeedLearn study! What is your full name?
+      input#fullnameinput.form-control(onkeyup='console.log(event.keyCode); if (event.keyCode == 13) document.getElementById("fullnamesubmitbutton").click()' style='width: 350px; display: inline-block; margin-right: 10px')
+      button#fullnamesubmitbutton.btn.btn-primary(style='width: 100px' onclick='fullNameSubmitted()') Submit
+
+    
+    #accordion.panel-group(role='tablist' aria-multiselectable='true' style='display: none')
 
 
       .panel.panel-default
         #headingOne.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseOne' aria-expanded='true' aria-controls='collapseOne')
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseOne' aria-expanded='false' aria-controls='collapseOne')
+              span#consentcheck.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
               span Welcome to the FeedLearn study
               span#fullnamedisplay 
               span ! Please read and agree to this consent form
-        #collapseOne.panel-collapse.collapse.in(role='tabpanel' aria-labelledby='headingOne')
+        #collapseOne.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingOne')
           .panel-body
             p Please read the following consent form and agree to it:
             h4 Description
@@ -49,25 +58,29 @@ html(lang='en')
             p If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906.  You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306.
             p
               b The extra copy of this consent form is for you to keep. Please print a copy of this page for your records.
-            button.btn.btn-lg.btn-primary(onclick='consentAgreed()') I agree to these conditions
+            #consentdisplay
+            button#consentbutton.btn.btn-lg.btn-primary(onclick='consentAgreed()') I agree to these conditions
 
 
       .panel.panel-default
         #headingTwo.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo').
-              Pre-test for First Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
+              span#pretest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Pre-test for First Week Vocabulary (50 Japanese words)
         #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
           .panel-body
             p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
-            button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
+            #pretest1donedisplay
+            button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
 
 
       .panel.panel-default
         #headingThree.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseThree' aria-expanded='false' aria-controls='collapseThree').
-              Install Chrome Extension
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseThree' aria-expanded='false' aria-controls='collapseThree')
+              span#extensioninstalledcheck.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Install Chrome Extension
         #collapseThree.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
           .panel-body
             p Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
@@ -77,91 +90,107 @@ html(lang='en')
       .panel.panel-default
         #headingFour.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFour' aria-expanded='false' aria-controls='collapseFour').
-              Study First Week Vocabulary (for 7 days)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFour' aria-expanded='false' aria-controls='collapseFour')
+              span#startweek1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Study First Week Vocabulary (for 7 days)
         #collapseFour.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
           .panel-body
-            p During the first week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.
+            p#week1desc WEEK1
             p Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            #startweek1donedisplay
             button#startweek1button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
 
 
       .panel.panel-default
         #headingFive.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFive' aria-expanded='false' aria-controls='collapseFive').
-              Post-test for First Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseFive' aria-expanded='false' aria-controls='collapseFive')
+              span#posttest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Post-test for First Week Vocabulary (50 Japanese words)
         #collapseFive.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingFive')
           .panel-body
             p Please follow this link to take a post-test on the 50 words you studied during the first week.
-            button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the post-test for Week 1 Japanese Vocabulary
+            #posttest1donedisplay
+            button#posttest1button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the post-test for Week 1 Japanese Vocabulary
 
 
       .panel.panel-default
         #headingSix.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseSix' aria-expanded='false' aria-controls='collapseSix').
-              Pre-test for Second Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseSix' aria-expanded='false' aria-controls='collapseSix')
+              span#pretest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Pre-test for Second Week Vocabulary (50 Japanese words)
         #collapseSix.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSix')
           .panel-body
             p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
-            button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Japanese Vocabulary
+            #pretest2donedisplay
+            button#pretest2button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Japanese Vocabulary
 
 
       .panel.panel-default
         #headingSeven.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseSeven' aria-expanded='false' aria-controls='collapseSeven').
-              Study Second Week Vocabulary (for 7 days)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseSeven' aria-expanded='false' aria-controls='collapseSeven')
+              span#startweek2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Study Second Week Vocabulary (for 7 days)
         #collapseSeven.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSeven')
           .panel-body
-            p During the second week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.
+            p#week2desc WEEK2
             p Click the button below to automatically configure the chrome extension and start the Week 2 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            #startweek2donedisplay
             button#startweek2button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
 
 
       .panel.panel-default
         #headingEight.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseEight' aria-expanded='false' aria-controls='collapseEight').
-              Post-test for Second Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseEight' aria-expanded='false' aria-controls='collapseEight')
+              span#posttest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Post-test for Second Week Vocabulary (50 Japanese words)
         #collapseEight.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingEight')
           .panel-body
             p Please follow this link to take a post-test on the 50 words you studied during the second week.
-            button.btn.btn-lg.btn-primary(onclick='openPosttest2()') Take the post-test for Week 2 Japanese Vocabulary
+            #posttest2donedisplay
+            button#posttest2button.btn.btn-lg.btn-primary(onclick='openPosttest2()') Take the post-test for Week 2 Japanese Vocabulary
 
 
       .panel.panel-default
         #headingNine.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseNine' aria-expanded='false' aria-controls='collapseNine').
-              Pre-test for Third Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseNine' aria-expanded='false' aria-controls='collapseNine')
+              span#pretest3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Pre-test for Third Week Vocabulary (50 Japanese words)
         #collapseNine.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingNine')
           .panel-body
             p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
-            button.btn.btn-lg.btn-primary(onclick='openPretest3()') Take the pre-test for Week 3 Japanese Vocabulary
+            #pretest3donedisplay
+            button#pretest3button.btn.btn-lg.btn-primary(onclick='openPretest3()') Take the pre-test for Week 3 Japanese Vocabulary
 
 
       .panel.panel-default
         #headingTen.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTen' aria-expanded='false' aria-controls='collapseTen').
-              Study Third Week Vocabulary (for 7 days)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTen' aria-expanded='false' aria-controls='collapseTen')
+              span#startweek3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Study Third Week Vocabulary (for 7 days)
         #collapseTen.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTen')
           .panel-body
-            p During the third week, you will not be shown quizzes in your Facebook feeed, but will rather be sent a daily email reminder asking you to visit the website.
+            p#week3desc WEEK3
             p Click the button below to automatically configure the chrome extension and start the Week 3 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            #startweek3donedisplay
             button#startweek3button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
 
 
       .panel.panel-default
         #headingEleven.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseEleven' aria-expanded='false' aria-controls='collapseEleven').
-              Post-test for Third Week Vocabulary (50 Japanese words)
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseEleven' aria-expanded='false' aria-controls='collapseEleven')
+              span#posttest3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Post-test for Third Week Vocabulary (50 Japanese words)
         #collapseEleven.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingEleven')
           .panel-body
             p Please follow this link to take a post-test on the 50 words you studied during the second week.
-            button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Japanese Vocabulary
+            #posttest3donedisplay
+            button#posttest3button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Japanese Vocabulary
 
 

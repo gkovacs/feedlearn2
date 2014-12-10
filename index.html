@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FeedLearn</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="index.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/jadeDom/jquery.jadedom.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/prelude-browser-min/index.js"></script>
+    <script src="bower_components/jquery-cookie/jquery.cookie.js"></script>
+    <script src="bower_components/async/lib/async.js"></script>
+    <script src="commonlib.js"></script>
+    <script src="flashcards.js"></script>
+    <script src="logging_client.js"></script>
+    <script src="index.js"></script>
+    <audio id="speechsynth" style="display: none" src="error.mp3"></audio>
+    <div style="background-color: white" class="bluebackground">
+      <div id="quizpage" style="display: none" class="mainpage">
+        <div style="padding-top: 12px; position: absolute"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png"></div>
+        <div id="questionmessage" style="font-size: 18px; text-align: center"></div>
+        <div id="questionworddiv" style="font-size: 30px; text-align: center"><span id="questionword"></span><span id="questionwordaudio" onclick="playSoundCurrentWord()" style="cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px" class="glyphicon glyphicon-volume-up"></span></div>
+        <div id="answeroptions"></div>
+        <button id="showanswersbutton" onclick="showAnswers()" style="font-size: 20px; margin-top: 15px; width: 48.5%; margin-right: 1%" class="btn btn-primary"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-question-sign"></span><span>Show Answers</span></button>
+        <button id="optionbutton" onclick="gotoOptionPage()" style="font-size: 20px; margin-top: 15px; width: 48.5%; margin-left: 1%" class="btn btn-primary"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-wrench"></span><span>Options</span></button>
+      </div>
+      <div id="optionpage" style="display: none" class="mainpage">
+        <div style="overflow: hidden"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-wrench"></span><span style="font-size: 26px">Options</span>
+          <button onclick="gotoQuizPage()" style="font-size: 20px; float: right; width: 50%" class="btn btn-primary"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-backward"></span><span>Back to Quiz</span></button>
+        </div>
+        <div style="margin-top: 20px"><span style="font-size: 20px; width: 50%">Your Full Name:</span>
+          <input id="fullnameinput" onkeyup="changeFullName()" style="width: auto; display; font-size: 20px; float: right; width: 50%" class="form-control">
+        </div>
+        <div style="margin-top: 20px"><span style="font-size: 20px; width: 50%">Currently Studying:</span>
+          <select id="langselect" onchange="changeLang()" style="width: auto; display; font-size: 20px; float: right; width: 50%" class="form-control">
+            <option>japanese1</option>
+            <option>japanese2</option>
+            <option>japanese3</option>
+            <option>chinese1</option>
+            <option>korean1</option>
+            <option>vietnamese1</option>
+          </select>
+        </div>
+        <div style="margin-top: 20px"><span style="font-size: 20px; width: 50%">Display Romanizations:</span>
+          <select id="scriptselect" onchange="changeScriptFormat()" style="width: auto; display; font-size: 20px; float: right; width: 50%" class="form-control">
+            <option>show romanized only</option>
+            <option>show both scripts</option>
+          </select>
+        </div>
+        <div style="margin-top: 20px"><span style="font-size: 20px; width: 50%">Feed Insertion Format:</span>
+          <select id="formatselect" onchange="changeFeedInsertionFormat()" style="width: auto; display; font-size: 20px; float: right; width: 50%" class="form-control">
+            <option>interactive</option>
+            <option>link</option>
+            <option>none</option>
+          </select>
+        </div>
+      </div>
+      <div id="chatpage" style="display: none" class="mainpage">
+        <div style="overflow: hidden"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-question-sign"></span><span style="font-size: 26px">Answer + Discuss</span>
+          <button onclick="gotoQuizPage()" style="font-size: 20px; float: right; width: 50%" class="btn btn-primary"><span style="margin-right: 7px; font-size: 18px" class="glyphicon glyphicon-backward"></span><span>Back to Quiz</span></button>
+        </div>
+        <div id="currentanswer" style="font-size: 30px; text-align: center; margin-top: 20px"></div>
+        <div style="margin-top: 20px">TODO discussion forum goes here</div>
+      </div>
+    </div>
+  </body>
+</html>

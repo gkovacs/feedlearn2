@@ -8,6 +8,7 @@
     "body-parser": "^1.9.3",
     "express": "^4.10.4",
     "gulp": "^3.8.10",
+    "gulp-jade": "^0.10.0",
     "gulp-livescript": "^2.3.0",
     "gulp-nodemon": "^1.0.4",
     "gulp-shell": "^0.2.11",
