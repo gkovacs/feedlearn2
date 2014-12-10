@@ -222,14 +222,12 @@ app.get '/conditions', (req, res) ->
   getvardict 'conditions', (conditions) ->
     res.send <| JSON.stringify conditions
 
-
-
 app.get '/setconditionforuser_get', (req, res) ->
   {username, condition} = req.query
   if not username? or not condition?
     res.send 'need to provide username and condition'
     return
-  getvar 'conditions', (conditions) ->
+  getvardict 'conditions', (conditions) ->
     conditions[username] = condition
     setvardict 'conditions', conditions, ->
       res.send condition
