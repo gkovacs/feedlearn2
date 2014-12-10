@@ -46,7 +46,7 @@ export getCurrentAnswers = ->
 
 export submit-answers = ->
   param = getUrlParameters()
-  addlog {type: 'vocabquiz', vocabquiz: param.type, answers: getCurrentAnswers()}
+  addlog {type: 'vocabquiz', quiztype: param.type, lang: param.vocab, answers: getCurrentAnswers()}
   alert 'Answers submitted!'
 
 $(document).ready ->
@@ -66,3 +66,4 @@ $(document).ready ->
     $('#englishwordlist').append <| J('div.engwordopt').css({margin-top: '0px', display: 'inline-block', vertical-align: 'top', margin-right: '25px', margin-bottom: '20px', background-color: 'lightblue', border-radius: '10px', padding-left: '5px', padding-right: '5px', padding-top: '5px', padding-bottom: '5px'}).append J('span').text(wordinfo.english)
     $('#englishwords').append <| J('option').attr('value', wordinfo.english)
   $('.engselect').select2()
+  addlog {type: 'vocabquizvisited', quiztype: param.type, lang: param.vocab}

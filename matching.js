@@ -78,7 +78,8 @@
     param = getUrlParameters();
     addlog({
       type: 'vocabquiz',
-      vocabquiz: param.type,
+      quiztype: param.type,
+      lang: param.vocab,
       answers: getCurrentAnswers()
     });
     return alert('Answers submitted!');
@@ -131,7 +132,12 @@
       }).append(J('span').text(wordinfo.english)));
       $('#englishwords').append(J('option').attr('value', wordinfo.english));
     }
-    return $('.engselect').select2();
+    $('.engselect').select2();
+    return addlog({
+      type: 'vocabquizvisited',
+      quiztype: param.type,
+      lang: param.vocab
+    });
     function fn$(it){
       return it.romaji;
     }

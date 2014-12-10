@@ -52,6 +52,9 @@
     var param;
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, $.cookie('fullname'), 'Anonymous User');
-    return $('#fullnamedisplay').text(' ' + root.fullname);
+    $('#fullnamedisplay').text(' ' + root.fullname);
+    return addlog({
+      type: 'study1visit'
+    });
   });
 }).call(this);

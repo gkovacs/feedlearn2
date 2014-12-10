@@ -52,4 +52,5 @@ $(document).ready ->
   param = getUrlParameters()
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name, $.cookie('fullname'), 'Anonymous User'
   $('#fullnamedisplay').text  ' ' + root.fullname
+  addlog {type: 'study1visit'}
   #console.log 'study1'
