@@ -1,6 +1,7 @@
 root = exports ? this
 
 export openfeedlearnlink = ->
+  addlog {type: 'linkopen', linkopen: 'link'}
   window.open('https://feedlearn.herokuapp.com')
 
 language_names = {

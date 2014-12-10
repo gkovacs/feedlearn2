@@ -2,6 +2,10 @@
   var root, openfeedlearnlink, language_names, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.openfeedlearnlink = openfeedlearnlink = function(){
+    addlog({
+      type: 'linkopen',
+      linkopen: 'link'
+    });
     return window.open('https://feedlearn.herokuapp.com');
   };
   language_names = {

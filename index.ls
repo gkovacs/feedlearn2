@@ -5,6 +5,7 @@ J = $.jade
 {find-index} = require \prelude-ls
 
 {first-non-null, getUrlParameters} = root # commonlib.ls
+{addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
 set-flashcard-set = (new_flashcard_set) ->
@@ -262,9 +263,10 @@ $(document).ready ->
   set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
   if param.facebook? and param.facebook != 'false' and param.facebook != false
     condition = $.cookie('format')
+    addlog {type: 'feedinsert'}
     if condition? and condition == 'link'
       window.location = '/control'
       return
-    else if condition == 'interactive'
-      console.log 'interactive accessed'
+  else
+    addlog {type: 'webvisit'}
   goto-page <| first-non-null param.page, 'quiz'
