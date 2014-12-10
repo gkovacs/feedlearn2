@@ -13,11 +13,12 @@ if not mongourl?
   mongourl = 'mongodb://localhost:27017/default'
 
 get-mongo-db = (callback) ->
-  MongoClient.connect mongourl, {
-    auto_reconnect: true
-    poolSize: 20
-    socketOtions: {keepAlive: 1}
-  }, (err, db) ->
+  #MongoClient.connect mongourl, {
+  #  auto_reconnect: true
+  #  poolSize: 20
+  #  socketOtions: {keepAlive: 1}
+  #}, (err, db) ->
+  MongoClient.connect mongourl, (err, db) ->
     if err
       console.log 'error getting mongodb'
     else

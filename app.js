@@ -10,13 +10,7 @@
     mongourl = 'mongodb://localhost:27017/default';
   }
   getMongoDb = function(callback){
-    return MongoClient.connect(mongourl, {
-      auto_reconnect: true,
-      poolSize: 20,
-      socketOtions: {
-        keepAlive: 1
-      }
-    }, function(err, db){
+    return MongoClient.connect(mongourl, function(err, db){
       if (err) {
         return console.log('error getting mongodb');
       } else {
