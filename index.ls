@@ -64,6 +64,8 @@ root.current-word = null
 root.curq-allwords = null
 root.curq-langname = null
 
+root.isfirstquestion = true
+
 export new-question = ->
   word = select-elem root.vocabulary |> deep-copy
   word.correct = true
@@ -75,6 +77,8 @@ export new-question = ->
   langname = ['English', current_language_name ]|> select-elem
   root.curq-allwords = allwords
   root.curq-langname = langname
+  addlog {type: 'newquestion', questiontype: langname, allwords: allwords, word: word, isfirstquestion: root.isfirstquestion}
+  root.isfirstquestion = false
   refresh-question()
 
 export refresh-question = ->

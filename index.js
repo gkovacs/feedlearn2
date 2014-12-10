@@ -81,6 +81,7 @@
   root.currentWord = null;
   root.curqAllwords = null;
   root.curqLangname = null;
+  root.isfirstquestion = true;
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;
     word = deepCopy(
@@ -98,6 +99,14 @@
     ['English', current_language_name]);
     root.curqAllwords = allwords;
     root.curqLangname = langname;
+    addlog({
+      type: 'newquestion',
+      questiontype: langname,
+      allwords: allwords,
+      word: word,
+      isfirstquestion: root.isfirstquestion
+    });
+    root.isfirstquestion = false;
     return refreshQuestion();
     function fn$(elem){
       elem.correct = false;

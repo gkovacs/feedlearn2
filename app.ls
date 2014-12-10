@@ -7,7 +7,7 @@ require! {
 # mongo
 
 mongo = require 'mongodb'
-{MongoClient} = mongo
+{MongoClient, Grid} = mongo
 mongourl = process.env.MONGOHQ_URL
 if not mongourl?
   mongourl = 'mongodb://localhost:27017/default'
@@ -23,6 +23,10 @@ get-mongo-db = (callback) ->
       console.log 'error getting mongodb'
     else
       callback db
+
+get-grid = (callback) ->
+  get-mongo-db (db) ->
+    callback Grid(db)
 
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
@@ -74,6 +78,21 @@ app.get '/viewlog', (req, res) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
 
+getvar = (varname, callback) ->
+  get-grid (grid) ->
+    key = 'gvr|' + varname
+    grid.get key, (err, res) ->
+      calback res
+
+setvar = (varname, body, callback) ->
+  get-grid (grid) ->
+    key = 'gvr|' + varname
+    grid.put body, {_id: key}, (err, res) ->
+      callback(res)
+
+#app.get '/getvar', (req, res) ->
+#  req.
+
 # POST statements
 
 app.post '/addlog', (req, res) ->
@@ -88,3 +107,5 @@ app.post '/addlog', (req, res) ->
         res.send <| 'error upon insertion: ' + JSON.stringify(err)
       else
         res.send <| 'successful insertion'
+
+

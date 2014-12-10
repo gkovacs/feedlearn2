@@ -1,10 +1,10 @@
 (function(){
-  var express, path, bodyParser, mongo, MongoClient, mongourl, getMongoDb, getLogsCollection, app, get_index, get_control, get_matching, get_study1;
+  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, getMongoDb, getGrid, getLogsCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
   mongo = require('mongodb');
-  MongoClient = mongo.MongoClient;
+  MongoClient = mongo.MongoClient, Grid = mongo.Grid;
   mongourl = process.env.MONGOHQ_URL;
   if (mongourl == null) {
     mongourl = 'mongodb://localhost:27017/default';
@@ -16,6 +16,11 @@
       } else {
         return callback(db);
       }
+    });
+  };
+  getGrid = function(callback){
+    return getMongoDb(function(db){
+      return callback(Grid(db));
     });
   };
   getLogsCollection = function(callback){
@@ -58,6 +63,26 @@
       });
     });
   });
+  getvar = function(varname, callback){
+    return getGrid(function(grid){
+      var key;
+      key = 'gvr|' + varname;
+      return grid.get(key, function(err, res){
+        return calback(res);
+      });
+    });
+  };
+  setvar = function(varname, body, callback){
+    return getGrid(function(grid){
+      var key;
+      key = 'gvr|' + varname;
+      return grid.put(body, {
+        _id: key
+      }, function(err, res){
+        return callback(res);
+      });
+    });
+  };
   app.post('/addlog', function(req, res){
     var username;
     username = req.body.username;
