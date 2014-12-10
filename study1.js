@@ -254,16 +254,16 @@
     addlog({
       type: 'study1visit'
     });
-    getCondition(function(condition){
+    return getCondition(function(condition){
       root.condition = condition;
       setvar('condition', root.condition);
       root.studyorder = condition_to_order[condition];
-      return setStudyorder(root.studyorder);
+      setStudyorder(root.studyorder);
+      refreshCompletedParts();
+      return setInterval(function(){
+        return refreshCompletedParts();
+      }, 2000);
     });
-    refreshCompletedParts();
-    return setInterval(function(){
-      return refreshCompletedParts();
-    }, 2000);
   };
   $(document).ready(function(){
     var param;

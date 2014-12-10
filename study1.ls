@@ -215,10 +215,10 @@ export have-full-name = ->
     setvar 'condition', root.condition
     root.studyorder = condition_to_order[condition]
     set-studyorder root.studyorder
-  refresh-completed-parts()
-  setInterval ->
     refresh-completed-parts()
-  , 2000
+    setInterval ->
+      refresh-completed-parts()
+    , 2000
 
 $(document).ready ->
   setvar 'hideoption', true
