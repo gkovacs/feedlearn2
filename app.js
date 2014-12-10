@@ -219,6 +219,24 @@
       return res.send(JSON.stringify(conditions));
     });
   });
+  app.get('/removeconditionforuser_get', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('need to provide username');
+      return;
+    }
+    return getvardict('conditions', function(conditions){
+      if (conditions[username] != null) {
+        delete conditions[username];
+        return setvardict('conditions', conditions, function(){
+          res.send('done');
+        });
+      } else {
+        res.send('user was not in the conditions list');
+      }
+    });
+  });
   app.get('/setconditionforuser_get', function(req, res){
     var ref$, username, condition;
     ref$ = req.query, username = ref$.username, condition = ref$.condition;

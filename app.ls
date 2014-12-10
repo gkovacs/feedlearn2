@@ -222,6 +222,21 @@ app.get '/conditions', (req, res) ->
   getvardict 'conditions', (conditions) ->
     res.send <| JSON.stringify conditions
 
+app.get '/removeconditionforuser_get', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send 'need to provide username'
+    return
+  getvardict 'conditions', (conditions) ->
+    if conditions[username]?
+      delete conditions[username]
+      setvardict 'conditions', conditions, ->
+        res.send 'done'
+        return
+    else
+      res.send 'user was not in the conditions list'
+      return
+
 app.get '/setconditionforuser_get', (req, res) ->
   {username, condition} = req.query
   if not username? or not condition?
