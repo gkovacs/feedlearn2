@@ -187,6 +187,13 @@
         idx: idx
       });
       return optiondiv.click(function(){
+        addlog({
+          type: 'answered',
+          iscorrect: elem.correct,
+          wordclicked: elem,
+          wordtested: word,
+          allwords: allwords
+        });
         if (elem.correct) {
           optiondiv.removeClass('btn-default');
           optiondiv.addClass('btn-success');

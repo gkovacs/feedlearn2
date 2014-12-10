@@ -155,6 +155,7 @@ question-with-words = (allwords, langname) ->
       idx: idx
     })
     optiondiv.click ->
+      addlog {type: 'answered', iscorrect: elem.correct, wordclicked: elem, wordtested: word, allwords: allwords}
       if elem.correct
         optiondiv.remove-class 'btn-default'
         optiondiv.add-class 'btn-success'
