@@ -30,8 +30,8 @@
     var data;
     data = $.extend({}, logdata);
     data.username = getUserName();
-    date.time = Date.now();
-    date.timeloc = new Date().toString();
+    data.time = Date.now();
+    data.timeloc = new Date().toString();
     return postJson('/addlog', data);
   };
 }).call(this);

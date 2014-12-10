@@ -1,10 +1,11 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, selectChanged, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, addlog, selectChanged, getCurrentAnswers, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
+  addlog = root.addlog;
   out$.selectChanged = selectChanged = function(){
     var selected_words, i$, ref$, len$, idx, x, curword, newidx, results$ = [];
     selected_words = {};
@@ -51,6 +52,37 @@
     }
     return results$;
   };
+  out$.getCurrentAnswers = getCurrentAnswers = function(){
+    var output, i$, ref$, len$, idx, x, myanswer, english, romaji, kanji, iscorrect;
+    output = [];
+    for (i$ = 0, len$ = (ref$ = $('select.engselect')).length; i$ < len$; ++i$) {
+      idx = i$;
+      x = ref$[i$];
+      myanswer = $(x).val().trim();
+      english = $(x).attr('english').trim();
+      romaji = $(x).attr('romaji').trim();
+      kanji = $(x).attr('kanji').trim();
+      iscorrect = myanswer === english;
+      output.push({
+        myanswer: myanswer,
+        iscorrect: iscorrect,
+        english: english,
+        romaji: romaji,
+        kanji: kanji
+      });
+    }
+    return output;
+  };
+  out$.submitAnswers = submitAnswers = function(){
+    var param;
+    param = getUrlParameters();
+    addlog({
+      type: 'vocabquiz',
+      vocabquiz: param.type,
+      answers: getCurrentAnswers()
+    });
+    return alert('Answers submitted!');
+  };
   $(document).ready(function(){
     var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
     param = getUrlParameters();
@@ -63,7 +95,7 @@
     for (i$ = 0, len$ = (ref$ = sortBy(fn$, flashcards)).length; i$ < len$; ++i$) {
       idx = i$;
       wordinfo = ref$[i$];
-      curinput = J('select.engselect.engselect' + idx).attr('onchange', 'selectChanged()').css({
+      curinput = J('select.engselect.engselect' + idx).attr('english', wordinfo.english).attr('romaji', wordinfo.romaji).attr('kanji', wordinfo.kanji).attr('onchange', 'selectChanged()').css({
         width: '200px',
         float: 'right',
         marginLeft: '10px'

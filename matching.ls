@@ -6,6 +6,7 @@ J = $.jade
 
 {first-non-null, getUrlParameters} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
+{addlog} = root # logging_client.ls
 
 export select-changed = ->
   #console.log 'select changed'
@@ -31,7 +32,22 @@ export select-changed = ->
     else
       $(x).css({background-color: 'lightblue', color: 'black', text-decoration: 'none'})
 
+export getCurrentAnswers = ->
+  output = []
+  for x,idx in $('select.engselect')
+    #console.log $(x).val().trim()
+    myanswer = $(x).val().trim()
+    english = $(x).attr('english').trim()
+    romaji = $(x).attr('romaji').trim()
+    kanji = $(x).attr('kanji').trim()
+    iscorrect = myanswer == english
+    output.push {myanswer, iscorrect, english, romaji, kanji}
+  return output
 
+export submit-answers = ->
+  param = getUrlParameters()
+  addlog {type: 'vocabquiz', vocabquiz: param.type, answers: getCurrentAnswers()}
+  alert 'Answers submitted!'
 
 $(document).ready ->
   param = getUrlParameters()
@@ -41,7 +57,7 @@ $(document).ready ->
   for wordinfo,idx in sort-by (.romaji), flashcards
     #console.log wordinfo.romaji
     #curinput = J('input').attr('list', 'englishwords').css({width: '200px', float: 'right', margin-left: '10px'})
-    curinput = J('select.engselect.engselect' + idx).attr('onchange', 'selectChanged()').css({width: '200px', float: 'right', margin-left: '10px'})
+    curinput = J('select.engselect.engselect' + idx).attr('english', wordinfo.english).attr('romaji', wordinfo.romaji).attr('kanji', wordinfo.kanji).attr('onchange', 'selectChanged()').css({width: '200px', float: 'right', margin-left: '10px'})
     for engword in select-options
       curinput.append J('option').attr('value', engword).text(engword)
     $('#foreignwordlist').append <| J('div').css({padding-top: '10px', padding-bottom: '10px', padding-left: '10px', padding-right: '10px', border-radius: '10px', margin-bottom: '10px', vertical-align: 'middle'}).append [ J('span').text(wordinfo.romaji), curinput ]

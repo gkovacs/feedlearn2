@@ -30,6 +30,6 @@ get-user-name = ->
 export addlog = (logdata) ->
   data = $.extend {}, logdata
   data.username = get-user-name()
-  date.time = Date.now()
-  date.timeloc = new Date().toString()
+  data.time = Date.now()
+  data.timeloc = new Date().toString()
   post-json '/addlog', data
