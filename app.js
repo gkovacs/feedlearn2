@@ -226,6 +226,7 @@
       res.send('need to provide username and condition');
       return;
     }
+    condition = parseInt(condition);
     return getvardict('conditions', function(conditions){
       conditions[username] = condition;
       return setvardict('conditions', conditions, function(){

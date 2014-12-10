@@ -227,6 +227,7 @@ app.get '/setconditionforuser_get', (req, res) ->
   if not username? or not condition?
     res.send 'need to provide username and condition'
     return
+  condition = parseInt condition
   getvardict 'conditions', (conditions) ->
     conditions[username] = condition
     setvardict 'conditions', conditions, ->
