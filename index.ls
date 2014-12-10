@@ -255,6 +255,8 @@ goto-page = (page) ->
   | \option => goto-option-page()
   | \chat => goto-chat-page()
 
+root.qcontext = null
+
 $(document).ready ->
   param = getUrlParameters()
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'chinese1'
@@ -262,11 +264,13 @@ $(document).ready ->
   set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
   set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
   if param.facebook? and param.facebook != 'false' and param.facebook != false
+    root.qcontext = 'facebook'
     condition = $.cookie('format')
     addlog {type: 'feedinsert'}
     if condition? and condition == 'link'
       window.location = '/control'
       return
   else
+    root.qcontext = 'website'
     addlog {type: 'webvisit'}
   goto-page <| first-non-null param.page, 'quiz'

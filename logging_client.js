@@ -29,10 +29,11 @@
   out$.addlog = addlog = function(logdata){
     var data;
     data = $.extend({}, logdata);
-    data.fullname = getUserName();
+    data.username = getUserName();
     data.lang = $.cookie('lang');
     data.format = $.cookie('format');
     data.scriptformat = $.cookie('scriptformat');
+    data.qcontext = root.qcontext;
     data.time = Date.now();
     data.timeloc = new Date().toString();
     return postJson('/addlog', data);

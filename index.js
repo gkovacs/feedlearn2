@@ -297,6 +297,7 @@
       return gotoChatPage();
     }
   };
+  root.qcontext = null;
   $(document).ready(function(){
     var param, condition;
     param = getUrlParameters();
@@ -305,6 +306,7 @@
     setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
     setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
+      root.qcontext = 'facebook';
       condition = $.cookie('format');
       addlog({
         type: 'feedinsert'
@@ -314,6 +316,7 @@
         return;
       }
     } else {
+      root.qcontext = 'website';
       addlog({
         type: 'webvisit'
       });

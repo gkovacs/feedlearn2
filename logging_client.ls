@@ -29,10 +29,11 @@ get-user-name = ->
 
 export addlog = (logdata) ->
   data = $.extend {}, logdata
-  data.fullname = get-user-name()
+  data.username = get-user-name()
   data.lang = $.cookie('lang')
   data.format = $.cookie('format')
   data.scriptformat = $.cookie('scriptformat')
+  data.qcontext = root.qcontext
   data.time = Date.now()
   data.timeloc = new Date().toString()
   post-json '/addlog', data
