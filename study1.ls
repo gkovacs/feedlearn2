@@ -3,6 +3,15 @@ root = exports ? this
 {first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition} = root # commonlib.ls
 {post-json, post-start-event} = root # logging_client.ls
 
+alert-prereqs = (plist) ->
+  #if window.location.href == "http://localhost:5000/study1"
+  #  return
+  for x in plist
+    if not root.completed-parts[x]?
+      alert 'You need to complete the following section first: ' + x
+      return false
+  return true
+
 export consent-agreed = ->
   $('#collapseOne').collapse('hide')
   #$('#collapseTwo').collapse('show')
@@ -10,27 +19,41 @@ export consent-agreed = ->
   post-start-event 'consentagreed'
 
 export open-pretest1 = ->
+  #if not alert-prereqs ['consentagreed']
+  #  return
   window.open('matching?vocab=japanese1&type=pretest')
 
 export open-posttest1 = ->
+  if not alert-prereqs ['week1startstudy']
+    return
   window.open('matching?vocab=japanese1&type=posttest')
 
 export open-pretest2 = ->
+  if not alert-prereqs ['posttest1']
+    return
   window.open('matching?vocab=japanese2&type=pretest')
 
 export open-posttest2 = ->
+  if not alert-prereqs ['week2startstudy']
+    return
   window.open('matching?vocab=japanese2&type=posttest')
 
 export open-pretest3 = ->
+  if not alert-prereqs ['posttest2']
+    return
   window.open('matching?vocab=japanese3&type=pretest')
 
 export open-posttest3 = ->
+  if not alert-prereqs ['week3startstudy']
+    return
   window.open('matching?vocab=japanese3&type=posttest')
 
 export install-chrome-extension = ->
   window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
 
 export start-week1 = ->
+  if not alert-prereqs ['pretest1']
+    return
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese1'
@@ -40,6 +63,8 @@ export start-week1 = ->
   post-start-event 'week1startstudy'
 
 export start-week2 = ->
+  if not alert-prereqs ['pretest2']
+    return
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese2'
@@ -49,6 +74,8 @@ export start-week2 = ->
   post-start-event 'week2startstudy'
 
 export start-week3 = ->
+  if not alert-prereqs ['pretest3']
+    return
   setvar 'fullname', root.fullname
   setvar 'scriptformat', 'show romanized only'
   setvar 'lang', 'japanese3'
@@ -112,7 +139,7 @@ show-posttest-done = (num, timestamp) ->
   if not timestamp?
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
-  $('#posttest' + num + 'check').css 'visbililty', 'visible'
+  $('#posttest' + num + 'check').css 'visibility', 'visible'
   $('#posttest' + num + 'button').attr 'disabled', true
   $('#posttest' + num + 'donedisplay').css('color', 'green').text 'You submitted post-test ' + num + ' on ' + readable
 
@@ -135,12 +162,15 @@ show-studyperiod-started = (num, timesamp) ->
   message2 = $('<div>').text 'Please return one week later at ' + oneweeklater + ' to take post-test ' + num
   $('#startweek' + num + 'donedisplay').attr('color', 'green').html $('<div>').append([message1, message2])
 
+root.completed-parts = {}
+
 refresh-completed-parts = ->
   num_events_prev = 0
   get-user-events (events) ->
     if Object.keys(events).length == num_events_prev
       return
     num_events_prev := Object.keys(events).length
+    root.completed-parts = events
     if events.consentagreed?
       show-consent-agreed(events.consentagreed)
     for num in [1,2,3]

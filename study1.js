@@ -1,8 +1,19 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, postJson, postStartEvent, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, startWeek2, startWeek3, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, startWeek2, startWeek3, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition;
   postJson = root.postJson, postStartEvent = root.postStartEvent;
+  alertPrereqs = function(plist){
+    var i$, len$, x;
+    for (i$ = 0, len$ = plist.length; i$ < len$; ++i$) {
+      x = plist[i$];
+      if (root.completedParts[x] == null) {
+        alert('You need to complete the following section first: ' + x);
+        return false;
+      }
+    }
+    return true;
+  };
   out$.consentAgreed = consentAgreed = function(){
     $('#collapseOne').collapse('hide');
     showConsentAgreed();
@@ -12,24 +23,42 @@
     return window.open('matching?vocab=japanese1&type=pretest');
   };
   out$.openPosttest1 = openPosttest1 = function(){
+    if (!alertPrereqs(['week1startstudy'])) {
+      return;
+    }
     return window.open('matching?vocab=japanese1&type=posttest');
   };
   out$.openPretest2 = openPretest2 = function(){
+    if (!alertPrereqs(['posttest1'])) {
+      return;
+    }
     return window.open('matching?vocab=japanese2&type=pretest');
   };
   out$.openPosttest2 = openPosttest2 = function(){
+    if (!alertPrereqs(['week2startstudy'])) {
+      return;
+    }
     return window.open('matching?vocab=japanese2&type=posttest');
   };
   out$.openPretest3 = openPretest3 = function(){
+    if (!alertPrereqs(['posttest2'])) {
+      return;
+    }
     return window.open('matching?vocab=japanese3&type=pretest');
   };
   out$.openPosttest3 = openPosttest3 = function(){
+    if (!alertPrereqs(['week3startstudy'])) {
+      return;
+    }
     return window.open('matching?vocab=japanese3&type=posttest');
   };
   out$.installChromeExtension = installChromeExtension = function(){
     return window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf');
   };
   out$.startWeek1 = startWeek1 = function(){
+    if (!alertPrereqs(['pretest1'])) {
+      return;
+    }
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese1');
@@ -38,6 +67,9 @@
     return postStartEvent('week1startstudy');
   };
   out$.startWeek2 = startWeek2 = function(){
+    if (!alertPrereqs(['pretest2'])) {
+      return;
+    }
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese2');
@@ -46,6 +78,9 @@
     return postStartEvent('week2startstudy');
   };
   out$.startWeek3 = startWeek3 = function(){
+    if (!alertPrereqs(['pretest3'])) {
+      return;
+    }
     setvar('fullname', root.fullname);
     setvar('scriptformat', 'show romanized only');
     setvar('lang', 'japanese3');
@@ -125,7 +160,7 @@
       timestamp = Date.now();
     }
     readable = new Date(timestamp).toString();
-    $('#posttest' + num + 'check').css('visbililty', 'visible');
+    $('#posttest' + num + 'check').css('visibility', 'visible');
     $('#posttest' + num + 'button').attr('disabled', true);
     return $('#posttest' + num + 'donedisplay').css('color', 'green').text('You submitted post-test ' + num + ' on ' + readable);
   };
@@ -152,6 +187,7 @@
     message2 = $('<div>').text('Please return one week later at ' + oneweeklater + ' to take post-test ' + num);
     return $('#startweek' + num + 'donedisplay').attr('color', 'green').html($('<div>').append([message1, message2]));
   };
+  root.completedParts = {};
   refreshCompletedParts = function(){
     var num_events_prev;
     num_events_prev = 0;
@@ -161,6 +197,7 @@
         return;
       }
       num_events_prev = Object.keys(events).length;
+      root.completedParts = events;
       if (events.consentagreed != null) {
         showConsentAgreed(events.consentagreed);
       }
