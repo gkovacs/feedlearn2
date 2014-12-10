@@ -4,22 +4,9 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null, getUrlParameters} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar} = root # commonlib.ls
 {addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
-
-export setvar = (varname, varval) ->
-  if localStorage?
-    localStorage.setItem varname, varval
-  $.cookie varname, varval
-  return
-
-export getvar = (varname) ->
-  if localStorage?
-    output = localStorage.getItem varname
-    if output?
-      return output
-  return $.cookie varname
 
 root.srs_words = null # kanji -> bucket num 1 -> inf, word reviewed with probability proportional to 1 / bucket num
 
@@ -140,12 +127,20 @@ export select_kanji_from_srs = ->
     cursum += v
     if cursum >= randval
       return k
+  return k
 
 export select_word_from_srs = ->
   kanji = select_kanji_from_srs()
+  if not kanji?
+    # hrrm seems something is going wrong if we are here
+    console.log 'did not find kanji from srs'
+    return select-elem root.vocabulary
   for wordinfo in root.vocabulary
     if wordinfo.kanji == kanji
       return wordinfo
+  # hrrm seems something is going wrong if we are here
+  console.log 'selected kanji was not in vocabulary'
+  return select-elem root.vocabulary
 
 export new-question = ->
   #console.log select_kanji_from_srs()

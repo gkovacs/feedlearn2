@@ -1,27 +1,11 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setvar, getvar, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar;
   addlog = root.addlog;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
-  out$.setvar = setvar = function(varname, varval){
-    if (typeof localStorage != 'undefined' && localStorage !== null) {
-      localStorage.setItem(varname, varval);
-    }
-    $.cookie(varname, varval);
-  };
-  out$.getvar = getvar = function(varname){
-    var output;
-    if (typeof localStorage != 'undefined' && localStorage !== null) {
-      output = localStorage.getItem(varname);
-      if (output != null) {
-        return output;
-      }
-    }
-    return $.cookie(varname);
-  };
   root.srs_words = null;
   values_over_1 = function(dict){
     var output, k, v;
@@ -179,16 +163,23 @@
         return k;
       }
     }
+    return k;
   };
   out$.select_word_from_srs = select_word_from_srs = function(){
     var kanji, i$, ref$, len$, wordinfo;
     kanji = select_kanji_from_srs();
+    if (kanji == null) {
+      console.log('did not find kanji from srs');
+      return selectElem(root.vocabulary);
+    }
     for (i$ = 0, len$ = (ref$ = root.vocabulary).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
       if (wordinfo.kanji === kanji) {
         return wordinfo;
       }
     }
+    console.log('selected kanji was not in vocabulary');
+    return selectElem(root.vocabulary);
   };
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;

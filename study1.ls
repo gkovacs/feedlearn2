@@ -1,6 +1,6 @@
 root = exports ? this
 
-{first-non-null, getUrlParameters} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar} = root # commonlib.ls
 
 export consent-agreed = ->
   $('#collapseOne').collapse('hide')
@@ -28,29 +28,29 @@ export install-chrome-extension = ->
   window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
 
 export start-week1 = ->
-  $.cookie 'fullname', root.fullname
-  $.cookie 'scriptformat', 'show romanized only'
-  $.cookie 'lang', 'japanese1'
-  $.cookie 'format', 'link'
+  setvar 'fullname', root.fullname
+  setvar 'scriptformat', 'show romanized only'
+  setvar 'lang', 'japanese1'
+  setvar 'format', 'link'
   $('#startweek1button').attr 'disabled', true
 
 export start-week2 = ->
-  $.cookie 'fullname', root.fullname
-  $.cookie 'scriptformat', 'show romanized only'
-  $.cookie 'lang', 'japanese2'
-  $.cookie 'format', 'interactive'
+  setvar 'fullname', root.fullname
+  setvar 'scriptformat', 'show romanized only'
+  setvar 'lang', 'japanese2'
+  setvar 'format', 'interactive'
   $('#startweek2button').attr 'disabled', true
 
 export start-week3 = ->
-  $.cookie 'fullname', root.fullname
-  $.cookie 'scriptformat', 'show romanized only'
-  $.cookie 'lang', 'japanese3'
-  $.cookie 'format', 'none'
+  setvar 'fullname', root.fullname
+  setvar 'scriptformat', 'show romanized only'
+  setvar 'lang', 'japanese3'
+  setvar 'format', 'none'
   $('#startweek3button').attr 'disabled', true
 
 $(document).ready ->
   param = getUrlParameters()
-  root.fullname = first-non-null param.fullname, param.username, param.user, param.name, $.cookie('fullname'), 'Anonymous User'
+  root.fullname = first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), 'Anonymous User'
   $('#fullnamedisplay').text  ' ' + root.fullname
   addlog {type: 'study1visit'}
   #console.log 'study1'

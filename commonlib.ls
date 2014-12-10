@@ -15,3 +15,17 @@ export getUrlParameters = ->
     map[key] = decodeURI(value)
   )
   return map
+
+export setvar = (varname, varval) ->
+  if localStorage?
+    localStorage.setItem varname, varval
+  $.cookie varname, varval
+  return
+
+export getvar = (varname) ->
+  if localStorage?
+    output = localStorage.getItem varname
+    if output?
+      return output
+  return $.cookie varname
+
