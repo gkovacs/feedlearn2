@@ -201,7 +201,7 @@ $(document).ready ->
   setvar 'hideoption', true
   param = getUrlParameters()
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname') #, 'Anonymous User'
-  if root.fullname?
+  if root.fullname? and root.fullname != 'Anonymous User'
     have-full-name()
   else
     $('#fullnameinput').focus()

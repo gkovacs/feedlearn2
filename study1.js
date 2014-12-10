@@ -240,7 +240,7 @@
     setvar('hideoption', true);
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, getvar('fullname'));
-    if (root.fullname != null) {
+    if (root.fullname != null && root.fullname !== 'Anonymous User') {
       return haveFullName();
     } else {
       return $('#fullnameinput').focus();
