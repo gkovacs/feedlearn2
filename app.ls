@@ -9,8 +9,11 @@ require! {
 mongo = require 'mongodb'
 {MongoClient, Grid} = mongo
 mongourl = process.env.MONGOHQ_URL
+mongourl2 = process.env.MONGOLAB_URI
 if not mongourl?
   mongourl = 'mongodb://localhost:27017/default'
+if not mongourl2?
+  mongourl2 = mongourl
 
 get-mongo-db = (callback) ->
   #MongoClient.connect mongourl, {
@@ -24,6 +27,13 @@ get-mongo-db = (callback) ->
     else
       callback db
 
+get-mongo-db2 = (callback) ->
+  MongoClient.connect mongourl2, (err, db) ->
+    if err
+      console.log 'error getting mongodb2'
+    else
+      callback db
+
 get-grid = (callback) ->
   get-mongo-db (db) ->
     callback Grid(db)
@@ -31,6 +41,10 @@ get-grid = (callback) ->
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('logs') #, db
+
+get-logs-fb-collection = (callback) ->
+  get-mongo-db2 (db) ->
+    callback db.collection('fblogs') #, db
 
 # Express initialization
 
@@ -78,6 +92,12 @@ app.get '/viewlog', (req, res) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
 
+app.get '/viewlogfb', (req, res) ->
+  get-logs-fb-collection (logs) ->
+    logs.find().toArray (err, results) ->
+      res.send <| JSON.stringify results
+
+
 getvar = (varname, callback) ->
   get-grid (grid) ->
     key = 'gvr|' + varname
@@ -89,6 +109,32 @@ setvar = (varname, body, callback) ->
     key = 'gvr|' + varname
     grid.put body, {_id: key}, (err, res) ->
       callback(res)
+
+app.get '/addlog_get', (req, res) ->
+  username = req.query.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-collection (logs) ->
+    logs.insert req.query, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
+
+app.get '/addlogfb_get', (req, res) ->
+  username = req.query.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-fb-collection (logs) ->
+    logs.insert req.query, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
 
 #app.get '/getvar', (req, res) ->
 #  req.
@@ -108,4 +154,16 @@ app.post '/addlog', (req, res) ->
       else
         res.send <| 'successful insertion'
 
+app.post '/addlogfb', (req, res) ->
+  username = req.body.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-fb-collection (logs) ->
+    logs.insert req.body, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
 
