@@ -173,4 +173,6 @@ $(document).ready ->
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname') #, 'Anonymous User'
   if root.fullname?
     have-full-name()
+  else
+    $('#fullnameinput').focus()
 

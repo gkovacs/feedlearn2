@@ -205,6 +205,8 @@
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, getvar('fullname'));
     if (root.fullname != null) {
       return haveFullName();
+    } else {
+      return $('#fullnameinput').focus();
     }
   });
 }).call(this);

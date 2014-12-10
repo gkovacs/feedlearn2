@@ -18,8 +18,8 @@
     <script src="commonlib.js"></script>
     <script src="logging_client.js"></script>
     <script src="study1.js"></script>
-    <div id="getfullname">
-      <div style="font-size: 20px">Welcome to the FeedLearn study! What is your full name?</div>
+    <div id="getfullname" style="margin-left: 10px; margin-top: 10px">
+      <div style="font-size: 20px; margin-bottom: 10px">Welcome to the FeedLearn study! What is your full name?</div>
       <input id="fullnameinput" onkeyup="console.log(event.keyCode); if (event.keyCode == 13) document.getElementById(&quot;fullnamesubmitbutton&quot;).click()" style="width: 350px; display: inline-block; margin-right: 10px" class="form-control">
       <button id="fullnamesubmitbutton" style="width: 100px" onclick="fullNameSubmitted()" class="btn btn-primary">Submit</button>
     </div>
@@ -69,7 +69,8 @@
         <div id="collapseThree" role="tabpanel" aria-labelledby="headingThree" class="panel-collapse collapse">
           <div class="panel-body">
             <p>Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.</p>
-            <button onclick="installChromeExtension()" class="btn btn-lg btn-primary">Install FeedLearn Chrome Extension</button>
+            <div id="extensioninstalleddisplay"></div>
+            <button id="extensioninstallbutton" onclick="installChromeExtension()" class="btn btn-lg btn-primary">Install FeedLearn Chrome Extension</button>
           </div>
         </div>
       </div>
