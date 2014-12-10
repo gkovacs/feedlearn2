@@ -1,9 +1,9 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps;
   addlog = root.addlog;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
   root.srs_words = null;
@@ -353,7 +353,7 @@
   out$.gotoOptionPage = gotoOptionPage = function(){
     $('.mainpage').hide();
     $('#optionpage').show();
-    $('#langselect').val(root.current_flashcard_set);
+    $('#langselect').val(getvar('lang'));
     $('#formatselect').val(getvar('format'));
     $('#fullnameinput').val(getvar('fullname'));
     $('#scriptselect').val(getvar('scriptformat'));
@@ -443,6 +443,7 @@
   root.qcontext = null;
   $(document).ready(function(){
     var param, condition;
+    forcehttps();
     param = getUrlParameters();
     setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
     setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));

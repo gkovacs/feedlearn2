@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index, map, sort, sort-by} = require \prelude-ls
 
-{first-non-null, getUrlParameters} = root # commonlib.ls
+{first-non-null, getUrlParameters, forcehttps} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
 {addlog, post-start-event} = root # logging_client.ls
 
@@ -66,6 +66,7 @@ export submit-answers = ->
   post-start-event(param.type + get-pretest-num())
 
 $(document).ready ->
+  forcehttps()
   param = getUrlParameters()
   flashcard_set = get-flashcard-set()
   flashcards = flashcard_sets[flashcard_set]

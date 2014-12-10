@@ -48,3 +48,7 @@ export get-user-name = ->
 export printcb = (...args) ->
   for x in args
     console.log x
+
+export forcehttps = ->
+  if window.location.href.startsWith('http://feedlearn.herokuapp.com/study1')
+    window.location.href = window.location.href.split('http://feedlearn.herokuapp.com/study1').join('https://feedlearn.herokuapp.com/study1')

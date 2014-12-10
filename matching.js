@@ -1,9 +1,9 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
   addlog = root.addlog, postStartEvent = root.postStartEvent;
   out$.selectChanged = selectChanged = function(){
@@ -107,6 +107,7 @@
   };
   $(document).ready(function(){
     var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    forcehttps();
     param = getUrlParameters();
     flashcard_set = getFlashcardSet();
     flashcards = flashcard_sets[flashcard_set];

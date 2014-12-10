@@ -1,6 +1,6 @@
 root = exports ? this
 
-{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps} = root # commonlib.ls
 {post-json, post-start-event} = root # logging_client.ls
 
 root.skip-prereqs = false
@@ -233,6 +233,7 @@ export have-full-name = ->
     , 2000
 
 $(document).ready ->
+  forcehttps()
   setvar 'hideoption', true
   param = getUrlParameters()
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname') #, 'Anonymous User'

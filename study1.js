@@ -1,7 +1,7 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps;
   postJson = root.postJson, postStartEvent = root.postStartEvent;
   root.skipPrereqs = false;
   alertPrereqs = function(plist){
@@ -285,6 +285,7 @@
   };
   $(document).ready(function(){
     var param;
+    forcehttps();
     setvar('hideoption', true);
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, getvar('fullname'));

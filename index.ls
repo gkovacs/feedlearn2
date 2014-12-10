@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null, getUrlParameters, getvar, setvar} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, forcehttps} = root # commonlib.ls
 {addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
@@ -276,7 +276,7 @@ export goto-quiz-page = ->
 export goto-option-page = ->
   $('.mainpage').hide()
   $('#optionpage').show()
-  $('#langselect').val(root.current_flashcard_set)
+  $('#langselect').val(getvar('lang'))
   $('#formatselect').val(getvar('format'))
   $('#fullnameinput').val(getvar('fullname'))
   $('#scriptselect').val(getvar('scriptformat'))
@@ -356,6 +356,7 @@ goto-page = (page) ->
 root.qcontext = null
 
 $(document).ready ->
+  forcehttps()
   param = getUrlParameters()
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'
   set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
