@@ -36,15 +36,15 @@ get-mongo-db2 = (callback) ->
 
 get-grid = (callback) ->
   get-mongo-db (db) ->
-    callback Grid(db)
+    callback Grid(db), db
 
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
-    callback db.collection('logs') #, db
+    callback db.collection('logs'), db
 
 get-logs-fb-collection = (callback) ->
   get-mongo-db2 (db) ->
-    callback db.collection('fblogs') #, db
+    callback db.collection('fblogs'), db
 
 # Express initialization
 
@@ -88,27 +88,31 @@ app.get '/study1', get_study1
 app.get '/study1.html', get_study1
 
 app.get '/viewlog', (req, res) ->
-  get-logs-collection (logs) ->
+  get-logs-collection (logs, db) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
+      db.close()
 
 app.get '/viewlogfb', (req, res) ->
-  get-logs-fb-collection (logs) ->
+  get-logs-fb-collection (logs, db) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
+      db.close()
 
 
 getvar = (varname, callback) ->
-  get-grid (grid) ->
+  get-grid (grid, db) ->
     key = 'gvr|' + varname
     grid.get key, (err, res) ->
       calback res
+      db.close()
 
 setvar = (varname, body, callback) ->
-  get-grid (grid) ->
+  get-grid (grid, db) ->
     key = 'gvr|' + varname
     grid.put body, {_id: key}, (err, res) ->
-      callback(res)
+      callback res
+      db.close()
 
 app.get '/addlog_get', (req, res) ->
   username = req.query.username
@@ -116,12 +120,13 @@ app.get '/addlog_get', (req, res) ->
     res.send 'need to provide username'
     return
   #console.log req.body
-  get-logs-collection (logs) ->
+  get-logs-collection (logs, db) ->
     logs.insert req.query, (err, docs) ->
       if err?
         res.send <| 'error upon insertion: ' + JSON.stringify(err)
       else
         res.send <| 'successful insertion'
+      db.close()
 
 app.get '/addlogfb_get', (req, res) ->
   username = req.query.username
@@ -129,12 +134,13 @@ app.get '/addlogfb_get', (req, res) ->
     res.send 'need to provide username'
     return
   #console.log req.body
-  get-logs-fb-collection (logs) ->
+  get-logs-fb-collection (logs, db) ->
     logs.insert req.query, (err, docs) ->
       if err?
         res.send <| 'error upon insertion: ' + JSON.stringify(err)
       else
         res.send <| 'successful insertion'
+      db.close()
 
 #app.get '/getvar', (req, res) ->
 #  req.
@@ -147,12 +153,13 @@ app.post '/addlog', (req, res) ->
     res.send 'need to provide username'
     return
   #console.log req.body
-  get-logs-collection (logs) ->
+  get-logs-collection (logs, db) ->
     logs.insert req.body, (err, docs) ->
       if err?
         res.send <| 'error upon insertion: ' + JSON.stringify(err)
       else
         res.send <| 'successful insertion'
+      db.close()
 
 app.post '/addlogfb', (req, res) ->
   username = req.body.username
@@ -160,10 +167,11 @@ app.post '/addlogfb', (req, res) ->
     res.send 'need to provide username'
     return
   #console.log req.body
-  get-logs-fb-collection (logs) ->
+  get-logs-fb-collection (logs, db) ->
     logs.insert req.body, (err, docs) ->
       if err?
         res.send <| 'error upon insertion: ' + JSON.stringify(err)
       else
         res.send <| 'successful insertion'
+      db.close()
 

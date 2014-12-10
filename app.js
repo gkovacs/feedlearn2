@@ -33,17 +33,17 @@
   };
   getGrid = function(callback){
     return getMongoDb(function(db){
-      return callback(Grid(db));
+      return callback(Grid(db), db);
     });
   };
   getLogsCollection = function(callback){
     return getMongoDb(function(db){
-      return callback(db.collection('logs'));
+      return callback(db.collection('logs'), db);
     });
   };
   getLogsFbCollection = function(callback){
     return getMongoDb2(function(db){
-      return callback(db.collection('fblogs'));
+      return callback(db.collection('fblogs'), db);
     });
   };
   app = express();
@@ -75,36 +75,40 @@
   app.get('/study1', get_study1);
   app.get('/study1.html', get_study1);
   app.get('/viewlog', function(req, res){
-    return getLogsCollection(function(logs){
+    return getLogsCollection(function(logs, db){
       return logs.find().toArray(function(err, results){
-        return res.send(JSON.stringify(results));
+        res.send(JSON.stringify(results));
+        return db.close();
       });
     });
   });
   app.get('/viewlogfb', function(req, res){
-    return getLogsFbCollection(function(logs){
+    return getLogsFbCollection(function(logs, db){
       return logs.find().toArray(function(err, results){
-        return res.send(JSON.stringify(results));
+        res.send(JSON.stringify(results));
+        return db.close();
       });
     });
   });
   getvar = function(varname, callback){
-    return getGrid(function(grid){
+    return getGrid(function(grid, db){
       var key;
       key = 'gvr|' + varname;
       return grid.get(key, function(err, res){
-        return calback(res);
+        calback(res);
+        return db.close();
       });
     });
   };
   setvar = function(varname, body, callback){
-    return getGrid(function(grid){
+    return getGrid(function(grid, db){
       var key;
       key = 'gvr|' + varname;
       return grid.put(body, {
         _id: key
       }, function(err, res){
-        return callback(res);
+        callback(res);
+        return db.close();
       });
     });
   };
@@ -115,13 +119,14 @@
       res.send('need to provide username');
       return;
     }
-    return getLogsCollection(function(logs){
+    return getLogsCollection(function(logs, db){
       return logs.insert(req.query, function(err, docs){
         if (err != null) {
-          return res.send('error upon insertion: ' + JSON.stringify(err));
+          res.send('error upon insertion: ' + JSON.stringify(err));
         } else {
-          return res.send('successful insertion');
+          res.send('successful insertion');
         }
+        return db.close();
       });
     });
   });
@@ -132,13 +137,14 @@
       res.send('need to provide username');
       return;
     }
-    return getLogsFbCollection(function(logs){
+    return getLogsFbCollection(function(logs, db){
       return logs.insert(req.query, function(err, docs){
         if (err != null) {
-          return res.send('error upon insertion: ' + JSON.stringify(err));
+          res.send('error upon insertion: ' + JSON.stringify(err));
         } else {
-          return res.send('successful insertion');
+          res.send('successful insertion');
         }
+        return db.close();
       });
     });
   });
@@ -149,13 +155,14 @@
       res.send('need to provide username');
       return;
     }
-    return getLogsCollection(function(logs){
+    return getLogsCollection(function(logs, db){
       return logs.insert(req.body, function(err, docs){
         if (err != null) {
-          return res.send('error upon insertion: ' + JSON.stringify(err));
+          res.send('error upon insertion: ' + JSON.stringify(err));
         } else {
-          return res.send('successful insertion');
+          res.send('successful insertion');
         }
+        return db.close();
       });
     });
   });
@@ -166,13 +173,14 @@
       res.send('need to provide username');
       return;
     }
-    return getLogsFbCollection(function(logs){
+    return getLogsFbCollection(function(logs, db){
       return logs.insert(req.body, function(err, docs){
         if (err != null) {
-          return res.send('error upon insertion: ' + JSON.stringify(err));
+          res.send('error upon insertion: ' + JSON.stringify(err));
         } else {
-          return res.send('successful insertion');
+          res.send('successful insertion');
         }
+        return db.close();
       });
     });
   });
