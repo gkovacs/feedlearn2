@@ -64,6 +64,7 @@ export submit-answers = ->
   post-start-event(param.type + get-pretest-num())
 
 $(document).ready ->
+  param = getUrlParameters()
   flashcard_set = get-flashcard-set()
   flashcards = flashcard_sets[flashcard_set]
   select-options = [ '--- select a word ---' ].concat <| map (.english), flashcards |> sort

@@ -104,7 +104,8 @@
     return postStartEvent(param.type + getPretestNum());
   };
   $(document).ready(function(){
-    var flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    param = getUrlParameters();
     flashcard_set = getFlashcardSet();
     flashcards = flashcard_sets[flashcard_set];
     selectOptions = ['--- select a word ---'].concat(sort(
