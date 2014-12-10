@@ -74,8 +74,8 @@
     return results$;
   };
   out$.forcehttps = forcehttps = function(){
-    if (window.location.href.startsWith('http://feedlearn.herokuapp.com/study1')) {
-      return window.location.href = window.location.href.split('http://feedlearn.herokuapp.com/study1').join('https://feedlearn.herokuapp.com/study1');
+    if (window.location.href.startsWith('http://feedlearn.herokuapp.com')) {
+      return window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com');
     }
   };
 }).call(this);
