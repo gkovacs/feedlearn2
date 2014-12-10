@@ -27,7 +27,13 @@
     return window.open('matching?vocab=japanese1&type=pretest');
   };
   out$.openPosttest1 = openPosttest1 = function(){
+    var testtime;
     if (!alertPrereqs(['week1startstudy'])) {
+      return;
+    }
+    testtime = root.completedParts['week1startstudy'] + 1000 * 3600 * 24 * 7;
+    if (Date.now() < testtime) {
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
       return;
     }
     return window.open('matching?vocab=japanese1&type=posttest');
@@ -39,7 +45,13 @@
     return window.open('matching?vocab=japanese2&type=pretest');
   };
   out$.openPosttest2 = openPosttest2 = function(){
+    var testtime;
     if (!alertPrereqs(['week2startstudy'])) {
+      return;
+    }
+    testtime = root.completedParts['week2startstudy'] + 1000 * 3600 * 24 * 7;
+    if (Date.now() < testtime) {
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
       return;
     }
     return window.open('matching?vocab=japanese2&type=posttest');
@@ -51,7 +63,13 @@
     return window.open('matching?vocab=japanese3&type=pretest');
   };
   out$.openPosttest3 = openPosttest3 = function(){
+    var testtime;
     if (!alertPrereqs(['week3startstudy'])) {
+      return;
+    }
+    testtime = root.completedParts['week3startstudy'] + 1000 * 3600 * 24 * 7;
+    if (Date.now() < testtime) {
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
       return;
     }
     return window.open('matching?vocab=japanese3&type=posttest');

@@ -30,6 +30,10 @@ export open-pretest1 = ->
 export open-posttest1 = ->
   if not alert-prereqs ['week1startstudy']
     return
+  testtime = root.completed-parts['week1startstudy'] + 1000*3600*24*7
+  if Date.now() < testtime
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
+    return
   window.open('matching?vocab=japanese1&type=posttest')
 
 export open-pretest2 = ->
@@ -40,6 +44,10 @@ export open-pretest2 = ->
 export open-posttest2 = ->
   if not alert-prereqs ['week2startstudy']
     return
+  testtime = root.completed-parts['week2startstudy'] + 1000*3600*24*7
+  if Date.now() < testtime
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
+    return
   window.open('matching?vocab=japanese2&type=posttest')
 
 export open-pretest3 = ->
@@ -49,6 +57,10 @@ export open-pretest3 = ->
 
 export open-posttest3 = ->
   if not alert-prereqs ['week3startstudy']
+    return
+  testtime = root.completed-parts['week3startstudy'] + 1000*3600*24*7
+  if Date.now() < testtime
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
