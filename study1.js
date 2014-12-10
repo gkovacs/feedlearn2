@@ -3,8 +3,12 @@
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition;
   postJson = root.postJson, postStartEvent = root.postStartEvent;
+  root.skipPrereqs = false;
   alertPrereqs = function(plist){
     var i$, len$, x;
+    if (root.skipPrereqs) {
+      return true;
+    }
     for (i$ = 0, len$ = plist.length; i$ < len$; ++i$) {
       x = plist[i$];
       if (root.completedParts[x] == null) {

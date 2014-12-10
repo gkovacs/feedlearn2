@@ -3,9 +3,13 @@ root = exports ? this
 {first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition} = root # commonlib.ls
 {post-json, post-start-event} = root # logging_client.ls
 
+root.skip-prereqs = false
+
 alert-prereqs = (plist) ->
   #if window.location.href == "http://localhost:5000/study1"
   #  return
+  if root.skip-prereqs
+    return true
   for x in plist
     if not root.completed-parts[x]?
       alert 'You need to complete the following section first: ' + x
