@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar;
+  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, minidx, nextAssignedCondition;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -95,7 +95,11 @@
       var key;
       key = 'gvr|' + varname;
       return grid.get(key, function(err, res){
-        calback(res);
+        if (res != null) {
+          callback(res.toString('utf-8'));
+        } else {
+          callback(null);
+        }
         return db.close();
       });
     });
@@ -104,14 +108,114 @@
     return getGrid(function(grid, db){
       var key;
       key = 'gvr|' + varname;
-      return grid.put(body, {
+      return grid.put(new Buffer(body, 'utf-8'), {
         _id: key
       }, function(err, res){
-        callback(res);
+        if (callback != null) {
+          callback(res);
+        }
         return db.close();
       });
     });
   };
+  getvardict = function(varname, callback){
+    return getvar(varname, function(output){
+      console.log(varname);
+      console.log(output);
+      if (output != null) {
+        return callback(JSON.parse(output));
+      } else {
+        return callback({});
+      }
+    });
+  };
+  setvardict = function(varname, vardict, callback){
+    return setvar(varname, JSON.stringify(vardict), callback);
+  };
+  app.get('/getvar', function(req, res){
+    var varname;
+    varname = req.query.varname;
+    if (varname == null) {
+      res.send('need to provide varname');
+      return;
+    }
+    return getvar(varname, function(varval){
+      return res.send(varval);
+    });
+  });
+  app.get('/setvar', function(req, res){
+    var ref$, varname, varval;
+    ref$ = req.query, varname = ref$.varname, varval = ref$.varval;
+    if (varname == null || varval == null) {
+      res.send('need to provide varname and varval');
+      return;
+    }
+    return setvar(varname, varval, function(){
+      res.send('done');
+    });
+  });
+  minidx = function(list){
+    var minval, minidx, i$, len$, i, x;
+    minval = Infinity;
+    minidx = 0;
+    for (i$ = 0, len$ = list.length; i$ < len$; ++i$) {
+      i = i$;
+      x = list[i$];
+      if (x < minval) {
+        minidx = i;
+        minval = x;
+      }
+    }
+    return minidx;
+  };
+  nextAssignedCondition = function(conditions){
+    var counts, k, v;
+    counts = [0, 0, 0, 0, 0, 0];
+    for (k in conditions) {
+      v = conditions[k];
+      if (0 <= v && v <= 5) {
+        counts[v] += 1;
+      }
+    }
+    return minidx(counts);
+  };
+  app.get('/conditions', function(req, res){
+    return getvardict('conditions', function(conditions){
+      return res.send(JSON.stringify(conditions));
+    });
+  });
+  app.get('/setconditionforuser', function(req, res){
+    var ref$, username, condition;
+    ref$ = req.query, username = ref$.username, condition = ref$.condition;
+    if (username == null || condition == null) {
+      res.send('need to provide username and condition');
+      return;
+    }
+    return getvar('conditions', function(conditions){
+      conditions[username] = condition;
+      return setvardict('conditions', conditions, function(){
+        return res.send(condition);
+      });
+    });
+  });
+  app.get('/conditionforuser', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('need to provide username');
+      return;
+    }
+    return getvardict('conditions', function(conditions){
+      if (conditions[username] != null) {
+        return res.send(JSON.stringify(conditions[username]));
+      } else {
+        conditions[username] = nextAssignedCondition(conditions);
+        return setvardict('conditions', conditions, function(){
+          return res.send(JSON.stringify(conditions[username]));
+        });
+      }
+    });
+  });
   app.get('/addlog_get', function(req, res){
     var username;
     username = req.query.username;

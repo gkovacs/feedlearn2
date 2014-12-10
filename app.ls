@@ -103,16 +103,106 @@ app.get '/viewlogfb', (req, res) ->
 getvar = (varname, callback) ->
   get-grid (grid, db) ->
     key = 'gvr|' + varname
+    #console.log 'key is: ' + key
     grid.get key, (err, res) ->
-      calback res
+      #console.log 'res is: ' + res
+      #console.log key
+      #console.log res
+      #console.log err
+      if res?
+        callback res.toString('utf-8')
+      else
+        callback null
       db.close()
 
 setvar = (varname, body, callback) ->
   get-grid (grid, db) ->
     key = 'gvr|' + varname
-    grid.put body, {_id: key}, (err, res) ->
-      callback res
+    grid.put new Buffer(body, 'utf-8'), {_id: key}, (err, res) ->
+      #console.log key
+      #console.log err
+      #console.log res
+      if callback?
+        callback res
       db.close()
+
+getvardict = (varname, callback) ->
+  getvar varname, (output) ->
+    console.log varname
+    console.log output
+    if output?
+      callback JSON.parse(output)
+    else
+      callback {}
+
+setvardict = (varname, vardict, callback) ->
+  setvar varname, JSON.stringify(vardict), callback
+
+#add-keyval-to-vardict = (varname, key, val, callback) ->
+#  getvardict varname, (vardict) ->
+#    vardict[key] = val
+#    setvardict varname, vardict, callback
+
+app.get '/getvar', (req, res) ->
+  {varname} = req.query
+  if not varname?
+    res.send 'need to provide varname'
+    return
+  getvar varname, (varval) ->
+    res.send varval
+
+app.get '/setvar', (req, res) ->
+  {varname, varval} = req.query
+  if not varname? or not varval?
+    res.send 'need to provide varname and varval'
+    return
+  setvar varname, varval, ->
+    res.send 'done'
+    return
+
+minidx = (list) ->
+  minval = Infinity
+  minidx = 0
+  for x,i in list
+    if x < minval
+      minidx = i
+      minval = x
+  return minidx
+
+next-assigned-condition = (conditions) ->
+  counts = [0] * 6
+  for k,v of conditions
+    if 0 <= v <= 5
+      counts[v] += 1
+  return minidx(counts)
+
+app.get '/conditions', (req, res) ->
+  getvardict 'conditions', (conditions) ->
+    res.send <| JSON.stringify conditions
+
+app.get '/setconditionforuser', (req, res) ->
+  {username, condition} = req.query
+  if not username? or not condition?
+    res.send 'need to provide username and condition'
+    return
+  getvar 'conditions', (conditions) ->
+    conditions[username] = condition
+    setvardict 'conditions', conditions, ->
+      res.send condition
+
+app.get '/conditionforuser', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send 'need to provide username'
+    return
+  getvardict 'conditions', (conditions) ->
+    if conditions[username]?
+      res.send <| JSON.stringify conditions[username]
+    else
+      conditions[username] = next-assigned-condition conditions
+      setvardict 'conditions', conditions, ->
+        res.send <| JSON.stringify conditions[username]
+
 
 app.get '/addlog_get', (req, res) ->
   username = req.query.username
