@@ -14,6 +14,7 @@ html(lang='en')
     script(src='bower_components/prelude-browser-min/index.js')
     script(src='bower_components/jquery-cookie/jquery.cookie.js')
     script(src='bower_components/async/lib/async.js')
+    script(src='commonlib.js')
     script(src='study1.js')
     #accordion.panel-group(role='tablist' aria-multiselectable='true')
 
@@ -21,8 +22,10 @@ html(lang='en')
       .panel.panel-default
         #headingOne.panel-heading(role='tab')
           h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseOne' aria-expanded='true' aria-controls='collapseOne').
-              Welcome to the FeedLearn study! Please read and agree to this consent form
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseOne' aria-expanded='true' aria-controls='collapseOne')
+              span Welcome to the FeedLearn study
+              span#fullnamedisplay 
+              span ! Please read and agree to this consent form
         #collapseOne.panel-collapse.collapse.in(role='tabpanel' aria-labelledby='headingOne')
           .panel-body
             p Please read the following consent form and agree to it:
@@ -79,7 +82,7 @@ html(lang='en')
           .panel-body
             p During the first week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.
             p Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
+            button#startweek1button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
 
 
       .panel.panel-default
@@ -113,7 +116,7 @@ html(lang='en')
           .panel-body
             p During the second week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.
             p Click the button below to automatically configure the chrome extension and start the Week 2 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
+            button#startweek2button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
 
 
       .panel.panel-default
@@ -147,7 +150,7 @@ html(lang='en')
           .panel-body
             p During the third week, you will not be shown quizzes in your Facebook feeed, but will rather be sent a daily email reminder asking you to visit the website.
             p Click the button below to automatically configure the chrome extension and start the Week 3 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
+            button#startweek3button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
 
 
       .panel.panel-default

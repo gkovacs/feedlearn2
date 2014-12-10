@@ -1,5 +1,7 @@
 root = exports ? this
 
+{first-non-null, getUrlParameters} = root # commonlib.ls
+
 export consent-agreed = ->
   $('#collapseOne').collapse('hide')
   $('#collapseTwo').collapse('show')
@@ -26,7 +28,28 @@ export install-chrome-extension = ->
   window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
 
 export start-week1 = ->
-  console.log 'configure the extension appropriately'
+  $.cookie 'fullname', root.fullname
+  $.cookie 'scriptformat', 'show romanized only'
+  $.cookie 'lang', 'japanese1'
+  $.cookie 'format', 'link'
+  $('#startweek1button').attr 'disabled', true
+
+export start-week2 = ->
+  $.cookie 'fullname', root.fullname
+  $.cookie 'scriptformat', 'show romanized only'
+  $.cookie 'lang', 'japanese2'
+  $.cookie 'format', 'interactive'
+  $('#startweek2button').attr 'disabled', true
+
+export start-week3 = ->
+  $.cookie 'fullname', root.fullname
+  $.cookie 'scriptformat', 'show romanized only'
+  $.cookie 'lang', 'japanese3'
+  $.cookie 'format', 'none'
+  $('#startweek3button').attr 'disabled', true
 
 $(document).ready ->
-  console.log 'study1'
+  param = getUrlParameters()
+  root.fullname = first-non-null param.fullname, param.username, param.user, param.name, $.cookie('fullname'), 'Anonymous User'
+  $('#fullnamedisplay').text  ' ' + root.fullname
+  #console.log 'study1'
