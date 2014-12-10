@@ -11,6 +11,7 @@ J = $.jade
 export select-changed = ->
   #console.log 'select changed'
   $('#submitmessage').text ''
+  $('#submitbutton').attr 'disabled', false
   selected_words = {}
   for x,idx in $('select.engselect')
     #console.log $(x).val().trim()
@@ -61,6 +62,7 @@ export submit-answers = ->
   addlog {type: 'vocabquiz', quiztype: param.type, lang: param.vocab, answers: getCurrentAnswers()}
   #alert 'Answers submitted!'
   $('#submitmessage').css('color', 'green').text 'Answers submitted!'
+  $('#submitbutton').attr 'disabled', true
   post-start-event(param.type + get-pretest-num())
 
 $(document).ready ->

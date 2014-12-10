@@ -9,6 +9,7 @@
   out$.selectChanged = selectChanged = function(){
     var selected_words, i$, ref$, len$, idx, x, curword, newidx, results$ = [];
     $('#submitmessage').text('');
+    $('#submitbutton').attr('disabled', false);
     selected_words = {};
     for (i$ = 0, len$ = (ref$ = $('select.engselect')).length; i$ < len$; ++i$) {
       idx = i$;
@@ -101,6 +102,7 @@
       answers: getCurrentAnswers()
     });
     $('#submitmessage').css('color', 'green').text('Answers submitted!');
+    $('#submitbutton').attr('disabled', true);
     return postStartEvent(param.type + getPretestNum());
   };
   $(document).ready(function(){
