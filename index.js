@@ -1,15 +1,31 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, slice$ = [].slice, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, findIndex, firstNonNull, getUrlParameters, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setvar, getvar, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters;
   addlog = root.addlog;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
+  out$.setvar = setvar = function(varname, varval){
+    if (typeof localStorage != 'undefined' && localStorage !== null) {
+      localStorage.setItem(varname, varval);
+    }
+    $.cookie(varname, varval);
+  };
+  out$.getvar = getvar = function(varname){
+    var output;
+    if (typeof localStorage != 'undefined' && localStorage !== null) {
+      output = localStorage.getItem(varname);
+      if (output != null) {
+        return output;
+      }
+    }
+    return $.cookie(varname);
+  };
   setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
-    if (new_flashcard_set !== $.cookie('lang')) {
-      $.cookie('lang', new_flashcard_set);
+    if (new_flashcard_set !== getvar('lang')) {
+      setvar('lang', new_flashcard_set);
     }
     root.current_flashcard_set = new_flashcard_set;
     root.current_language_name = language_names[new_flashcard_set];
@@ -233,7 +249,7 @@
     var hideoption;
     $('.mainpage').hide();
     $('#quizpage').show();
-    hideoption = $.cookie('hideoption');
+    hideoption = getvar('hideoption');
     if (hideoption != null && hideoption !== 'false' && hideoption !== false) {
       $('#optionbutton').hide();
       $('#showanswersbutton').css({
@@ -251,9 +267,9 @@
     $('.mainpage').hide();
     $('#optionpage').show();
     $('#langselect').val(root.current_flashcard_set);
-    $('#formatselect').val($.cookie('format'));
-    $('#fullnameinput').val($.cookie('fullname'));
-    $('#scriptselect').val($.cookie('scriptformat'));
+    $('#formatselect').val(getvar('format'));
+    $('#fullnameinput').val(getvar('fullname'));
+    $('#scriptselect').val(getvar('scriptformat'));
   };
   out$.gotoChatPage = gotoChatPage = function(){
     $('.mainpage').hide();
@@ -268,7 +284,7 @@
   };
   out$.setInsertionFormat = setInsertionFormat = function(newformat){
     if (newformat === 'interactive' || newformat === 'link' || newformat === 'none') {
-      $.cookie('format', newformat);
+      setvar('format', newformat);
     }
   };
   out$.changeFeedInsertionFormat = changeFeedInsertionFormat = function(){
@@ -278,7 +294,8 @@
   };
   out$.setFullName = setFullName = function(newfullname){
     if (newfullname != null && newfullname.length > 0) {
-      $.cookie('fullname', newfullname);
+      setvar('fullname', newfullname);
+      localStorage;
     }
   };
   out$.changeFullName = changeFullName = function(){
@@ -288,7 +305,7 @@
   };
   out$.setScriptFormat = setScriptFormat = function(scriptformat){
     $('#scriptselect').val(scriptformat);
-    $.cookie('scriptformat', scriptformat);
+    setvar('scriptformat', scriptformat);
     root.scriptformat = scriptformat;
   };
   out$.changeScriptFormat = changeScriptFormat = function(){
@@ -340,13 +357,13 @@
   $(document).ready(function(){
     var param, condition;
     param = getUrlParameters();
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'chinese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, $.cookie('format'), 'interactive'));
-    setFullName(firstNonNull(param.fullname, $.cookie('fullname'), 'Anonymous User'));
-    setScriptFormat(firstNonNull(param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'));
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
+    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+    setFullName(firstNonNull(param.fullname, getvar('fullname'), 'Anonymous User'));
+    setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
       root.qcontext = 'facebook';
-      condition = $.cookie('format');
+      condition = getvar('format');
       addlog({
         type: 'feedinsert'
       });

@@ -14,15 +14,20 @@ export post-json = (url, jsondata, callback) ->
     #dataType: 'json'
   }
 
+getvar = (varname) ->
+  if localStorage?
+    output = localStorage.getItem varname
+    if output?
+      return output
+  return $.cookie varname
+
 get-user-name = ->
   if root.fullname?
     return root.fullname
-  else
-    root.fullname = $.cookie('fullname')
-    if root.fullname?
-      return root.fullname
-    else
-      return 'Anonymous User'
+  root.fullname = getvar 'fullname'
+  if root.fullname?
+    return root.fullname
+  return 'Anonymous User'
 
 #get-format = ->
 #
@@ -30,9 +35,9 @@ get-user-name = ->
 export addlog = (logdata) ->
   data = $.extend {}, logdata
   data.username = get-user-name()
-  data.lang = $.cookie('lang')
-  data.format = $.cookie('format')
-  data.scriptformat = $.cookie('scriptformat')
+  data.lang = getvar('lang')
+  data.format = getvar('format')
+  data.scriptformat = getvar('scriptformat')
   data.qcontext = root.qcontext
   data.time = Date.now()
   data.timeloc = new Date().toString()

@@ -8,10 +8,23 @@ J = $.jade
 {addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
+export setvar = (varname, varval) ->
+  if localStorage?
+    localStorage.setItem varname, varval
+  $.cookie varname, varval
+  return
+
+export getvar = (varname) ->
+  if localStorage?
+    output = localStorage.getItem varname
+    if output?
+      return output
+  return $.cookie varname
+
 set-flashcard-set = (new_flashcard_set) ->
   new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set
-  if new_flashcard_set != $.cookie('lang')
-    $.cookie('lang', new_flashcard_set)
+  if new_flashcard_set != getvar('lang')
+    setvar('lang', new_flashcard_set)
   root.current_flashcard_set = new_flashcard_set
   root.current_language_name = language_names[new_flashcard_set]
   root.current_language_code = language_codes[current_language_name]
@@ -181,7 +194,7 @@ question-with-words = (allwords, langname) ->
 export goto-quiz-page = ->
   $('.mainpage').hide()
   $('#quizpage').show()
-  hideoption = $.cookie('hideoption')
+  hideoption = getvar('hideoption')
   if hideoption? and hideoption != 'false' and hideoption != false
     $('#optionbutton').hide()
     $('#showanswersbutton').css({margin-right: '0px', width: '100%'})
@@ -195,9 +208,9 @@ export goto-option-page = ->
   $('.mainpage').hide()
   $('#optionpage').show()
   $('#langselect').val(root.current_flashcard_set)
-  $('#formatselect').val($.cookie('format'))
-  $('#fullnameinput').val($.cookie('fullname'))
-  $('#scriptselect').val($.cookie('scriptformat'))
+  $('#formatselect').val(getvar('format'))
+  $('#fullnameinput').val(getvar('fullname'))
+  $('#scriptselect').val(getvar('scriptformat'))
   return
 
 export goto-chat-page = ->
@@ -214,7 +227,7 @@ export change-lang = ->
 
 export set-insertion-format = (newformat) ->
   if newformat == 'interactive' or newformat == 'link' or newformat == 'none'
-    $.cookie('format', newformat)
+    setvar('format', newformat)
   return
 
 export change-feed-insertion-format = ->
@@ -224,7 +237,8 @@ export change-feed-insertion-format = ->
 
 export set-full-name = (newfullname) ->
   if newfullname? and newfullname.length > 0
-    $.cookie('fullname', newfullname)
+    setvar('fullname', newfullname)
+    localStorage
   return
 
 export change-full-name = ->
@@ -234,7 +248,7 @@ export change-full-name = ->
 
 export set-script-format = (scriptformat) ->
   $('#scriptselect').val(scriptformat)
-  $.cookie 'scriptformat', scriptformat
+  setvar 'scriptformat', scriptformat
   root.scriptformat = scriptformat
   return
 
@@ -274,13 +288,13 @@ root.qcontext = null
 
 $(document).ready ->
   param = getUrlParameters()
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, $.cookie('lang'), 'chinese1'
-  set-insertion-format <| first-non-null param.format, param.condition, $.cookie('format'), 'interactive'
-  set-full-name <| first-non-null param.fullname, $.cookie('fullname'), 'Anonymous User'
-  set-script-format <| first-non-null param.script, param.scriptformat, $.cookie('scriptformat'), 'show romanized only'
+  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'
+  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+  set-full-name <| first-non-null param.fullname, getvar('fullname'), 'Anonymous User'
+  set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
   if param.facebook? and param.facebook != 'false' and param.facebook != false
     root.qcontext = 'facebook'
-    condition = $.cookie('format')
+    condition = getvar('format')
     addlog {type: 'feedinsert'}
     if condition? and condition == 'link'
       window.location = '/control'
