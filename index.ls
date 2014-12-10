@@ -21,6 +21,56 @@ export getvar = (varname) ->
       return output
   return $.cookie varname
 
+root.srs_words = null # kanji -> bucket num 1 -> inf, word reviewed with probability proportional to 1 / bucket num
+
+values_over_1 = (dict) ->
+  output = {}
+  for k,v of dict
+    output[k] = 1.0 / v
+  return output
+
+normalize_values_to_sum_to_1 = (dict) ->
+  output = {}
+  current_sum = 0
+  for k,v of dict
+    current_sum += v
+  if current_sum == 0
+    return
+  for k,v of dict
+    output[k] = v / current_sum
+  return output
+
+export word_wrong = (kanji) ->
+  curbucket = root.srs_words[kanji]
+  if not curbucket?
+    curbucket = 1
+  root.srs_words[kanji] = Math.max(1, curbucket - 1)
+  localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
+  return
+
+export word_correct = (kanji) ->
+  curbucket = root.srs_words[kanji]
+  if not curbucket?
+    curbucket = 1
+  root.srs_words[kanji] = curbucket + 1
+  localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
+  return
+
+load-srs-words = ->
+  if localStorage?
+    stored_srs = localStorage.getItem('srs_' + getvar('lang'))
+    if stored_srs?
+      try
+        root.srs_words = JSON.parse stored_srs
+        return
+      catch
+        root.srs_words = null
+  root.srs_words = {}
+  for wordinfo in flashcard_sets[getvar('lang')]
+    root.srs_words[wordinfo.kanji] = 1
+  return
+
+
 set-flashcard-set = (new_flashcard_set) ->
   new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set
   if new_flashcard_set != getvar('lang')
@@ -29,6 +79,7 @@ set-flashcard-set = (new_flashcard_set) ->
   root.current_language_name = language_names[new_flashcard_set]
   root.current_language_code = language_codes[current_language_name]
   root.vocabulary = flashcard_sets[new_flashcard_set]
+  load-srs-words()
 
 select-idx = (list) ->
   return Math.random() * list.length |> Math.floor
@@ -79,8 +130,27 @@ root.curq-langname = null
 root.qnum = 0
 root.numtries = 0
 
+get_kanji_probabilities = ->
+  return normalize_values_to_sum_to_1 values_over_1(root.srs_words)
+
+export select_kanji_from_srs = ->
+  randval = Math.random()
+  cursum = 0
+  for k,v of get_kanji_probabilities()
+    cursum += v
+    if cursum >= randval
+      return k
+
+export select_word_from_srs = ->
+  kanji = select_kanji_from_srs()
+  for wordinfo in root.vocabulary
+    if wordinfo.kanji == kanji
+      return wordinfo
+
 export new-question = ->
-  word = select-elem root.vocabulary |> deep-copy
+  #console.log select_kanji_from_srs()
+  #word = select-elem root.vocabulary |> deep-copy
+  word = select_word_from_srs() |> deep-copy
   word.correct = true
   root.current-word = word
   otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
@@ -184,6 +254,10 @@ question-with-words = (allwords, langname) ->
         set-timeout ->
           new-question()
         , 1300
+        if root.numtries == 0 and not root.showedanswers
+          word_correct(elem.kanji)
+        else
+          word_wrong(elem.kanji)
       else
         #optiondiv.remove-class 'btn-default'
         #optiondiv.add-class 'btn-danger'

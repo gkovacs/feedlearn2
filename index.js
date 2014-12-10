@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setvar, getvar, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, setvar, getvar, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -22,6 +22,71 @@
     }
     return $.cookie(varname);
   };
+  root.srs_words = null;
+  values_over_1 = function(dict){
+    var output, k, v;
+    output = {};
+    for (k in dict) {
+      v = dict[k];
+      output[k] = 1.0 / v;
+    }
+    return output;
+  };
+  normalize_values_to_sum_to_1 = function(dict){
+    var output, current_sum, k, v;
+    output = {};
+    current_sum = 0;
+    for (k in dict) {
+      v = dict[k];
+      current_sum += v;
+    }
+    if (current_sum === 0) {
+      return;
+    }
+    for (k in dict) {
+      v = dict[k];
+      output[k] = v / current_sum;
+    }
+    return output;
+  };
+  out$.word_wrong = word_wrong = function(kanji){
+    var curbucket;
+    curbucket = root.srs_words[kanji];
+    if (curbucket == null) {
+      curbucket = 1;
+    }
+    root.srs_words[kanji] = Math.max(1, curbucket - 1);
+    localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
+  };
+  out$.word_correct = word_correct = function(kanji){
+    var curbucket;
+    curbucket = root.srs_words[kanji];
+    if (curbucket == null) {
+      curbucket = 1;
+    }
+    root.srs_words[kanji] = curbucket + 1;
+    localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
+  };
+  loadSrsWords = function(){
+    var stored_srs, e, i$, ref$, len$, wordinfo;
+    if (typeof localStorage != 'undefined' && localStorage !== null) {
+      stored_srs = localStorage.getItem('srs_' + getvar('lang'));
+      if (stored_srs != null) {
+        try {
+          root.srs_words = JSON.parse(stored_srs);
+          return;
+        } catch (e$) {
+          e = e$;
+          root.srs_words = null;
+        }
+      }
+    }
+    root.srs_words = {};
+    for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
+      wordinfo = ref$[i$];
+      root.srs_words[wordinfo.kanji] = 1;
+    }
+  };
   setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
     if (new_flashcard_set !== getvar('lang')) {
@@ -30,7 +95,8 @@
     root.current_flashcard_set = new_flashcard_set;
     root.current_language_name = language_names[new_flashcard_set];
     root.current_language_code = language_codes[current_language_name];
-    return root.vocabulary = flashcard_sets[new_flashcard_set];
+    root.vocabulary = flashcard_sets[new_flashcard_set];
+    return loadSrsWords();
   };
   selectIdx = function(list){
     return Math.floor(
@@ -99,10 +165,35 @@
   root.curqLangname = null;
   root.qnum = 0;
   root.numtries = 0;
+  get_kanji_probabilities = function(){
+    return normalize_values_to_sum_to_1(values_over_1(root.srs_words));
+  };
+  out$.select_kanji_from_srs = select_kanji_from_srs = function(){
+    var randval, cursum, k, ref$, v;
+    randval = Math.random();
+    cursum = 0;
+    for (k in ref$ = get_kanji_probabilities()) {
+      v = ref$[k];
+      cursum += v;
+      if (cursum >= randval) {
+        return k;
+      }
+    }
+  };
+  out$.select_word_from_srs = select_word_from_srs = function(){
+    var kanji, i$, ref$, len$, wordinfo;
+    kanji = select_kanji_from_srs();
+    for (i$ = 0, len$ = (ref$ = root.vocabulary).length; i$ < len$; ++i$) {
+      wordinfo = ref$[i$];
+      if (wordinfo.kanji === kanji) {
+        return wordinfo;
+      }
+    }
+  };
   out$.newQuestion = newQuestion = function(){
     var word, otherwords, i$, len$, allwords, langname;
     word = deepCopy(
-    selectElem(root.vocabulary));
+    select_word_from_srs());
     word.correct = true;
     root.currentWord = word;
     otherwords = deepCopy(
@@ -233,9 +324,14 @@
           optiondiv.addClass('btn-success');
           showAnswer(optiondiv);
           playSoundCurrentWord();
-          return setTimeout(function(){
+          setTimeout(function(){
             return newQuestion();
           }, 1300);
+          if (root.numtries === 0 && !root.showedanswers) {
+            return word_correct(elem.kanji);
+          } else {
+            return word_wrong(elem.kanji);
+          }
         } else {
           if (!optiondiv.data('showed')) {
             showAnswer(optiondiv);
