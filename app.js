@@ -190,7 +190,7 @@
   };
   app.get('/removeuserevent_get', function(req, res){
     var ref$, username, eventname;
-    ref$ = req.body, username = ref$.username, eventname = ref$.eventname;
+    ref$ = req.query, username = ref$.username, eventname = ref$.eventname;
     if (username == null || eventname == null) {
       res.send('need username and eventname');
       return;

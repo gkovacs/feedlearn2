@@ -200,7 +200,7 @@ settimestampforuserevent_express = (data, res) ->
         return
 
 app.get '/removeuserevent_get', (req, res) ->
-  {username, eventname} = req.body
+  {username, eventname} = req.query
   if not username? or not eventname?
     res.send 'need username and eventname'
     return
