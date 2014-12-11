@@ -105,7 +105,7 @@
       });
     });
   });
-  app.get('/email_japanese.png', function(req, res){
+  app.get('/email-japanese.png', function(req, res){
     addlogemail({
       type: 'emailopened',
       username: req.query.emailuser,

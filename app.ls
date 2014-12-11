@@ -115,7 +115,7 @@ app.get '/viewlogfb', (req, res) ->
       res.send <| JSON.stringify results
       db.close()
 
-app.get '/email_japanese.png', (req, res) ->
+app.get '/email-japanese.png', (req, res) ->
   addlogemail {type: 'emailopened', username: req.query.emailuser, timesent: req.query.timesent, timeopened: Date.now()}
   res.sendfile 'feedlearn_email_japanese.png'
 
