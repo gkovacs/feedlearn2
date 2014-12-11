@@ -163,7 +163,7 @@ show-pretest-done = (num, timestamp) ->
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
   $('#pretest' + num + 'check').css 'visibility', 'visible'
-  $('#pretest' + num + 'button').attr 'disabled', true
+  #$('#pretest' + num + 'button').attr 'disabled', true
   $('#pretest' + num + 'donedisplay').css('color', 'green').text 'You submitted pre-test ' + num + ' on ' + readable
 
 show-posttest-done = (num, timestamp) ->
@@ -171,7 +171,7 @@ show-posttest-done = (num, timestamp) ->
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
   $('#posttest' + num + 'check').css 'visibility', 'visible'
-  $('#posttest' + num + 'button').attr 'disabled', true
+  #$('#posttest' + num + 'button').attr 'disabled', true
   $('#posttest' + num + 'donedisplay').css('color', 'green').text 'You submitted post-test ' + num + ' on ' + readable
 
 show-consent-agreed = (timestamp) ->
