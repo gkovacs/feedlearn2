@@ -412,6 +412,9 @@ $(document).ready ->
       #window.location = '/control'
       show-controlpage()
       return
+  else if param.email? and param.email != 'false' and param.email != false
+    root.qcontext = 'emailvisit'
+    addlog {type: 'emailvisit'}
   else
     root.qcontext = 'website'
     addlog {type: 'webvisit'}

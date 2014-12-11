@@ -511,6 +511,11 @@
         showControlpage();
         return;
       }
+    } else if (param.email != null && param.email !== 'false' && param.email !== false) {
+      root.qcontext = 'emailvisit';
+      addlog({
+        type: 'emailvisit'
+      });
     } else {
       root.qcontext = 'website';
       addlog({
