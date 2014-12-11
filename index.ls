@@ -387,7 +387,7 @@ $(document).ready ->
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name
   if root.fullname?
     setvar 'fullname', root.fullname
-    window.location = '/index?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
+    window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
     return
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'
   set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'

@@ -479,7 +479,7 @@
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
     if (root.fullname != null) {
       setvar('fullname', root.fullname);
-      window.location = '/index?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
+      window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
       return;
     }
     setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
