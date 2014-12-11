@@ -44,6 +44,10 @@ get-logs-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('logs'), db
 
+get-logs-email-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('emaillogs'), db
+
 get-logs-fb-collection = (callback) ->
   get-mongo-db2 (db) ->
     callback db.collection('fblogs'), db
@@ -99,12 +103,21 @@ app.get '/viewlog', (req, res) ->
       res.send <| JSON.stringify results
       db.close()
 
+app.get '/viewlogemail', (req, res) ->
+  get-logs-email-collection (logs, db) ->
+    logs.find().toArray (err, results) ->
+      res.send <| JSON.stringify results
+      db.close()
+
 app.get '/viewlogfb', (req, res) ->
   get-logs-fb-collection (logs, db) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
 
+app.get '/email_japanese.png', (req, res) ->
+  addlogemail {type: 'emailopened', username: req.query.emailuser, timesent: req.query.timesent, timeopened: Date.now()}
+  res.sendfile 'feedlearn_email_japanese.png'
 
 getvar = (varname, callback) ->
   get-grid (grid, db) ->
@@ -413,19 +426,42 @@ app.post '/setvar', postify(setvar_express)
 
 app.post '/settimestampforuserevent', postify(settimestampforuserevent_express)
 
+addlog = (data, callback) ->
+  if not data.username?
+    callback 'need to provide username'
+    return
+  get-logs-collection (logs, db) ->
+    logs.insert data, (err, docs) ->
+      if err?
+        if callback?
+          callback <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        if callback?
+          callback <| 'successful insertion'
+      db.close()
+
+addlogemail = (data, callback) ->
+  if not data.username?
+    callback 'need to provide username'
+    return
+  get-logs-email-collection (logs, db) ->
+    logs.insert data, (err, docs) ->
+      if err?
+        if callback?
+          callback <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        if callback?
+          callback <| 'successful insertion'
+      db.close()
+
 app.post '/addlog', (req, res) ->
   username = req.body.username
   if not username?
     res.send 'need to provide username'
     return
   #console.log req.body
-  get-logs-collection (logs, db) ->
-    logs.insert req.body, (err, docs) ->
-      if err?
-        res.send <| 'error upon insertion: ' + JSON.stringify(err)
-      else
-        res.send <| 'successful insertion'
-      db.close()
+  addlog req.body, (result) ->
+    res.send result
 
 app.post '/addlogfb', (req, res) ->
   username = req.body.username

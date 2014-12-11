@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, map, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers;
+  var express, path, bodyParser, async, map, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -43,6 +43,11 @@
       return callback(db.collection('logs'), db);
     });
   };
+  getLogsEmailCollection = function(callback){
+    return getMongoDb(function(db){
+      return callback(db.collection('emaillogs'), db);
+    });
+  };
   getLogsFbCollection = function(callback){
     return getMongoDb2(function(db){
       return callback(db.collection('fblogs'), db);
@@ -84,6 +89,14 @@
       });
     });
   });
+  app.get('/viewlogemail', function(req, res){
+    return getLogsEmailCollection(function(logs, db){
+      return logs.find().toArray(function(err, results){
+        res.send(JSON.stringify(results));
+        return db.close();
+      });
+    });
+  });
   app.get('/viewlogfb', function(req, res){
     return getLogsFbCollection(function(logs, db){
       return logs.find().toArray(function(err, results){
@@ -91,6 +104,15 @@
         return db.close();
       });
     });
+  });
+  app.get('/email_japanese.png', function(req, res){
+    addlogemail({
+      type: 'emailopened',
+      username: req.query.emailuser,
+      timesent: req.query.timesent,
+      timeopened: Date.now()
+    });
+    return res.sendfile('feedlearn_email_japanese.png');
   });
   getvar = function(varname, callback){
     return getGrid(function(grid, db){
@@ -466,6 +488,46 @@
   });
   app.post('/setvar', postify(setvar_express));
   app.post('/settimestampforuserevent', postify(settimestampforuserevent_express));
+  addlog = function(data, callback){
+    if (data.username == null) {
+      callback('need to provide username');
+      return;
+    }
+    return getLogsCollection(function(logs, db){
+      return logs.insert(data, function(err, docs){
+        if (err != null) {
+          if (callback != null) {
+            callback('error upon insertion: ' + JSON.stringify(err));
+          }
+        } else {
+          if (callback != null) {
+            callback('successful insertion');
+          }
+        }
+        return db.close();
+      });
+    });
+  };
+  addlogemail = function(data, callback){
+    if (data.username == null) {
+      callback('need to provide username');
+      return;
+    }
+    return getLogsEmailCollection(function(logs, db){
+      return logs.insert(data, function(err, docs){
+        if (err != null) {
+          if (callback != null) {
+            callback('error upon insertion: ' + JSON.stringify(err));
+          }
+        } else {
+          if (callback != null) {
+            callback('successful insertion');
+          }
+        }
+        return db.close();
+      });
+    });
+  };
   app.post('/addlog', function(req, res){
     var username;
     username = req.body.username;
@@ -473,15 +535,8 @@
       res.send('need to provide username');
       return;
     }
-    return getLogsCollection(function(logs, db){
-      return logs.insert(req.body, function(err, docs){
-        if (err != null) {
-          res.send('error upon insertion: ' + JSON.stringify(err));
-        } else {
-          res.send('successful insertion');
-        }
-        return db.close();
-      });
+    return addlog(req.body, function(result){
+      return res.send(result);
     });
   });
   app.post('/addlogfb', function(req, res){
