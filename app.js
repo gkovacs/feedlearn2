@@ -188,6 +188,24 @@
       }
     });
   };
+  app.get('/removeuserevent_get', function(req, res){
+    var ref$, username, eventname;
+    ref$ = req.body, username = ref$.username, eventname = ref$.eventname;
+    if (username == null || eventname == null) {
+      res.send('need username and eventname');
+      return;
+    }
+    return getvardict('evts|' + username, function(events){
+      if (events[eventname] != null) {
+        delete events[eventname];
+        return setvardict('evts|' + username, events, function(){
+          res.send('done');
+        });
+      } else {
+        res.send('eventname was not in the events list');
+      }
+    });
+  });
   app.get('/settimestampforuserevent_get', getify(settimestampforuserevent_express));
   minidx = function(list){
     var minval, minidx, i$, len$, i, x;

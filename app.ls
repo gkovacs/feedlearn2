@@ -199,6 +199,21 @@ settimestampforuserevent_express = (data, res) ->
         res.send 'done'
         return
 
+app.get '/removeuserevent_get', (req, res) ->
+  {username, eventname} = req.body
+  if not username? or not eventname?
+    res.send 'need username and eventname'
+    return
+  getvardict ('evts|' + username), (events) ->
+    if events[eventname]?
+      delete events[eventname]
+      setvardict ('evts|' + username), events, ->
+        res.send 'done'
+        return
+    else
+      res.send 'eventname was not in the events list'
+      return
+
 app.get '/settimestampforuserevent_get', getify(settimestampforuserevent_express)
 
 
