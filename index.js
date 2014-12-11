@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -51,6 +51,16 @@
     root.srs_words[kanji] = curbucket + 1;
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
+  is_srs_correct = function(srs_words){
+    var i$, ref$, len$, wordinfo;
+    for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
+      wordinfo = ref$[i$];
+      if (srs_words[wordinfo.kanji] == null) {
+        return false;
+      }
+    }
+    return true;
+  };
   loadSrsWords = function(){
     var stored_srs, e, i$, ref$, len$, wordinfo;
     if (typeof localStorage != 'undefined' && localStorage !== null) {
@@ -58,18 +68,23 @@
       if (stored_srs != null) {
         try {
           root.srs_words = JSON.parse(stored_srs);
-          return;
+          if (is_srs_correct(root.srs_words)) {
+            console.log('srs_' + getvar('lang') + ' loaded successfully');
+            return;
+          }
         } catch (e$) {
           e = e$;
           root.srs_words = null;
         }
       }
     }
+    console.log('rebuildling srs_' + getvar('lang'));
     root.srs_words = {};
     for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
       root.srs_words[wordinfo.kanji] = 1;
     }
+    localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
   setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);

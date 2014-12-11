@@ -43,18 +43,28 @@ export word_correct = (kanji) ->
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
+is_srs_correct = (srs_words) ->
+  for wordinfo in flashcard_sets[getvar('lang')]
+    if not srs_words[wordinfo.kanji]?
+      return false
+  return true
+
 load-srs-words = ->
   if localStorage?
     stored_srs = localStorage.getItem('srs_' + getvar('lang'))
     if stored_srs?
       try
         root.srs_words = JSON.parse stored_srs
-        return
+        if is_srs_correct root.srs_words
+          console.log 'srs_' + getvar('lang') + ' loaded successfully'
+          return
       catch
         root.srs_words = null
+  console.log 'rebuildling srs_' + getvar('lang')
   root.srs_words = {}
   for wordinfo in flashcard_sets[getvar('lang')]
     root.srs_words[wordinfo.kanji] = 1
+  localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
 
