@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -459,13 +459,31 @@
     });
     return window.open('https://feedlearn.herokuapp.com');
   };
+  shallowCopy = function(dict){
+    return $.extend({}, dict);
+  };
+  excludeParam = function(){
+    var params, output, i$, len$, param;
+    params = slice$.call(arguments);
+    output = shallowCopy(getUrlParameters());
+    for (i$ = 0, len$ = params.length; i$ < len$; ++i$) {
+      param = params[i$];
+      delete output[param];
+    }
+    return output;
+  };
   $(document).ready(function(){
     var param, condition;
     forcehttps();
     param = getUrlParameters();
+    root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
+    if (root.fullname != null) {
+      setvar('fullname', root.fullname);
+      window.location = '/index?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
+      return;
+    }
     setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
     setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
-    setFullName(firstNonNull(param.fullname, param.username, getvar('fullname'), 'Anonymous User'));
     setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
     updatecookies();
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
