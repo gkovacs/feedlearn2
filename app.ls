@@ -172,9 +172,12 @@ setvar_express = (data, res) ->
 
 app.get '/setvar_get', getify(setvar_express)
 
+getuserevents = (username, callback) ->
+  getvardict ('evts|' + username), callback
+
 app.get '/getuserevents', (req, res) ->
   {username} = req.query
-  getvardict ('evts|' + username), (events) ->
+  getuserevents username, (events) ->
     #console.log 'getuserevents'
     #console.log events
     #console.log JSON.stringify events
@@ -189,7 +192,7 @@ settimestampforuserevent_express = (data, res) ->
   if not username? or not eventname?
     res.send 'need username and eventname'
     return
-  getvardict ('evts|' + username), (events) ->
+  getuserevents username, (events) ->
     if events[eventname]?
       res.send 'already set timestamp for event'
       return
@@ -204,7 +207,7 @@ app.get '/removeuserevent_get', (req, res) ->
   if not username? or not eventname?
     res.send 'need username and eventname'
     return
-  getvardict ('evts|' + username), (events) ->
+  getuserevents username, (events) ->
     if events[eventname]?
       delete events[eventname]
       setvardict ('evts|' + username), events, ->
@@ -229,7 +232,7 @@ minidx = (list) ->
 next-assigned-condition = (conditions) ->
   counts = [0] * 6
   for k,v of conditions
-    if 0 <= v <= 5
+    if (0 <= v <= 5)
       counts[v] += 1
   return minidx(counts)
 
@@ -260,20 +263,68 @@ app.get '/setconditionforuser_get', (req, res) ->
   getvardict 'conditions', (conditions) ->
     conditions[username] = parseInt condition
     setvardict 'conditions', conditions, ->
-      res.send condition
+      res.send <| JSON.stringify condition
+
+conditionforuser = (username, callback) ->
+  if not username?
+    callback 0
+    return
+  getvardict 'conditions', (conditions) ->
+    if conditions[username]?
+      callback <| parseInt conditions[username]
+    else
+      conditions[username] = next-assigned-condition conditions
+      setvardict 'conditions', conditions, ->
+        callback <| parseInt conditions[username]
 
 app.get '/conditionforuser', (req, res) ->
   {username} = req.query
   if not username?
     res.send 'need to provide username'
     return
-  getvardict 'conditions', (conditions) ->
-    if conditions[username]?
-      res.send <| JSON.stringify conditions[username]
-    else
-      conditions[username] = next-assigned-condition conditions
-      setvardict 'conditions', conditions, ->
-        res.send <| JSON.stringify conditions[username]
+  conditionforuser username, (condition) ->
+    res.send <| JSON.stringify condition
+
+condition_to_order = [
+  <[ interactive link none ]>
+  <[ interactive none link ]>
+  <[ link interactive none ]>
+  <[ link none interactive ]>
+  <[ none interactive link ]>
+  <[ none link interactive ]>
+]
+
+cookies-from-events-and-condition = (events, condition) ->
+  output = {}
+  if not (events.pretest1? or events.pretest2? or events.pretest3?)
+    return output
+  if not (0 <= condition <= 5)
+    return output
+  partnum = switch
+  | events.pretest3? => 2
+  | events.pretest2? => 1
+  | events.pretest1? => 0
+  output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum]
+  output.format = condition_to_order[condition][partnum]
+  output.condition = condition
+  return output
+
+cookiesforuser = (username, callback) ->
+  conditionforuser username, (condition) ->
+    if not (0 <= condition <= 5)
+      callback {}
+      return
+    getuserevents username, (events) ->
+      callback cookies-from-events-and-condition(events, condition)
+      return
+
+app.get '/cookiesforuser', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send '{}'
+    return
+  cookiesforuser username, (cookies) ->
+    res.send <| JSON.stringify cookies
 
 
 app.get '/addlog_get', (req, res) ->

@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, settimestampforuserevent_express, minidx, nextAssignedCondition;
+  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsAndCondition, cookiesforuser;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -163,10 +163,13 @@
     });
   };
   app.get('/setvar_get', getify(setvar_express));
+  getuserevents = function(username, callback){
+    return getvardict('evts|' + username, callback);
+  };
   app.get('/getuserevents', function(req, res){
     var username;
     username = req.query.username;
-    return getvardict('evts|' + username, function(events){
+    return getuserevents(username, function(events){
       res.send(JSON.stringify(events));
     });
   });
@@ -177,7 +180,7 @@
       res.send('need username and eventname');
       return;
     }
-    return getvardict('evts|' + username, function(events){
+    return getuserevents(username, function(events){
       if (events[eventname] != null) {
         res.send('already set timestamp for event');
       } else {
@@ -195,7 +198,7 @@
       res.send('need username and eventname');
       return;
     }
-    return getvardict('evts|' + username, function(events){
+    return getuserevents(username, function(events){
       if (events[eventname] != null) {
         delete events[eventname];
         return setvardict('evts|' + username, events, function(){
@@ -265,10 +268,26 @@
     return getvardict('conditions', function(conditions){
       conditions[username] = parseInt(condition);
       return setvardict('conditions', conditions, function(){
-        return res.send(condition);
+        return res.send(JSON.stringify(condition));
       });
     });
   });
+  conditionforuser = function(username, callback){
+    if (username == null) {
+      callback(0);
+      return;
+    }
+    return getvardict('conditions', function(conditions){
+      if (conditions[username] != null) {
+        return callback(parseInt(conditions[username]));
+      } else {
+        conditions[username] = nextAssignedCondition(conditions);
+        return setvardict('conditions', conditions, function(){
+          return callback(parseInt(conditions[username]));
+        });
+      }
+    });
+  };
   app.get('/conditionforuser', function(req, res){
     var username;
     username = req.query.username;
@@ -276,15 +295,55 @@
       res.send('need to provide username');
       return;
     }
-    return getvardict('conditions', function(conditions){
-      if (conditions[username] != null) {
-        return res.send(JSON.stringify(conditions[username]));
-      } else {
-        conditions[username] = nextAssignedCondition(conditions);
-        return setvardict('conditions', conditions, function(){
-          return res.send(JSON.stringify(conditions[username]));
-        });
+    return conditionforuser(username, function(condition){
+      return res.send(JSON.stringify(condition));
+    });
+  });
+  condition_to_order = [['interactive', 'link', 'none'], ['interactive', 'none', 'link'], ['link', 'interactive', 'none'], ['link', 'none', 'interactive'], ['none', 'interactive', 'link'], ['none', 'link', 'interactive']];
+  cookiesFromEventsAndCondition = function(events, condition){
+    var output, partnum;
+    output = {};
+    if (!(events.pretest1 != null || events.pretest2 != null || events.pretest3 != null)) {
+      return output;
+    }
+    if (!(0 <= condition && condition <= 5)) {
+      return output;
+    }
+    partnum = (function(){
+      switch (false) {
+      case events.pretest3 == null:
+        return 2;
+      case events.pretest2 == null:
+        return 1;
+      case events.pretest1 == null:
+        return 0;
       }
+    }());
+    output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum];
+    output.format = condition_to_order[condition][partnum];
+    output.condition = condition;
+    return output;
+  };
+  cookiesforuser = function(username, callback){
+    return conditionforuser(username, function(condition){
+      if (!(0 <= condition && condition <= 5)) {
+        callback({});
+        return;
+      }
+      return getuserevents(username, function(events){
+        callback(cookiesFromEventsAndCondition(events, condition));
+      });
+    });
+  };
+  app.get('/cookiesforuser', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('{}');
+      return;
+    }
+    return cookiesforuser(username, function(cookies){
+      return res.send(JSON.stringify(cookies));
     });
   });
   app.get('/addlog_get', function(req, res){

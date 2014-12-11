@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, setvar, getvar, getUserEvents, getCondition, getUserName, printcb, forcehttps, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, firstNonNull, getUrlParameters, setvar, getvar, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.firstNonNull = firstNonNull = function(){
     var args, i$, len$, x;
@@ -77,5 +77,27 @@
     if (window.location.href.indexOf('http://feedlearn.herokuapp.com') === 0) {
       return window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com');
     }
+  };
+  out$.updatecookies = updatecookies = function(){
+    return $.getJSON('/cookiesforuser?' + $.param({
+      username: getUserName()
+    }), function(cookies){
+      var needrefresh, k, v, curv;
+      needrefresh = false;
+      for (k in cookies) {
+        v = cookies[k];
+        if (v == null) {
+          continue;
+        }
+        curv = getvar(k);
+        if (curv == null || v.toString() !== curv.toString()) {
+          needrefresh = true;
+          setvar(k, v);
+        }
+      }
+      if (needrefresh) {
+        return window.location = window.location;
+      }
+    });
   };
 }).call(this);

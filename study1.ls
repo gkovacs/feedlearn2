@@ -1,6 +1,6 @@
 root = exports ? this
 
-{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies} = root # commonlib.ls
 {post-json, post-start-event} = root # logging_client.ls
 
 root.skip-prereqs = false
@@ -241,6 +241,7 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location.href = '/study1'
     return
+  updatecookies()
   root.fullname = first-non-null root.fullname, getvar('fullname') #, 'Anonymous User'
   if root.fullname? and root.fullname != 'Anonymous User'
     have-full-name()

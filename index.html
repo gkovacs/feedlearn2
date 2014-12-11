@@ -20,7 +20,7 @@
     <script src="logging_client.js"></script>
     <script src="index.js"></script>
     <audio id="speechsynth" style="display: none" src="error.mp3"></audio>
-    <div style="background-color: white" class="bluebackground">
+    <div id="mainviewpage" style="background-color: white" class="bluebackground">
       <div id="quizpage" style="display: none" class="mainpage">
         <div style="padding-top: 12px; position: absolute"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png"></div>
         <div id="questionmessage" style="font-size: 18px; text-align: center"></div>
@@ -66,6 +66,19 @@
         </div>
         <div id="currentanswer" style="font-size: 30px; text-align: center; margin-top: 20px"></div>
         <div style="margin-top: 20px">TODO discussion forum goes here</div>
+      </div>
+    </div>
+    <div id="controlviewpage" style="background-color: white; display: none" onclick="openfeedlearnlink()" class="bluebackgroundcontrol">
+      <div style="padding-top: 12px"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png">
+        <div style="display: inline-block; vertical-align: top; margin-left: 10px"><span style="font-weight: bold; font-size: 15px; color: #3b5998; vertical-align: top; ">FeedLearn</span><br><span style="font-size: 13px; color: #9197a3">Just now</span></div>
+      </div>
+      <div class="titlelink">Study Vocabulary at FeedLearn</div>
+      <div style="display: table-row"><img id="previewdisplay" src="preview.png" style="width: 270px; display: table-cell; border-color: #e9eaed; border-width: 1px; border-style: solid; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px">
+        <div style="display: table-cell; vertical-align: middle; text-align: left; padding-left: 10px; border-color: #e9eaed; border-width: 1px; border-style: solid">
+          <div style="font-size: 13px; font-family: Helvetica, Arial, 'lucida grande',tahoma,verdana,arial,sans-serif"><span>Your friends are studying vocabulary in</span><span> </span><span id="langdisplay">Chinese</span><span> </span><span>at FeedLearn, go join them!</span>
+          </div>
+          <div style="color: grey; font-size: 12px; margin-top: 20px">FEEDLEARN.HEROKUAPP.COM</div>
+        </div>
       </div>
     </div>
   </body>

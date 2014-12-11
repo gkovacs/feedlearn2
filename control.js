@@ -1,6 +1,7 @@
 (function(){
-  var root, openfeedlearnlink, language_names, out$ = typeof exports != 'undefined' && exports || this;
+  var root, updatecookies, getvar, openfeedlearnlink, language_names, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
+  updatecookies = root.updatecookies, getvar = root.getvar;
   out$.openfeedlearnlink = openfeedlearnlink = function(){
     addlog({
       type: 'linkopen',
@@ -16,7 +17,7 @@
   };
   $(document).ready(function(){
     var lang, langname;
-    lang = $.cookie('lang');
+    lang = getvar('lang');
     if (lang != null && language_names[lang] != null) {
       langname = language_names[lang];
       $('#previewdisplay').attr('src', 'preview-' + langname.toLowerCase() + '.png');

@@ -53,3 +53,19 @@ export forcehttps = ->
   #if window.location.href.startsWith('http://feedlearn.herokuapp.com')
   if window.location.href.indexOf('http://feedlearn.herokuapp.com') == 0
     window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com')
+
+export updatecookies = ->
+  $.getJSON ('/cookiesforuser?' + $.param({username: get-user-name()})), (cookies) ->
+    #console.log cookies
+    needrefresh = false
+    for k,v of cookies
+      #console.log k
+      #console.log v
+      if not v?
+        continue
+      curv = getvar(k)
+      if (not curv?) or v.toString() != curv.toString()
+        needrefresh = true
+        setvar k, v
+    if needrefresh
+      window.location = window.location

@@ -1,5 +1,7 @@
 root = exports ? this
 
+{updatecookies, getvar} = root # commonlib.ls
+
 export openfeedlearnlink = ->
   addlog {type: 'linkopen', linkopen: 'link'}
   window.open('https://feedlearn.herokuapp.com')
@@ -12,7 +14,8 @@ language_names = {
 }
 
 $(document).ready ->
-  lang = $.cookie('lang')
+  #updatecookies()
+  lang = getvar('lang')
   if lang? and language_names[lang]?
     langname = language_names[lang]
     $('#previewdisplay').attr 'src', 'preview-' + langname.toLowerCase() + '.png'

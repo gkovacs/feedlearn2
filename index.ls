@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null, getUrlParameters, getvar, setvar, forcehttps} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies} = root # commonlib.ls
 {addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
@@ -355,19 +355,35 @@ goto-page = (page) ->
 
 root.qcontext = null
 
+export show-controlpage = ->
+  $('#mainviewpage').hide()
+  $('#controlviewpage').show()
+  lang = getvar('lang')
+  langname = language_names[lang]
+  if lang? and langname?
+    langname = language_names[lang]
+    $('#previewdisplay').attr 'src', 'preview-' + langname.toLowerCase() + '.png'
+    #$('#previewdisplay').css({
+    #  width: \290px
+    #  display: \table-cell
+    #})
+    $('#langdisplay').text langname
+
 $(document).ready ->
   forcehttps()
   param = getUrlParameters()
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'
   set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
-  set-full-name <| first-non-null param.fullname, getvar('fullname'), 'Anonymous User'
+  set-full-name <| first-non-null param.fullname, param.username, getvar('fullname'), 'Anonymous User'
   set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+  updatecookies()
   if param.facebook? and param.facebook != 'false' and param.facebook != false
     root.qcontext = 'facebook'
     condition = getvar('format')
     addlog {type: 'feedinsert'}
     if condition? and condition == 'link'
-      window.location = '/control'
+      #window.location = '/control'
+      show-controlpage()
       return
   else
     root.qcontext = 'website'

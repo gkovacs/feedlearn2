@@ -20,7 +20,7 @@ html(lang='en')
     script(src='index.js')
     //- audio(style='display: none' src='error.mp3')
     audio#speechsynth(style='display: none' src='error.mp3')
-    .bluebackground(style='background-color: white')
+    .bluebackground#mainviewpage(style='background-color: white')
       #quizpage.mainpage(style='display: none')
         div(style='padding-top: 12px; position: absolute')
           img(style='border-style: solid; border-width: 1px; border-color: grey' src='feedlearn-40px.png')
@@ -77,3 +77,23 @@ html(lang='en')
             span Back to Quiz
         #currentanswer(style='font-size: 30px; text-align: center; margin-top: 20px')
         div(style='margin-top: 20px') TODO discussion forum goes here
+    .bluebackgroundcontrol#controlviewpage(style='background-color: white; display: none' onclick='openfeedlearnlink()')
+      div(style='padding-top: 12px')
+        img(style='border-style: solid; border-width: 1px; border-color: grey' src='feedlearn-40px.png')
+        div(style='display: inline-block; vertical-align: top; margin-left: 10px')
+          span(style='font-weight: bold; font-size: 15px; color: #3b5998; vertical-align: top; ') FeedLearn
+          br
+          span(style='font-size: 13px; color: #9197a3') Just now
+      div.titlelink Study Vocabulary at FeedLearn
+      div(style='display: table-row')
+        img#previewdisplay(src='preview.png' style='width: 270px; display: table-cell; border-color: #e9eaed; border-width: 1px; border-style: solid; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px')
+        div(style='display: table-cell; vertical-align: middle; text-align: left; padding-left: 10px; border-color: #e9eaed; border-width: 1px; border-style: solid')
+          div(style="font-size: 13px; font-family: Helvetica, Arial, 'lucida grande',tahoma,verdana,arial,sans-serif")
+            //- span(style='font-size: 32px') Study Vocabulary at FeedLearn
+            //- br
+            span Your friends are studying vocabulary in
+            span 
+            span#langdisplay Chinese
+            span 
+            span at FeedLearn, go join them!
+          div(style='color: grey; font-size: 12px; margin-top: 20px') FEEDLEARN.HEROKUAPP.COM
