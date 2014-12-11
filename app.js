@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, map, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, cookiesforallusers;
+  var express, path, bodyParser, async, map, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -173,6 +173,34 @@
     username = req.query.username;
     return getuserevents(username, function(events){
       res.send(JSON.stringify(events));
+    });
+  });
+  getusereventsandcookies = function(username, callback){
+    return getuserevents(username, function(events){
+      return cookiesforuser(username, function(cookies){
+        var output, res$, k, ref$, v;
+        res$ = {};
+        for (k in ref$ = events) {
+          v = ref$[k];
+          res$[k] = v;
+        }
+        output = res$;
+        for (k in cookies) {
+          v = cookies[k];
+          output[k] = v;
+        }
+        return callback(output);
+      });
+    });
+  };
+  getallusereventsandcookies = function(callback){
+    return getuserlist(function(userlist){
+      return asyncMapNoerr(userlist, getusereventsandcookies, callback);
+    });
+  };
+  app.get('/getallusereventsandcookies', function(req, res){
+    return getallusereventsandcookies(function(resultsArray){
+      return res.send(JSON.stringify(resultsArray));
     });
   });
   settimestampforuserevent_express = function(data, res){
@@ -378,13 +406,21 @@
       });
     };
   };
-  cookiesforallusers = function(callback){
+  getuserlist = function(callback){
     return getvardict('conditions', function(conditions){
       var usersArray;
       usersArray = dictToKeys(conditions);
-      return async.map(usersArray, addErrToCallback(cookiesforuser), function(err, results){
-        return callback(results);
-      });
+      return callback(usersArray);
+    });
+  };
+  asyncMapNoerr = function(list, func, callback){
+    return async.map(list, addErrToCallback(func), function(err, results){
+      return callback(results);
+    });
+  };
+  cookiesforallusers = function(callback){
+    return getuserlist(function(userlist){
+      return asyncMapNoerr(userlist, cookiesforuser, callback);
     });
   };
   app.get('/cookiesforallusers', function(req, res){

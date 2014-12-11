@@ -186,6 +186,23 @@ app.get '/getuserevents', (req, res) ->
     res.send <| JSON.stringify events
     return
 
+getusereventsandcookies = (username, callback) ->
+  getuserevents username, (events) ->
+    cookiesforuser username, (cookies) ->
+      output = {[k,v] for k,v of events}
+      for k,v of cookies
+        output[k] = v
+      callback output
+
+getallusereventsandcookies = (callback) ->
+  getuserlist (userlist) ->
+    async-map-noerr userlist, getusereventsandcookies, callback
+
+
+app.get '/getallusereventsandcookies', (req, res) ->
+  getallusereventsandcookies (results-array) ->
+    res.send JSON.stringify results-array
+
 settimestampforuserevent_express = (data, res) ->
   {username, eventname} = data
   #console.log 'settimestampforuserevent_express'
@@ -341,17 +358,18 @@ add-err-to-callback = (f) ->
     f x, (results) ->
       callback(null, results)
 
-cookiesforallusers = (callback) ->
+getuserlist = (callback) ->
   getvardict 'conditions', (conditions) ->
     users-array = dict-to-keys conditions
-    #users-and-conditions-array = dict-to-items conditions
-    async.map users-array, add-err-to-callback(cookiesforuser), (err, results) ->
-      #console.log users-array
-      #for [username,condition],i in users-and-conditions-array
-      #for username in users-array
-      #  results[i].fullname = username
-      #  results[i].condition = condition
-      callback results
+    callback users-array
+
+async-map-noerr = (list, func, callback) ->
+  async.map list, add-err-to-callback(func), (err, results) ->
+    callback results
+
+cookiesforallusers = (callback) ->
+  getuserlist (userlist) ->
+    async-map-noerr userlist, cookiesforuser, callback
 
 app.get '/cookiesforallusers', (req, res) ->
   cookiesforallusers (results-array) ->
