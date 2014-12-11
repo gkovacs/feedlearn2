@@ -50,5 +50,6 @@ export printcb = (...args) ->
     console.log x
 
 export forcehttps = ->
-  if window.location.href.startsWith('http://feedlearn.herokuapp.com')
+  #if window.location.href.startsWith('http://feedlearn.herokuapp.com')
+  if window.location.href.indexOf('http://feedlearn.herokuapp.com') == 0
     window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com')
