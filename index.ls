@@ -369,6 +369,10 @@ export show-controlpage = ->
     #})
     $('#langdisplay').text langname
 
+export openfeedlearnlink = ->
+  addlog {type: 'linkopen', linkopen: 'link'}
+  window.open('https://feedlearn.herokuapp.com')
+
 $(document).ready ->
   forcehttps()
   param = getUrlParameters()
