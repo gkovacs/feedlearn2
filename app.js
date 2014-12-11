@@ -1,8 +1,10 @@
 (function(){
-  var express, path, bodyParser, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsAndCondition, cookiesforuser;
+  var express, path, bodyParser, async, map, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, cookiesforallusers;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
+  async = require('async');
+  map = require('prelude-ls').map;
   mongo = require('mongodb');
   MongoClient = mongo.MongoClient, Grid = mongo.Grid;
   mongourl = process.env.MONGOHQ_URL;
@@ -300,13 +302,15 @@
     });
   });
   condition_to_order = [['interactive', 'link', 'none'], ['interactive', 'none', 'link'], ['link', 'interactive', 'none'], ['link', 'none', 'interactive'], ['none', 'interactive', 'link'], ['none', 'link', 'interactive']];
-  cookiesFromEventsAndCondition = function(events, condition){
+  cookiesFromEventsConditionUsername = function(events, condition, username){
     var output, partnum;
     output = {};
-    if (!(events.pretest1 != null || events.pretest2 != null || events.pretest3 != null)) {
+    output.username = username;
+    if (!(0 <= condition && condition <= 5)) {
       return output;
     }
-    if (!(0 <= condition && condition <= 5)) {
+    output.condition = condition;
+    if (!(events.pretest1 != null || events.pretest2 != null || events.pretest3 != null)) {
       return output;
     }
     partnum = (function(){
@@ -321,7 +325,6 @@
     }());
     output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum];
     output.format = condition_to_order[condition][partnum];
-    output.condition = condition;
     return output;
   };
   cookiesforuser = function(username, callback){
@@ -331,7 +334,7 @@
         return;
       }
       return getuserevents(username, function(events){
-        callback(cookiesFromEventsAndCondition(events, condition));
+        callback(cookiesFromEventsConditionUsername(events, condition, username));
       });
     });
   };
@@ -343,7 +346,50 @@
       return;
     }
     return cookiesforuser(username, function(cookies){
-      return res.send(JSON.stringify(cookies));
+      res.send(JSON.stringify(cookies));
+    });
+  });
+  dictToItems = function(dict){
+    var k, v;
+    return (function(){
+      var ref$, results$ = [];
+      for (k in ref$ = dict) {
+        v = ref$[k];
+        results$.push([k, v]);
+      }
+      return results$;
+    }());
+  };
+  dictToKeys = function(dict){
+    var k, v;
+    return (function(){
+      var ref$, results$ = [];
+      for (k in ref$ = dict) {
+        v = ref$[k];
+        results$.push(k);
+      }
+      return results$;
+    }());
+  };
+  addErrToCallback = function(f){
+    return function(x, callback){
+      return f(x, function(results){
+        return callback(null, results);
+      });
+    };
+  };
+  cookiesforallusers = function(callback){
+    return getvardict('conditions', function(conditions){
+      var usersArray;
+      usersArray = dictToKeys(conditions);
+      return async.map(usersArray, addErrToCallback(cookiesforuser), function(err, results){
+        return callback(results);
+      });
+    });
+  };
+  app.get('/cookiesforallusers', function(req, res){
+    return cookiesforallusers(function(resultsArray){
+      res.send(JSON.stringify(resultsArray));
     });
   });
   app.get('/addlog_get', function(req, res){

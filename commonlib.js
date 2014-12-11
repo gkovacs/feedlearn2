@@ -76,13 +76,24 @@
     }
   };
   out$.updatecookies = updatecookies = function(){
+    var username;
+    username = getUserName();
     return $.getJSON('/cookiesforuser?' + $.param({
-      username: getUserName()
+      username: username
     }), function(cookies){
       var needrefresh, k, v, curv;
+      if (cookies.username == null) {
+        return;
+      }
+      if (cookies.username !== username) {
+        return;
+      }
       needrefresh = false;
       for (k in cookies) {
         v = cookies[k];
+        if (k === 'username') {
+          continue;
+        }
         if (v == null) {
           continue;
         }

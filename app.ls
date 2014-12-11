@@ -2,6 +2,8 @@ require! {
   'express'
   'path'
   'body-parser': 'bodyParser'
+  'async'
+  'prelude-ls': {map}
 }
 
 # mongo
@@ -294,11 +296,13 @@ condition_to_order = [
   <[ none link interactive ]>
 ]
 
-cookies-from-events-and-condition = (events, condition) ->
+cookies-from-events-condition-username = (events, condition, username) ->
   output = {}
-  if not (events.pretest1? or events.pretest2? or events.pretest3?)
-    return output
+  output.username = username
   if not (0 <= condition <= 5)
+    return output
+  output.condition = condition
+  if not (events.pretest1? or events.pretest2? or events.pretest3?)
     return output
   partnum = switch
   | events.pretest3? => 2
@@ -306,7 +310,6 @@ cookies-from-events-and-condition = (events, condition) ->
   | events.pretest1? => 0
   output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum]
   output.format = condition_to_order[condition][partnum]
-  output.condition = condition
   return output
 
 cookiesforuser = (username, callback) ->
@@ -315,7 +318,7 @@ cookiesforuser = (username, callback) ->
       callback {}
       return
     getuserevents username, (events) ->
-      callback cookies-from-events-and-condition(events, condition)
+      callback cookies-from-events-condition-username(events, condition, username)
       return
 
 app.get '/cookiesforuser', (req, res) ->
@@ -325,7 +328,35 @@ app.get '/cookiesforuser', (req, res) ->
     return
   cookiesforuser username, (cookies) ->
     res.send <| JSON.stringify cookies
+    return
 
+dict-to-items = (dict) ->
+  return [[k,v] for k,v of dict]
+
+dict-to-keys = (dict) ->
+  return [k for k,v of dict]
+
+add-err-to-callback = (f) ->
+  return (x, callback) ->
+    f x, (results) ->
+      callback(null, results)
+
+cookiesforallusers = (callback) ->
+  getvardict 'conditions', (conditions) ->
+    users-array = dict-to-keys conditions
+    #users-and-conditions-array = dict-to-items conditions
+    async.map users-array, add-err-to-callback(cookiesforuser), (err, results) ->
+      #console.log users-array
+      #for [username,condition],i in users-and-conditions-array
+      #for username in users-array
+      #  results[i].fullname = username
+      #  results[i].condition = condition
+      callback results
+
+app.get '/cookiesforallusers', (req, res) ->
+  cookiesforallusers (results-array) ->
+    res.send JSON.stringify results-array
+    return
 
 app.get '/addlog_get', (req, res) ->
   username = req.query.username
