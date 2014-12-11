@@ -55,9 +55,6 @@
     });
   };
   out$.getUserName = getUserName = function(){
-    if (root.fullname != null) {
-      return root.fullname;
-    }
     root.fullname = getvar('fullname');
     if (root.fullname != null) {
       return root.fullname;

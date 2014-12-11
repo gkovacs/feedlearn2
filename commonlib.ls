@@ -38,8 +38,8 @@ export get-condition = (callback) ->
     callback <| parseInt condition
 
 export get-user-name = ->
-  if root.fullname?
-    return root.fullname
+  #if root.fullname?
+  #  return root.fullname
   root.fullname = getvar 'fullname'
   if root.fullname?
     return root.fullname

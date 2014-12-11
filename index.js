@@ -382,7 +382,6 @@
   out$.setFullName = setFullName = function(newfullname){
     if (newfullname != null && newfullname.length > 0) {
       setvar('fullname', newfullname);
-      localStorage;
     }
   };
   out$.changeFullName = changeFullName = function(){

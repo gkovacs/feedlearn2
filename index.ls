@@ -307,7 +307,6 @@ export change-feed-insertion-format = ->
 export set-full-name = (newfullname) ->
   if newfullname? and newfullname.length > 0
     setvar('fullname', newfullname)
-    localStorage
   return
 
 export change-full-name = ->
