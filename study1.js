@@ -192,7 +192,6 @@
     }
     readable = new Date(timestamp).toString();
     $('#pretest' + num + 'check').css('visibility', 'visible');
-    $('#pretest' + num + 'button').attr('disabled', true);
     return $('#pretest' + num + 'donedisplay').css('color', 'green').text('You submitted pre-test ' + num + ' on ' + readable);
   };
   showPosttestDone = function(num, timestamp){
@@ -202,7 +201,6 @@
     }
     readable = new Date(timestamp).toString();
     $('#posttest' + num + 'check').css('visibility', 'visible');
-    $('#posttest' + num + 'button').attr('disabled', true);
     return $('#posttest' + num + 'donedisplay').css('color', 'green').text('You submitted post-test ' + num + ' on ' + readable);
   };
   showConsentAgreed = function(timestamp){
