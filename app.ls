@@ -117,7 +117,7 @@ app.get '/viewlogfb', (req, res) ->
 
 app.get '/email-japanese.png', (req, res) ->
   addlogemail {type: 'emailopened', username: req.query.emailuser, timesent: req.query.timesent, timeopened: Date.now()}
-  res.sendfile 'feedlearn_email_japanese.png'
+  res.sendfile 'feedlearn-email-japanese.png'
 
 getvar = (varname, callback) ->
   get-grid (grid, db) ->

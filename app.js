@@ -112,7 +112,7 @@
       timesent: req.query.timesent,
       timeopened: Date.now()
     });
-    return res.sendfile('feedlearn_email_japanese.png');
+    return res.sendfile('feedlearn-email-japanese.png');
   });
   getvar = function(varname, callback){
     return getGrid(function(grid, db){
