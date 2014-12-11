@@ -286,7 +286,13 @@
     forcehttps();
     setvar('hideoption', true);
     param = getUrlParameters();
-    root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name, getvar('fullname'));
+    root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
+    if (root.fullname != null) {
+      setvar('fullname', root.fullname);
+      window.location.href = '/study1';
+      return;
+    }
+    root.fullname = firstNonNull(root.fullname, getvar('fullname'));
     if (root.fullname != null && root.fullname !== 'Anonymous User') {
       return haveFullName();
     } else {
