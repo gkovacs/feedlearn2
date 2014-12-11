@@ -210,6 +210,7 @@
     }
     readable = new Date(timestamp).toString();
     $('#consentcheck').css('visibility', 'visible');
+    $('#consentbutton').attr('disabled', true);
     return $('#consentdisplay').css('color', 'green').text('You agreed to this on ' + readable);
   };
   showStudyperiodStarted = function(num, timesamp){

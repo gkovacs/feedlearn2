@@ -63,19 +63,6 @@ html(lang='en')
 
 
       .panel.panel-default
-        #headingTwo.panel-heading(role='tab')
-          h4.panel-title
-            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
-              span#pretest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Pre-test for First Week Vocabulary (50 Japanese words)
-        #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
-          .panel-body
-            p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
-            #pretest1donedisplay
-            button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
-
-
-      .panel.panel-default
         #headingThree.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseThree' aria-expanded='false' aria-controls='collapseThree')
@@ -86,6 +73,19 @@ html(lang='en')
             p Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
             #extensioninstalleddisplay The FeedLearn extension has not yet been installed. If you just installed it, please refresh this page.
             button#extensioninstallbutton.btn.btn-lg.btn-primary(onclick='installChromeExtension()') Install FeedLearn Chrome Extension
+
+
+      .panel.panel-default
+        #headingTwo.panel-heading(role='tab')
+          h4.panel-title
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
+              span#pretest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Pre-test for First Week Vocabulary (50 Japanese words)
+        #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
+          .panel-body
+            p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
+            #pretest1donedisplay
+            button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
 
 
       .panel.panel-default

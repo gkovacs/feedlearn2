@@ -179,7 +179,7 @@ show-consent-agreed = (timestamp) ->
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
   $('#consentcheck').css 'visibility', 'visible'
-  #$('#consentbutton').attr 'disabled', true
+  $('#consentbutton').attr 'disabled', true
   $('#consentdisplay').css('color', 'green').text 'You agreed to this on ' + readable
 
 show-studyperiod-started = (num, timesamp) ->
