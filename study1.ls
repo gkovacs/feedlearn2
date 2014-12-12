@@ -17,8 +17,8 @@ alert-prereqs = (plist) ->
   return true
 
 export consent-agreed = ->
-  $('#collapseOne').data 'allowcollapse', true
-  $('#collapseOne').collapse('hide')
+  #$('#collapseOne').data 'allowcollapse', true
+  #$('#collapseOne').collapse('hide')
   #forcecollapse $('#collapseOne')
   #$('#collapseTwo').collapse('show')
   show-consent-agreed()

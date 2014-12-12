@@ -19,8 +19,6 @@
     return true;
   };
   out$.consentAgreed = consentAgreed = function(){
-    $('#collapseOne').data('allowcollapse', true);
-    $('#collapseOne').collapse('hide');
     showConsentAgreed();
     return postStartEvent('consentagreed');
   };
