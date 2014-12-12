@@ -302,8 +302,11 @@ export fb-try-login-manual = ->
 
 window.fbAsyncInit = ->
   console.log 'fbAsyncInit called'
+  appid = '1582092298679557'
+  if window.location.indexOf('http://localhost') == 0
+    appid = '1582095062012614'
   FB.init {
-    appId  : '1582095062012614',
+    appId  : appid
     cookie : true  # enable cookies to allow the server to access the session
     xfbml  : true #true # true,  # parse social plugins on this page
     version: 'v2.1' # use version 2.1

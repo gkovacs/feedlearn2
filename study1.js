@@ -329,9 +329,14 @@
     });
   };
   window.fbAsyncInit = function(){
+    var appid;
     console.log('fbAsyncInit called');
+    appid = '1582092298679557';
+    if (window.location.indexOf('http://localhost') === 0) {
+      appid = '1582095062012614';
+    }
     FB.init({
-      appId: '1582095062012614',
+      appId: appid,
       cookie: true,
       xfbml: true,
       version: 'v2.1'
