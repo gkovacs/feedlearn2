@@ -68,6 +68,10 @@ export submit-answers = ->
 $(document).ready ->
   forcehttps()
   param = getUrlParameters()
+  if param.type == 'posttest'
+    $('#testtype').text 'Post-Test'
+  if get-pretest-num() != 0
+    $('#weeknum').text get-pretest-num()
   flashcard_set = get-flashcard-set()
   flashcards = flashcard_sets[flashcard_set]
   select-options = [ '--- select a word ---' ].concat <| map (.english), flashcards |> sort

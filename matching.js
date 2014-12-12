@@ -109,6 +109,12 @@
     var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
     forcehttps();
     param = getUrlParameters();
+    if (param.type === 'posttest') {
+      $('#testtype').text('Post-Test');
+    }
+    if (getPretestNum() !== 0) {
+      $('#weeknum').text(getPretestNum());
+    }
     flashcard_set = getFlashcardSet();
     flashcards = flashcard_sets[flashcard_set];
     selectOptions = ['--- select a word ---'].concat(sort(
