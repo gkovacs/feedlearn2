@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
   head
-    title FeedLearn
+    title FeedLearn - Study Japanese as you browse your Facebook feed
     meta(name='viewport' content='user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1')
     link(href='index.css' rel='stylesheet')
     link(href='bower_components/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet')
@@ -25,19 +25,20 @@ html(lang='en')
     #fbloginpage(style='margin-left: 170px; margin-top: 10px')
       img(src='feedlearn-128px.png' style='position: absolute; left: 10px')
       h1 FeedLearn
-      h3 A tool that teaches you Japanese by showing quizzes in your Facebook feed
+      h3 Study Japanese as you browse your Facebook news feed
       img(src='feedlearn-screenshot.png' style='border-radius: 15px')
       h3 Study Japanese with FeedLearn!
-      div If you would like to try FeedLearn, you can join our user study right now!
+      div FeedLearn is a Chrome extension that helps you learn Japanese vocabulary as you browse your Facebook feed.
+      div If you would like to try FeedLearn, you can join our 3-week user study right now!
       //- div FeedLearn is a Chrome extension, so you must be using the Chrome browser. FeedLearn does not post to your wall or access any private data.
-      div The user study is 3 weeks long. You will learn 50 Japanese words and take a vocabulary quiz each week. You can opt-out anytime.
+      div Each week, you will take a vocab test and study 50 Japanese words with one of 3 tools. You can opt-out anytime.
       div To install FeedLearn and participate in the user study, please login below using Facebook (we do not post to your wall).
       div(style='padding-bottom: 10px')
       div.fb-login-button#fbloginbutton(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' scope="public_profile,email" onlogin='fbButtonOnlogin()')
       div(style='padding-bottom: 10px')
       h3 Study Description
       div This is a research study about seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.
-      div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you view your Facebook news feed.
+      div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.
       div The study lasts for 3 weeks. You can opt out anytime.
       div On each week, you will take a vocabulary test on the 50 new words you will be studying.
       div You will then study the words for a week, using one of 3 different approaches:
@@ -71,7 +72,7 @@ html(lang='en')
           .panel-body
             h4 Study Description
             div This is a research study about seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.
-            div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you view your Facebook news feed.
+            div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.
             div The study lasts for 3 weeks. You can opt out anytime.
             div On each week, you will take a vocabulary test on the 50 new words you will be studying.
             div You will then study the words for a week, using one of 3 different approaches:
@@ -96,7 +97,7 @@ html(lang='en')
               span Install the FeedLearn Chrome Extension
         #collapseThree.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
           .panel-body
-            p Please now install the FeedLearn Chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
+            p Please now install the FeedLearn Chrome extension, which will show you vocabulary as you browse your Facebook feed. Please do not uninstall it until the conclusion of this study.
             #extensioninstalleddisplay The FeedLearn extension has not yet been installed. If you just installed it, please refresh this page.
             button#extensioninstallbutton.btn.btn-lg.btn-primary(onclick='installChromeExtension()') Install FeedLearn Chrome Extension
 
