@@ -245,11 +245,11 @@
       return;
     }
     if (events['posttest2'] == null) {
-      $('#collapseTwo').collapse('show');
+      $('#collapseSix').collapse('show');
       return;
     }
     if (events['posttest3'] == null) {
-      $('#collapseTwo').collapse('show');
+      $('#collapseNine').collapse('show');
     }
   };
   refreshCompletedParts = function(){

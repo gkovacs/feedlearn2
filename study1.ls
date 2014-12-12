@@ -245,10 +245,10 @@ open-part-that-needs-doing = ->
     $('#collapseTwo').collapse('show')
     return
   if not events['posttest2']?
-    $('#collapseTwo').collapse('show')
+    $('#collapseSix').collapse('show')
     return
   if not events['posttest3']?
-    $('#collapseTwo').collapse('show')
+    $('#collapseNine').collapse('show')
     return
 
 refresh-completed-parts = ->
