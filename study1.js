@@ -1,18 +1,30 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog;
   root.skipPrereqs = false;
+  readableTestNames = {
+    pretest1: 'Pre-Test for Week 1',
+    pretest2: 'Pre-Test for Week 2',
+    pretest3: 'Pre-Test for Week 3',
+    posttest1: 'Post-Test for Week 1',
+    posttest2: 'Post-Test for Week 2',
+    posttest3: 'Post-Test for Week 3'
+  };
   alertPrereqs = function(plist){
-    var i$, len$, x;
+    var i$, len$, x, testname;
     if (root.skipPrereqs) {
       return true;
     }
     for (i$ = 0, len$ = plist.length; i$ < len$; ++i$) {
       x = plist[i$];
       if (root.completedParts[x] == null) {
-        alert('You need to take the following test first: ' + x);
+        testname = x;
+        if (readableTestNames[x] != null) {
+          testname = readableTestNames[x];
+        }
+        alert('You need to take the following test first: ' + testname);
         return false;
       }
     }

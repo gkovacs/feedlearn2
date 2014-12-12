@@ -5,6 +5,15 @@ root = exports ? this
 
 root.skip-prereqs = false
 
+readable-test-names = {
+  pretest1: 'Pre-Test for Week 1'
+  pretest2: 'Pre-Test for Week 2'
+  pretest3: 'Pre-Test for Week 3'
+  posttest1: 'Post-Test for Week 1'
+  posttest2: 'Post-Test for Week 2'
+  posttest3: 'Post-Test for Week 3'
+}
+
 alert-prereqs = (plist) ->
   #if window.location.href == "http://localhost:5000/study1"
   #  return
@@ -12,7 +21,10 @@ alert-prereqs = (plist) ->
     return true
   for x in plist
     if not root.completed-parts[x]?
-      alert 'You need to take the following test first: ' + x
+      testname = x
+      if readable-test-names[x]?
+        testname = readable-test-names[x]
+      alert 'You need to take the following test first: ' + testname
       return false
   return true
 
