@@ -44,7 +44,7 @@
     }
     testtime = root.completedParts['pretest1'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 1 vocabulary');
+      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 1 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese1&type=posttest');
@@ -62,7 +62,7 @@
     }
     testtime = root.completedParts['pretest2'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 2 vocabulary');
+      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 2 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese2&type=posttest');
@@ -80,7 +80,7 @@
     }
     testtime = root.completedParts['pretest3'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 3 vocabulary');
+      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 3 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese3&type=posttest');
@@ -201,7 +201,7 @@
     if (timestamp == null) {
       timestamp = Date.now();
     }
-    readable = moment(timestamp).format('lll');
+    readable = moment(timestamp).format('llll');
     $('#pretest' + num + 'check').css('visibility', 'visible');
     $('#pretest' + num + 'button').attr('disabled', true);
     return $('#pretest' + num + 'donedisplay').css('color', 'green').text('You submitted pre-test ' + num + ' on ' + readable);
@@ -211,7 +211,7 @@
     if (timestamp == null) {
       timestamp = Date.now();
     }
-    readable = moment(timestamp).format('lll');
+    readable = moment(timestamp).format('llll');
     $('#posttest' + num + 'check').css('visibility', 'visible');
     $('#posttest' + num + 'button').attr('disabled', true);
     return $('#posttest' + num + 'donedisplay').css('color', 'green').text('You submitted post-test ' + num + ' on ' + readable);
@@ -221,7 +221,7 @@
     if (timestamp == null) {
       timestamp = Date.now();
     }
-    readable = moment(timestamp).format('lll');
+    readable = moment(timestamp).format('llll');
     $('#consentcheck').css('visibility', 'visible');
     $('#consentbutton').attr('disabled', true);
     return $('#consentdisplay').css('color', 'green').text('You agreed to this on ' + readable);
@@ -231,8 +231,8 @@
     if (typeof timestamp == 'undefined' || timestamp === null) {
       timestamp = Date.now();
     }
-    readable = moment(timestamp).format('lll');
-    oneweeklater = moment(timestamp + 1000 * 3600 * 24 * 7).format('lll');
+    readable = moment(timestamp).format('llll');
+    oneweeklater = moment(timestamp + 1000 * 3600 * 24 * 7).format('llll');
     $('#startweek' + num + 'check').css('visibility', 'visible');
     $('#startweek' + num + 'button').attr('disabled', true);
     message1 = $('<div>').text('You started the week ' + num + ' study period at ' + readable);
@@ -313,10 +313,12 @@
         num = ref$[i$];
         if (events['pretest' + num] != null) {
           showPretestDone(num, events['pretest' + num]);
-          if (Date.now() > events['pretest' + num] + 1000 * 3600 * 24 * 7) {
-            $('#week' + num + 'posttesttime').text('You can take the post-test now.');
+          if (events['posttest' + num] != null) {
+            $('#week' + num + 'posttesttime').text('You have already taken the post-test for week ' + num + ' vocabulary.');
+          } else if (Date.now() > events['pretest' + num] + 1000 * 3600 * 24 * 7) {
+            $('#week' + num + 'posttesttime').text('Please take the post-test for week ' + num + ' vocabulary now.');
           } else {
-            $('#week' + num + 'posttesttime').text('Please revisit this page on ' + moment(events['pretest' + num] + 1000 * 3600 * 24 * 7).format('lll') + ' to take the post-test.');
+            $('#week' + num + 'posttesttime').text('Please revisit this page on ' + moment(events['pretest' + num] + 1000 * 3600 * 24 * 7).format('llll') + ' to take the post-test for week ' + num + ' vocabulary.');
           }
         }
         if (events['posttest' + num] != null) {
