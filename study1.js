@@ -24,7 +24,7 @@
         if (readableTestNames[x] != null) {
           testname = readableTestNames[x];
         }
-        alert('You need to take the following test first: ' + testname);
+        toastr.error('You need to take the following test first: ' + testname);
         return false;
       }
     }
@@ -44,7 +44,7 @@
     }
     testtime = root.completedParts['pretest1'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 1 vocabulary');
+      toastr.error('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 1 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese1&type=posttest');
@@ -62,7 +62,7 @@
     }
     testtime = root.completedParts['pretest2'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 2 vocabulary');
+      toastr.error('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 2 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese2&type=posttest');
@@ -80,7 +80,7 @@
     }
     testtime = root.completedParts['pretest3'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 3 vocabulary');
+      toastr.error('Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 3 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese3&type=posttest');

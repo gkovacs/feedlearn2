@@ -24,7 +24,7 @@ alert-prereqs = (plist) ->
       testname = x
       if readable-test-names[x]?
         testname = readable-test-names[x]
-      alert 'You need to take the following test first: ' + testname
+      toastr.error 'You need to take the following test first: ' + testname
       return false
   return true
 
@@ -46,7 +46,7 @@ export open-posttest1 = ->
     return
   testtime = root.completed-parts['pretest1'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 1 vocabulary'
+    toastr.error 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 1 vocabulary'
     return
   window.open('matching?vocab=japanese1&type=posttest')
 
@@ -60,7 +60,7 @@ export open-posttest2 = ->
     return
   testtime = root.completed-parts['pretest2'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 2 vocabulary'
+    toastr.error 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 2 vocabulary'
     return
   window.open('matching?vocab=japanese2&type=posttest')
 
@@ -74,7 +74,7 @@ export open-posttest3 = ->
     return
   testtime = root.completed-parts['pretest3'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 3 vocabulary'
+    toastr.error 'Please wait until ' + moment(testtime).format('llll') + ' to take the post-test for week 3 vocabulary'
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
