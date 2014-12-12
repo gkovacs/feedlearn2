@@ -256,7 +256,7 @@
       }
       for (i$ = 0, len$ = (ref$ = [3, 2, 1]).length; i$ < len$; ++i$) {
         num = ref$[i$];
-        if (events['week' + num + 'startstudy'] != null) {
+        if (events['pretest' + num] != null) {
           configWeek(num);
           break;
         }

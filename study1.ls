@@ -249,7 +249,8 @@ refresh-completed-parts = ->
       if events['week' + num + 'startstudy']?
         show-studyperiod-started(num, events['week' + num + 'startstudy'])
     for num in [3,2,1]
-      if events['week' + num + 'startstudy']?
+      #if events['week' + num + 'startstudy']?
+      if events['pretest' + num]?
         config-week(num)
         break
 
