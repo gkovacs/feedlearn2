@@ -246,12 +246,14 @@
         num = ref$[i$];
         if (events['pretest' + num] != null) {
           showPretestDone(num, events['pretest' + num]);
+          if (Date.now() > events['pretest' + num] + 1000 * 3600 * 24 * 7) {
+            $('#week' + num + 'posttesttime').text('You can take the post-test now.');
+          } else {
+            $('#week' + num + 'posttesttime').text('Please revisit this page on ' + new Date(events['pretest' + num] + 1000 * 3600 * 24 * 7).toString() + ' to take the post-test.');
+          }
         }
         if (events['posttest' + num] != null) {
           showPosttestDone(num, events['posttest' + num]);
-        }
-        if (events['week' + num + 'startstudy'] != null) {
-          showStudyperiodStarted(num, events['week' + num + 'startstudy']);
         }
       }
       for (i$ = 0, len$ = (ref$ = [3, 2, 1]).length; i$ < len$; ++i$) {

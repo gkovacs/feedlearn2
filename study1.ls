@@ -244,10 +244,14 @@ refresh-completed-parts = ->
     for num in [1,2,3]
       if events['pretest' + num]?
         show-pretest-done(num, events['pretest' + num])
+        if Date.now() > events['pretest' + num] + 1000*3600*24*7
+          $('#week' + num + 'posttesttime').text('You can take the post-test now.')
+        else
+          $('#week' + num + 'posttesttime').text('Please revisit this page on ' + new Date(events['pretest' + num] + 1000*3600*24*7).toString() + ' to take the post-test.')
       if events['posttest' + num]?
         show-posttest-done(num, events['posttest' + num])
-      if events['week' + num + 'startstudy']?
-        show-studyperiod-started(num, events['week' + num + 'startstudy'])
+      #if events['week' + num + 'startstudy']?
+      #  show-studyperiod-started(num, events['week' + num + 'startstudy'])
     for num in [3,2,1]
       #if events['week' + num + 'startstudy']?
       if events['pretest' + num]?

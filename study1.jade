@@ -102,17 +102,24 @@ html(lang='en')
         #headingTwo.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
-              span#pretest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Start Studying Week 1 Vocabulary
+              span#posttest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Study Week 1 Vocabulary
         #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
           .panel-body
             h4 Pre-Test for Week 1 Vocbulary
             p Please follow this link to take a vocab test on the 50 words you will be studying over week 1. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words.
             #pretest1donedisplay
-            button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
+            button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Vocabulary
             div(style='height: 30px')
             h4 Study Week 1 Vocabulary
             #week1desc WEEK1
+            div(style='height: 30px')
+            h4 Post-Test for Week 1 Vocabulary
+            div#week1posttesttime Please wait until 7 days have passed, then:
+            div Follow this link to take a vocabulary test on the 50 words you studied during week 1.
+            br
+            #posttest1donedisplay
+            button#posttest1button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the post-test for Week 1 Vocabulary
 
 
       //-.panel.panel-default
@@ -129,7 +136,7 @@ html(lang='en')
             //- button#startweek1button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
 
 
-      .panel.panel-default
+      //- .panel.panel-default
         #headingFive.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseFive' aria-expanded='false' aria-controls='collapseFive')
@@ -146,17 +153,24 @@ html(lang='en')
         #headingSix.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseSix' aria-expanded='false' aria-controls='collapseSix')
-              span#pretest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Start Studying Week 2 Vocabulary
+              span#posttest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Study Week 2 Vocabulary
         #collapseSix.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSix')
           .panel-body
             h4 Pre-Test for Week 2 Vocbulary
             p Please follow this link to take a vocab test on the 50 words you will be studying over week 2. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words.
             #pretest2donedisplay
-            button#pretest2button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Japanese Vocabulary
+            button#pretest2button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Vocabulary
             div(style='height: 30px')
             h4 Study Week 2 Vocbulary
             #week2desc WEEK2
+            div(style='height: 30px')
+            h4 Post-Test for Week 2 Vocbulary
+            div#week2posttesttime Please wait until 7 days have passed, then:
+            div Follow this link to take a vocabulary test on the 50 words you studied during week 2.
+            br
+            #posttest2donedisplay
+            button#posttest2button.btn.btn-lg.btn-primary(onclick='openPosttest2()') Take the post-test for Week 2 Vocabulary
 
 
       //-.panel.panel-default
@@ -173,7 +187,7 @@ html(lang='en')
             //- button#startweek2button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
 
 
-      .panel.panel-default
+      //- .panel.panel-default
         #headingEight.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseEight' aria-expanded='false' aria-controls='collapseEight')
@@ -191,7 +205,7 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseNine' aria-expanded='false' aria-controls='collapseNine')
               span#pretest3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Start Studying Week 3 Vocabulary
+              span Study Week 3 Vocabulary
         #collapseNine.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingNine')
           .panel-body
             h4 Pre-Test for Week 3 Vocbulary
@@ -201,6 +215,13 @@ html(lang='en')
             div(style='height: 30px')
             h4 Study Week 3 Vocabulary
             #week3desc WEEK3
+            div(style='height: 30px')
+            h4 Post-Test for Week 3 Vocbulary
+            div#week3posttesttime Please wait until 7 days have passed, then:
+            div Follow this link to take a vocabulary test on the 50 words you studied during week 3.
+            br
+            #posttest3donedisplay
+            button#posttest3button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Vocabulary
 
 
       //-.panel.panel-default
@@ -217,7 +238,7 @@ html(lang='en')
             //- button#startweek3button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
 
 
-      .panel.panel-default
+      //- .panel.panel-default
         #headingEleven.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseEleven' aria-expanded='false' aria-controls='collapseEleven')

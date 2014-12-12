@@ -101,7 +101,7 @@
       lang: param.vocab,
       answers: getCurrentAnswers()
     });
-    $('#submitmessage').css('color', 'green').text('Answers submitted!');
+    $('#submitmessage').css('color', 'green').html('Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions');
     $('#submitbutton').attr('disabled', true);
     return postStartEvent(param.type + getPretestNum());
   };
