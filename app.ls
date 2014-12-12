@@ -1,7 +1,7 @@
 require! {
   'express'
   'path'
-  'body-parser': 'bodyParser'
+  'body-parser'
   'async'
 }
 
