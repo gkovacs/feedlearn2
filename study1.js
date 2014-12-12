@@ -243,6 +243,9 @@
       return;
     }
     $('#collapseThree').data('allowcollapse', true);
+    if (events.extensionfirstinstalled == null) {
+      postStartEvent('extensionfirstinstalled');
+    }
     if (events['posttest1'] == null) {
       $('#collapseTwo').data('allowcollapse', false);
       $('#collapseTwo').collapse('show');

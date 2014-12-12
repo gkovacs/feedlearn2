@@ -248,6 +248,8 @@ open-part-that-needs-doing = ->
     $('#collapseThree').collapse('show')
     return
   $('#collapseThree').data 'allowcollapse', true
+  if not events.extensionfirstinstalled?
+    post-start-event 'extensionfirstinstalled'
   
   if not events['posttest1']?
     $('#collapseTwo').data 'allowcollapse', false
