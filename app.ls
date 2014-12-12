@@ -3,7 +3,6 @@ require! {
   'path'
   'body-parser': 'bodyParser'
   'async'
-  'prelude-ls': {map}
 }
 
 # mongo
