@@ -267,11 +267,43 @@ next-assigned-condition = (conditions) ->
       counts[v] += 1
   return minidx(counts)
 
+get-conditions-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('conditions'), db
+
+getconditions = (callback) ->
+  get-conditions-collection (conditions-collection, db) ->
+    conditions-collection.find().toArray (err, results) ->
+      output = {}
+      for {username, condition} in results
+        output[username] = condition
+      callback output
+      db.close()
+
 app.get '/conditions', (req, res) ->
+  getconditions (conditions) ->
+    res.send <| JSON.stringify conditions
+
+app.get '/conditions_old', (req, res) ->
   getvardict 'conditions', (conditions) ->
     res.send <| JSON.stringify conditions
 
+removeconditionforuser = (username, donecallback) ->
+  get-conditions-collection (conditions-collection, db) ->
+    conditions-collection.remove {_id: username}, (err, numremoved) ->
+      if donecallback?
+        donecallback(err, numremoved)
+      db.close()
+
 app.get '/removeconditionforuser_get', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send 'need to provide username'
+    return
+  removeconditionforuser username, ->
+    res.send 'done'
+
+app.get '/removeconditionforuser_get_old', (req, res) ->
   {username} = req.query
   if not username?
     res.send 'need to provide username'
@@ -286,7 +318,23 @@ app.get '/removeconditionforuser_get', (req, res) ->
       res.send 'user was not in the conditions list'
       return
 
+setconditionforuser = (username, condition, donecallback) ->
+  get-conditions-collection (conditions-collection, db) ->
+    conditions-collection.save {_id: username, username: username, condition: condition}, (err, nummodified, status) ->
+      if donecallback?
+        donecallback(err, nummodified, status)
+      db.close()
+
 app.get '/setconditionforuser_get', (req, res) ->
+  {username, condition} = req.query
+  if not username? or not condition?
+    res.send 'need to provide username and condition'
+    return
+  condition = parseInt condition
+  setconditionforuser username, condition, ->
+    res.send JSON.stringify condition
+
+app.get '/setconditionforuser_get_old', (req, res) ->
   {username, condition} = req.query
   if not username? or not condition?
     res.send 'need to provide username and condition'
@@ -297,6 +345,19 @@ app.get '/setconditionforuser_get', (req, res) ->
       res.send <| JSON.stringify condition
 
 conditionforuser = (username, callback) ->
+  get-conditions-collection (conditions-collection, db) ->
+    conditions-collection.findOne {_id: username}, (err, result) ->
+      if result? and result.condition?
+        callback result.condition
+        db.close()
+        return
+      condition = Math.floor(Math.random() * 6)
+      setconditionforuser username, condition, ->
+        callback condition
+        db.close()
+        return
+
+conditionforuser_old = (username, callback) ->
   if not username?
     callback 0
     return
@@ -314,6 +375,14 @@ app.get '/conditionforuser', (req, res) ->
     res.send 'need to provide username'
     return
   conditionforuser username, (condition) ->
+    res.send <| JSON.stringify condition
+
+app.get '/conditionforuser_old', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send 'need to provide username'
+    return
+  conditionforuser_old username, (condition) ->
     res.send <| JSON.stringify condition
 
 condition_to_order = [

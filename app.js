@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, conditionforuser, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -286,12 +286,59 @@
     }
     return minidx(counts);
   };
+  getConditionsCollection = function(callback){
+    return getMongoDb(function(db){
+      return callback(db.collection('conditions'), db);
+    });
+  };
+  getconditions = function(callback){
+    return getConditionsCollection(function(conditionsCollection, db){
+      return conditionsCollection.find().toArray(function(err, results){
+        var output, i$, len$, ref$, username, condition;
+        output = {};
+        for (i$ = 0, len$ = results.length; i$ < len$; ++i$) {
+          ref$ = results[i$], username = ref$.username, condition = ref$.condition;
+          output[username] = condition;
+        }
+        callback(output);
+        return db.close();
+      });
+    });
+  };
   app.get('/conditions', function(req, res){
+    return getconditions(function(conditions){
+      return res.send(JSON.stringify(conditions));
+    });
+  });
+  app.get('/conditions_old', function(req, res){
     return getvardict('conditions', function(conditions){
       return res.send(JSON.stringify(conditions));
     });
   });
+  removeconditionforuser = function(username, donecallback){
+    return getConditionsCollection(function(conditionsCollection, db){
+      return conditionsCollection.remove({
+        _id: username
+      }, function(err, numremoved){
+        if (donecallback != null) {
+          donecallback(err, numremoved);
+        }
+        return db.close();
+      });
+    });
+  };
   app.get('/removeconditionforuser_get', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('need to provide username');
+      return;
+    }
+    return removeconditionforuser(username, function(){
+      return res.send('done');
+    });
+  });
+  app.get('/removeconditionforuser_get_old', function(req, res){
     var username;
     username = req.query.username;
     if (username == null) {
@@ -309,7 +356,33 @@
       }
     });
   });
+  setconditionforuser = function(username, condition, donecallback){
+    return getConditionsCollection(function(conditionsCollection, db){
+      return conditionsCollection.save({
+        _id: username,
+        username: username,
+        condition: condition
+      }, function(err, nummodified, status){
+        if (donecallback != null) {
+          donecallback(err, nummodified, status);
+        }
+        return db.close();
+      });
+    });
+  };
   app.get('/setconditionforuser_get', function(req, res){
+    var ref$, username, condition;
+    ref$ = req.query, username = ref$.username, condition = ref$.condition;
+    if (username == null || condition == null) {
+      res.send('need to provide username and condition');
+      return;
+    }
+    condition = parseInt(condition);
+    return setconditionforuser(username, condition, function(){
+      return res.send(JSON.stringify(condition));
+    });
+  });
+  app.get('/setconditionforuser_get_old', function(req, res){
     var ref$, username, condition;
     ref$ = req.query, username = ref$.username, condition = ref$.condition;
     if (username == null || condition == null) {
@@ -324,6 +397,25 @@
     });
   });
   conditionforuser = function(username, callback){
+    return getConditionsCollection(function(conditionsCollection, db){
+      return conditionsCollection.findOne({
+        _id: username
+      }, function(err, result){
+        var condition;
+        if (result != null && result.condition != null) {
+          callback(result.condition);
+          db.close();
+          return;
+        }
+        condition = Math.floor(Math.random() * 6);
+        return setconditionforuser(username, condition, function(){
+          callback(condition);
+          db.close();
+        });
+      });
+    });
+  };
+  conditionforuser_old = function(username, callback){
     if (username == null) {
       callback(0);
       return;
@@ -347,6 +439,17 @@
       return;
     }
     return conditionforuser(username, function(condition){
+      return res.send(JSON.stringify(condition));
+    });
+  });
+  app.get('/conditionforuser_old', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('need to provide username');
+      return;
+    }
+    return conditionforuser_old(username, function(condition){
       return res.send(JSON.stringify(condition));
     });
   });
