@@ -345,8 +345,8 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location.href = '/study1'
     return
-  updatecookies()
   root.fullname = first-non-null root.fullname, getvar('fullname') #, 'Anonymous User'
+  updatecookies()
   if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
     have-full-name()
   else

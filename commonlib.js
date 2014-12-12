@@ -78,6 +78,9 @@
   out$.updatecookies = updatecookies = function(){
     var username;
     username = getUserName();
+    if (username == null || username === 'Anonymous User' || username.length === 0) {
+      return;
+    }
     return $.getJSON('/cookiesforuser?' + $.param({
       username: username
     }), function(cookies){

@@ -56,6 +56,8 @@ export forcehttps = ->
 
 export updatecookies = ->
   username = get-user-name()
+  if not username? or username == 'Anonymous User' or username.length == 0
+    return
   $.getJSON ('/cookiesforuser?' + $.param({username: username})), (cookies) ->
     #console.log cookies
     if not cookies.username?

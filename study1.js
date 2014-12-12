@@ -368,8 +368,8 @@
       window.location.href = '/study1';
       return;
     }
-    updatecookies();
     root.fullname = firstNonNull(root.fullname, getvar('fullname'));
+    updatecookies();
     if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
       return haveFullName();
     } else {
