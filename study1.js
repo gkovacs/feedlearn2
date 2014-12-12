@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog;
@@ -229,11 +229,34 @@
     return $('#startweek' + num + 'donedisplay').attr('color', 'green').html($('<div>').append([message1, message2]));
   };
   root.completedParts = {};
+  openPartThatNeedsDoing = function(){
+    var events;
+    events = root.completedParts;
+    if (events.consentagreed == null) {
+      $('#collapseOne').collapse('show');
+      return;
+    }
+    if ($('#extensioninstalledcheck').css('visibility') !== 'visible') {
+      $('#collapseThree').collapse('show');
+      return;
+    }
+    if (events['posttest1'] == null) {
+      $('#collapseTwo').collapse('show');
+      return;
+    }
+    if (events['posttest2'] == null) {
+      $('#collapseTwo').collapse('show');
+      return;
+    }
+    if (events['posttest3'] == null) {
+      $('#collapseTwo').collapse('show');
+    }
+  };
   refreshCompletedParts = function(){
     var num_events_prev;
-    num_events_prev = 0;
+    num_events_prev = -1;
     return getUserEvents(function(events){
-      var i$, ref$, len$, num, results$ = [];
+      var i$, ref$, len$, num;
       if (Object.keys(events).length === num_events_prev) {
         return;
       }
@@ -263,7 +286,7 @@
           break;
         }
       }
-      return results$;
+      return openPartThatNeedsDoing();
     });
   };
   out$.haveFullName = haveFullName = function(){

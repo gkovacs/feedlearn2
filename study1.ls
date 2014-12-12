@@ -232,8 +232,27 @@ show-studyperiod-started = (num, timesamp) ->
 
 root.completed-parts = {}
 
+open-part-that-needs-doing = ->
+  # TODO
+  events = root.completed-parts
+  if not events.consentagreed? # consent
+    $('#collapseOne').collapse('show')
+    return
+  if $('#extensioninstalledcheck').css('visibility') != 'visible' # extension
+    $('#collapseThree').collapse('show')
+    return
+  if not events['posttest1']?
+    $('#collapseTwo').collapse('show')
+    return
+  if not events['posttest2']?
+    $('#collapseTwo').collapse('show')
+    return
+  if not events['posttest3']?
+    $('#collapseTwo').collapse('show')
+    return
+
 refresh-completed-parts = ->
-  num_events_prev = 0
+  num_events_prev = -1
   get-user-events (events) ->
     if Object.keys(events).length == num_events_prev
       return
@@ -257,6 +276,7 @@ refresh-completed-parts = ->
       if events['pretest' + num]?
         config-week(num)
         break
+    open-part-that-needs-doing()
 
 export have-full-name = ->
   #setvar 'fullname', root.fullname
