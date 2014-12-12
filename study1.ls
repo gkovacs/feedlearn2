@@ -16,8 +16,16 @@ alert-prereqs = (plist) ->
       return false
   return true
 
+root.allowcollapse = false
+
+export forcecollapse = (elem) ->
+  root.allowcollapse = true
+  elem.collapse 'hide'
+  root.allowcollapse = false
+
 export consent-agreed = ->
-  $('#collapseOne').collapse('hide')
+  #$('#collapseOne').collapse('hide')
+  forcecollapse $('#collapseOne')
   #$('#collapseTwo').collapse('show')
   show-consent-agreed()
   post-start-event 'consentagreed'
@@ -251,6 +259,18 @@ open-part-that-needs-doing = ->
     $('#collapseNine').collapse('show')
     return
 
+prevent-accordion-collapsing = ->
+  $('#collapseOne').on 'hide.bs.collapse', ->
+    return root.allowcollapse
+  $('#collapseThree').on 'hide.bs.collapse', ->
+    return root.allowcollapse
+  $('#collapseTwo').on 'hide.bs.collapse', ->
+    return root.allowcollapse
+  $('#collapseSix').on 'hide.bs.collapse', ->
+    return root.allowcollapse
+  $('#collapseNine').on 'hide.bs.collapse', ->
+    return root.allowcollapse
+
 refresh-completed-parts = ->
   num_events_prev = -1
   get-user-events (events) ->
@@ -371,6 +391,7 @@ $(document).ready ->
     return
   root.fullname = first-non-null root.fullname, getvar('fullname') #, 'Anonymous User'
   updatecookies()
+  prevent-accordion-collapsing()
   if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
     have-full-name()
   else
