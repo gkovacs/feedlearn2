@@ -332,7 +332,7 @@
     var appid;
     console.log('fbAsyncInit called');
     appid = '1582092298679557';
-    if (window.location.indexOf('http://localhost') === 0) {
+    if (window.location.href.indexOf('http://localhost') === 0) {
       appid = '1582095062012614';
     }
     FB.init({
