@@ -16,16 +16,10 @@ alert-prereqs = (plist) ->
       return false
   return true
 
-root.allowcollapse = false
-
-export forcecollapse = (elem) ->
-  root.allowcollapse = true
-  elem.collapse 'hide'
-  root.allowcollapse = false
-
 export consent-agreed = ->
-  #$('#collapseOne').collapse('hide')
-  forcecollapse $('#collapseOne')
+  $('#collapseOne').data 'allowcollapse', true
+  $('#collapseOne').collapse('hide')
+  #forcecollapse $('#collapseOne')
   #$('#collapseTwo').collapse('show')
   show-consent-agreed()
   post-start-event 'consentagreed'
@@ -241,35 +235,55 @@ show-studyperiod-started = (num, timesamp) ->
 root.completed-parts = {}
 
 open-part-that-needs-doing = ->
-  # TODO
   events = root.completed-parts
+  
   if not events.consentagreed? # consent
+    $('#collapseOne').data 'allowcollapse', false
     $('#collapseOne').collapse('show')
     return
+  $('#collapseOne').data 'allowcollapse', true
+  
   if $('#extensioninstalledcheck').css('visibility') != 'visible' # extension
+    $('#collapseThree').data 'allowcollapse', false
     $('#collapseThree').collapse('show')
     return
+  $('#collapseThree').data 'allowcollapse', true
+  
   if not events['posttest1']?
+    $('#collapseTwo').data 'allowcollapse', false
     $('#collapseTwo').collapse('show')
     return
+  $('#collapseTwo').data 'allowcollapse', true
+
   if not events['posttest2']?
+    $('#collapseSix').data 'allowcollapse', false
     $('#collapseSix').collapse('show')
     return
+  $('#collapseSix').data 'allowcollapse', true
+
   if not events['posttest3']?
+    $('#collapseNine').data 'allowcollapse', false
     $('#collapseNine').collapse('show')
     return
+  $('#collapseNine').data 'allowcollapse', true
+  return
+
+setup-accordion-elem = (elemname) ->
+  elem = $('#' + elemname)
+  elem.data 'allowcollapse', true
+  elem.on 'hide.bs.collapse', ->
+    if elem.data('allowcollapse')
+      return true
+    else
+      return false
+  return
 
 prevent-accordion-collapsing = ->
-  $('#collapseOne').on 'hide.bs.collapse', ->
-    return root.allowcollapse
-  $('#collapseThree').on 'hide.bs.collapse', ->
-    return root.allowcollapse
-  $('#collapseTwo').on 'hide.bs.collapse', ->
-    return root.allowcollapse
-  $('#collapseSix').on 'hide.bs.collapse', ->
-    return root.allowcollapse
-  $('#collapseNine').on 'hide.bs.collapse', ->
-    return root.allowcollapse
+  setup-accordion-elem 'collapseOne'
+  setup-accordion-elem 'collapseThree'
+  setup-accordion-elem 'collapseTwo'
+  setup-accordion-elem 'collapseSix'
+  setup-accordion-elem 'collapseNine'
 
 refresh-completed-parts = ->
   num_events_prev = -1
