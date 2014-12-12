@@ -34,7 +34,7 @@ export open-posttest1 = ->
     return
   testtime = root.completed-parts['pretest1'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 1 vocabulary'
+    alert 'Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 1 vocabulary'
     return
   window.open('matching?vocab=japanese1&type=posttest')
 
@@ -48,7 +48,7 @@ export open-posttest2 = ->
     return
   testtime = root.completed-parts['pretest2'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 2 vocabulary'
+    alert 'Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 2 vocabulary'
     return
   window.open('matching?vocab=japanese2&type=posttest')
 
@@ -62,7 +62,7 @@ export open-posttest3 = ->
     return
   testtime = root.completed-parts['pretest3'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 3 vocabulary'
+    alert 'Please wait until ' + moment(testtime).format('lll') + ' to take the post-test for week 3 vocabulary'
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
@@ -200,7 +200,7 @@ set-studyorder = (studyorder) ->
 show-pretest-done = (num, timestamp) ->
   if not timestamp?
     timestamp = Date.now()
-  readable = new Date(timestamp).toString()
+  readable = moment(timestamp).format('lll')
   $('#pretest' + num + 'check').css 'visibility', 'visible'
   $('#pretest' + num + 'button').attr 'disabled', true
   $('#pretest' + num + 'donedisplay').css('color', 'green').text 'You submitted pre-test ' + num + ' on ' + readable
@@ -208,7 +208,7 @@ show-pretest-done = (num, timestamp) ->
 show-posttest-done = (num, timestamp) ->
   if not timestamp?
     timestamp = Date.now()
-  readable = new Date(timestamp).toString()
+  readable = moment(timestamp).format('lll')
   $('#posttest' + num + 'check').css 'visibility', 'visible'
   $('#posttest' + num + 'button').attr 'disabled', true
   $('#posttest' + num + 'donedisplay').css('color', 'green').text 'You submitted post-test ' + num + ' on ' + readable
@@ -216,7 +216,7 @@ show-posttest-done = (num, timestamp) ->
 show-consent-agreed = (timestamp) ->
   if not timestamp?
     timestamp = Date.now()
-  readable = new Date(timestamp).toString()
+  readable = moment(timestamp).format('lll')
   $('#consentcheck').css 'visibility', 'visible'
   $('#consentbutton').attr 'disabled', true
   $('#consentdisplay').css('color', 'green').text 'You agreed to this on ' + readable
@@ -224,8 +224,8 @@ show-consent-agreed = (timestamp) ->
 show-studyperiod-started = (num, timesamp) ->
   if not timestamp?
     timestamp = Date.now()
-  readable = new Date(timestamp).toString()
-  oneweeklater = new Date(timestamp + 1000*3600*24*7).toString()
+  readable = moment(timestamp).format('lll')
+  oneweeklater = moment(timestamp + 1000*3600*24*7).format('lll')
   $('#startweek' + num + 'check').css 'visibility', 'visible'
   $('#startweek' + num + 'button').attr 'disabled', true
   message1 = $('<div>').text 'You started the week ' +  num + ' study period at ' + readable
@@ -302,7 +302,7 @@ refresh-completed-parts = ->
         if Date.now() > events['pretest' + num] + 1000*3600*24*7
           $('#week' + num + 'posttesttime').text('You can take the post-test now.')
         else
-          $('#week' + num + 'posttesttime').text('Please revisit this page on ' + new Date(events['pretest' + num] + 1000*3600*24*7).toString() + ' to take the post-test.')
+          $('#week' + num + 'posttesttime').text('Please revisit this page on ' + moment(events['pretest' + num] + 1000*3600*24*7).format('lll') + ' to take the post-test.')
       if events['posttest' + num]?
         show-posttest-done(num, events['posttest' + num])
       #if events['week' + num + 'startstudy']?
