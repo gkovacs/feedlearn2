@@ -273,8 +273,9 @@ question-with-words = (allwords, langname) ->
 export goto-quiz-page = ->
   $('.mainpage').hide()
   $('#quizpage').show()
-  hideoption = getvar('hideoption')
-  if hideoption? and hideoption != 'false' and hideoption != false
+  #hideoption = getvar('hideoption')
+  #if hideoption? and hideoption != 'false' and hideoption != false
+  if true
     $('#optionbutton').hide()
     $('#showanswersbutton').css({margin-right: '0px', width: '100%'})
   if not root.current-word?
@@ -399,8 +400,11 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
     return
+  if not getvar('fullname')?
+    window.location = '/study1'
+    return
   set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'
-  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'none'
   #set-full-name <| first-non-null param.fullname, param.username, getvar('fullname'), 'Anonymous User'
   set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
   updatecookies()

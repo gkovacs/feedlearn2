@@ -1,8 +1,8 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
-  postJson = root.postJson, postStartEvent = root.postStartEvent;
+  postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog;
   root.skipPrereqs = false;
   alertPrereqs = function(plist){
     var i$, len$, x;
@@ -12,7 +12,7 @@
     for (i$ = 0, len$ = plist.length; i$ < len$; ++i$) {
       x = plist[i$];
       if (root.completedParts[x] == null) {
-        alert('You need to complete the following section first: ' + x);
+        alert('You need to take the following test first: ' + x);
         return false;
       }
     }
@@ -28,12 +28,12 @@
   };
   out$.openPosttest1 = openPosttest1 = function(){
     var testtime;
-    if (!alertPrereqs(['week1startstudy'])) {
+    if (!alertPrereqs(['pretest1'])) {
       return;
     }
-    testtime = root.completedParts['week1startstudy'] + 1000 * 3600 * 24 * 7;
+    testtime = root.completedParts['pretest1'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 1 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese1&type=posttest');
@@ -46,12 +46,12 @@
   };
   out$.openPosttest2 = openPosttest2 = function(){
     var testtime;
-    if (!alertPrereqs(['week2startstudy'])) {
+    if (!alertPrereqs(['pretest2'])) {
       return;
     }
-    testtime = root.completedParts['week2startstudy'] + 1000 * 3600 * 24 * 7;
+    testtime = root.completedParts['pretest2'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 2 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese2&type=posttest');
@@ -64,12 +64,12 @@
   };
   out$.openPosttest3 = openPosttest3 = function(){
     var testtime;
-    if (!alertPrereqs(['week3startstudy'])) {
+    if (!alertPrereqs(['pretest3'])) {
       return;
     }
-    testtime = root.completedParts['week3startstudy'] + 1000 * 3600 * 24 * 7;
+    testtime = root.completedParts['pretest3'] + 1000 * 3600 * 24 * 7;
     if (Date.now() < testtime) {
-      alert('Please wait until ' + new Date(testtime).toString() + ' to take this test');
+      alert('Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 3 vocabulary');
       return;
     }
     return window.open('matching?vocab=japanese3&type=posttest');
@@ -138,47 +138,47 @@
     }
   };
   condition_to_order = [['interactive', 'link', 'none'], ['interactive', 'none', 'link'], ['link', 'interactive', 'none'], ['link', 'none', 'interactive'], ['none', 'interactive', 'link'], ['none', 'link', 'interactive']];
-  setWeek1Description = function(format){
-    var desctext;
-    desctext = (function(){
-      switch (format) {
-      case 'interactive':
-        return 'During the first week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.';
-      case 'link':
-        return 'During the first week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.';
-      case 'none':
-        return 'During the first week, you will not be shown quizzes in your Facebook feeed, but will rather be sent a daily email reminder asking you to visit the website.';
+  interactiveDescription = 'This week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not see the quizzes in your Facebook feed.<br>\n</div>';
+  linkDescription = 'This week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-link-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not see the links in your Facebook feed.\n</div>';
+  noneDescription = 'This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the FeedLearn website to study.<br>\nThe email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-email-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not receive the daily email by the next day at 11AM.\n</div>';
+  getDescriptionForFormatAndWeek = function(format, weeknum){
+    var firstpart, formatDescription;
+    firstpart = (function(){
+      switch (weeknum) {
+      case 0:
+        return 'After you have completed the pretest, you will be studying the week 1 vocabulary as follows:';
+      case 1:
+        return 'After you have completed the pretest, you will be studying the week 2 vocabulary as follows:';
+      case 2:
+        return 'After you have completed the pretest, you will be studying the week 3 vocabulary as follows:';
       }
     }());
-    return $('#week1desc').text(desctext);
+    formatDescription = (function(){
+      switch (format) {
+      case 'interactive':
+        return interactiveDescription;
+      case 'link':
+        return linkDescription;
+      case 'none':
+        return noneDescription;
+      }
+    }());
+    return $('<div>').append([$('<div>').text(firstpart), $('<div>').html(formatDescription)]);
+  };
+  setWeek1Description = function(format){
+    var desctext;
+    desctext = getDescriptionForFormatAndWeek(format, 0);
+    return $('#week1desc').html(desctext);
   };
   setWeek2Description = function(format){
     var desctext;
-    desctext = (function(){
-      switch (format) {
-      case 'interactive':
-        return 'During the second week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.';
-      case 'link':
-        return 'During the second week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.';
-      case 'none':
-        return 'During the second week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the website.';
-      }
-    }());
-    return $('#week2desc').text(desctext);
+    desctext = getDescriptionForFormatAndWeek(format, 1);
+    return $('#week2desc').html(desctext);
   };
   setWeek3Description = function(format){
     var desctext;
-    desctext = (function(){
-      switch (format) {
-      case 'interactive':
-        return 'During the third week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.';
-      case 'link':
-        return 'During the third week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.';
-      case 'none':
-        return 'During the third week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the website.';
-      }
-    }());
-    return $('#week3desc').text(desctext);
+    desctext = getDescriptionForFormatAndWeek(format, 2);
+    return $('#week3desc').html(desctext);
   };
   setStudyorder = function(studyorder){
     setWeek1Description(studyorder[0]);
@@ -192,6 +192,7 @@
     }
     readable = new Date(timestamp).toString();
     $('#pretest' + num + 'check').css('visibility', 'visible');
+    $('#pretest' + num + 'button').attr('disabled', true);
     return $('#pretest' + num + 'donedisplay').css('color', 'green').text('You submitted pre-test ' + num + ' on ' + readable);
   };
   showPosttestDone = function(num, timestamp){
@@ -201,6 +202,7 @@
     }
     readable = new Date(timestamp).toString();
     $('#posttest' + num + 'check').css('visibility', 'visible');
+    $('#posttest' + num + 'button').attr('disabled', true);
     return $('#posttest' + num + 'donedisplay').css('color', 'green').text('You submitted post-test ' + num + ' on ' + readable);
   };
   showConsentAgreed = function(timestamp){
@@ -263,8 +265,8 @@
     });
   };
   out$.haveFullName = haveFullName = function(){
-    setvar('fullname', root.fullname);
     $('#getfullname').hide();
+    $('#fbloginpage').hide();
     $('#accordion').show();
     $('#fullnamedisplay').text(' ' + root.fullname);
     addlog({
@@ -281,6 +283,75 @@
       }, 2000);
     });
   };
+  /*
+  fb-login-status-change-callback = (response) ->
+    if response.status == 'connected'
+  
+    setvar 'fullname', response.name
+    addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+    #window.location.href = '/study1'
+    have-full-name()
+  */
+  out$.fbTryLoginAutomatic = fbTryLoginAutomatic = function(){
+    return FB.getLoginStatus(function(loginstatus){
+      if (loginstatus.status !== 'connected') {
+        return;
+      }
+      return FB.api('/me', function(response){
+        if (response.name != null) {
+          setvar('fullname', response.name);
+          addlog({
+            type: 'fblogin',
+            logintype: 'automatic',
+            fblogin: response
+          });
+          return haveFullName();
+        }
+      });
+    });
+  };
+  out$.fbTryLoginManual = fbTryLoginManual = function(){
+    return FB.getLoginStatus(function(loginstatus){
+      if (loginstatus.status !== 'connected') {
+        return;
+      }
+      return FB.api('/me', function(response){
+        if (response.name != null) {
+          setvar('fullname', response.name);
+          addlog({
+            type: 'fblogin',
+            logintype: 'manual',
+            fblogin: response
+          });
+          return haveFullName();
+        }
+      });
+    });
+  };
+  window.fbAsyncInit = function(){
+    console.log('fbAsyncInit called');
+    FB.init({
+      appId: '1582095062012614',
+      cookie: true,
+      xfbml: true,
+      version: 'v2.1'
+    });
+    return fbTryLoginAutomatic();
+  };
+  injectFacebookTag = function(){
+    var e;
+    console.log('inject-facebook-tag called');
+    e = document.createElement('script');
+    e.async = true;
+    e.src = '//connect.facebook.net/en_US/sdk.js';
+    return document.getElementById('fb-root').appendChild(e);
+  };
+  out$.dontHaveFullName = dontHaveFullName = function(){
+    return injectFacebookTag();
+  };
+  out$.fbButtonOnlogin = fbButtonOnlogin = function(){
+    return fbTryLoginManual();
+  };
   $(document).ready(function(){
     var param;
     forcehttps();
@@ -294,10 +365,10 @@
     }
     updatecookies();
     root.fullname = firstNonNull(root.fullname, getvar('fullname'));
-    if (root.fullname != null && root.fullname !== 'Anonymous User') {
+    if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
       return haveFullName();
     } else {
-      return $('#fullnameinput').focus();
+      return dontHaveFullName();
     }
   });
 }).call(this);

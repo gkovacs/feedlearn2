@@ -1,7 +1,7 @@
 root = exports ? this
 
 {first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies} = root # commonlib.ls
-{post-json, post-start-event} = root # logging_client.ls
+{post-json, post-start-event, addlog} = root # logging_client.ls
 
 root.skip-prereqs = false
 
@@ -12,7 +12,7 @@ alert-prereqs = (plist) ->
     return true
   for x in plist
     if not root.completed-parts[x]?
-      alert 'You need to complete the following section first: ' + x
+      alert 'You need to take the following test first: ' + x
       return false
   return true
 
@@ -28,11 +28,11 @@ export open-pretest1 = ->
   window.open('matching?vocab=japanese1&type=pretest')
 
 export open-posttest1 = ->
-  if not alert-prereqs ['week1startstudy']
+  if not alert-prereqs ['pretest1']
     return
-  testtime = root.completed-parts['week1startstudy'] + 1000*3600*24*7
+  testtime = root.completed-parts['pretest1'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 1 vocabulary'
     return
   window.open('matching?vocab=japanese1&type=posttest')
 
@@ -42,11 +42,11 @@ export open-pretest2 = ->
   window.open('matching?vocab=japanese2&type=pretest')
 
 export open-posttest2 = ->
-  if not alert-prereqs ['week2startstudy']
+  if not alert-prereqs ['pretest2']
     return
-  testtime = root.completed-parts['week2startstudy'] + 1000*3600*24*7
+  testtime = root.completed-parts['pretest2'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 2 vocabulary'
     return
   window.open('matching?vocab=japanese2&type=posttest')
 
@@ -56,11 +56,11 @@ export open-pretest3 = ->
   window.open('matching?vocab=japanese3&type=pretest')
 
 export open-posttest3 = ->
-  if not alert-prereqs ['week3startstudy']
+  if not alert-prereqs ['pretest3']
     return
-  testtime = root.completed-parts['week3startstudy'] + 1000*3600*24*7
+  testtime = root.completed-parts['pretest3'] + 1000*3600*24*7
   if Date.now() < testtime
-    alert 'Please wait until ' + new Date(testtime).toString() + ' to take this test'
+    alert 'Please wait until ' + new Date(testtime).toString() + ' to take the post-test for week 3 vocabulary'
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
@@ -130,26 +130,63 @@ condition_to_order = [
   <[ none link interactive ]>
 ]
 
+interactive-description = '''
+This week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.<br>
+It should look like this:<br><br>
+
+<img src="feedlearn-screenshot.png" style="border-radius: 15px"></img>
+
+<div>
+<br><br>
+<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week's vocabulary, but you do not see the quizzes in your Facebook feed.<br>
+</div>
+'''
+link-description = '''
+This week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.<br>
+It should look like this:<br><br>
+
+<img src="feedlearn-link-screenshot.png" style="border-radius: 15px"></img>
+
+<div>
+<br><br>
+<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week's vocabulary, but you do not see the links in your Facebook feed.
+</div>
+'''
+none-description = '''
+This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the FeedLearn website to study.<br>
+The email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>
+It should look like this:<br><br>
+
+<img src="feedlearn-email-screenshot.png" style="border-radius: 15px"></img>
+
+<div>
+<br><br>
+<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week's vocabulary, but you do not receive the daily email by the next day at 11AM.
+</div>
+'''
+
+get-description-for-format-and-week = (format, weeknum) ->
+  firstpart = switch weeknum
+  | 0 => 'After you have completed the pretest, you will be studying the week 1 vocabulary as follows:'
+  | 1 => 'After you have completed the pretest, you will be studying the week 2 vocabulary as follows:'
+  | 2 => 'After you have completed the pretest, you will be studying the week 3 vocabulary as follows:'
+  format-description = switch format
+  | 'interactive' => interactive-description
+  | 'link' => link-description
+  | 'none' => none-description
+  return $('<div>').append [$('<div>').text(firstpart), $('<div>').html(format-description)]
+
 set-week1-description = (format) ->
-  desctext = switch format
-  | 'interactive' => 'During the first week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.'
-  | 'link' => 'During the first week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.'
-  | 'none' => 'During the first week, you will not be shown quizzes in your Facebook feeed, but will rather be sent a daily email reminder asking you to visit the website.'
-  $('#week1desc').text desctext
+  desctext = get-description-for-format-and-week(format, 0)
+  $('#week1desc').html desctext
 
 set-week2-description = (format) ->
-  desctext = switch format
-  | 'interactive' => 'During the second week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.'
-  | 'link' => 'During the second week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.'
-  | 'none' => 'During the second week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the website.'
-  $('#week2desc').text desctext
+  desctext = get-description-for-format-and-week(format, 1)
+  $('#week2desc').html desctext
 
 set-week3-description = (format) ->
-  desctext = switch format
-  | 'interactive' => 'During the third week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.'
-  | 'link' => 'During the third week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.'
-  | 'none' => 'During the third week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the website.'
-  $('#week3desc').text desctext
+  desctext = get-description-for-format-and-week(format, 2)
+  $('#week3desc').html desctext
 
 
 set-studyorder = (studyorder) ->
@@ -163,7 +200,7 @@ show-pretest-done = (num, timestamp) ->
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
   $('#pretest' + num + 'check').css 'visibility', 'visible'
-  #$('#pretest' + num + 'button').attr 'disabled', true
+  $('#pretest' + num + 'button').attr 'disabled', true
   $('#pretest' + num + 'donedisplay').css('color', 'green').text 'You submitted pre-test ' + num + ' on ' + readable
 
 show-posttest-done = (num, timestamp) ->
@@ -171,7 +208,7 @@ show-posttest-done = (num, timestamp) ->
     timestamp = Date.now()
   readable = new Date(timestamp).toString()
   $('#posttest' + num + 'check').css 'visibility', 'visible'
-  #$('#posttest' + num + 'button').attr 'disabled', true
+  $('#posttest' + num + 'button').attr 'disabled', true
   $('#posttest' + num + 'donedisplay').css('color', 'green').text 'You submitted post-test ' + num + ' on ' + readable
 
 show-consent-agreed = (timestamp) ->
@@ -217,8 +254,9 @@ refresh-completed-parts = ->
         break
 
 export have-full-name = ->
-  setvar 'fullname', root.fullname
+  #setvar 'fullname', root.fullname
   $('#getfullname').hide()
+  $('#fbloginpage').hide()
   $('#accordion').show()
   $('#fullnamedisplay').text  ' ' + root.fullname
   addlog {type: 'study1visit'}
@@ -232,6 +270,68 @@ export have-full-name = ->
       refresh-completed-parts()
     , 2000
 
+/*
+fb-login-status-change-callback = (response) ->
+  if response.status == 'connected'
+
+  setvar 'fullname', response.name
+  addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+  #window.location.href = '/study1'
+  have-full-name()
+*/
+
+export fb-try-login-automatic = ->
+  FB.get-login-status (loginstatus) ->
+    if loginstatus.status != 'connected'
+      return
+    FB.api '/me', (response) ->
+      if response.name?
+        setvar 'fullname', response.name
+        addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+        have-full-name()
+
+export fb-try-login-manual = ->
+  FB.get-login-status (loginstatus) ->
+    if loginstatus.status != 'connected'
+      return
+    FB.api '/me', (response) ->
+      if response.name?
+        setvar 'fullname', response.name
+        addlog {type: 'fblogin', logintype: 'manual', fblogin: response}
+        have-full-name()
+
+window.fbAsyncInit = ->
+  console.log 'fbAsyncInit called'
+  FB.init {
+    appId  : '1582095062012614',
+    cookie : true  # enable cookies to allow the server to access the session
+    xfbml  : true #true # true,  # parse social plugins on this page
+    version: 'v2.1' # use version 2.1
+  }
+  #FB.XFBML.parse document.getElementById('fbloginbutton')
+
+  #FB.get-login-status fb-login-status-change-callback
+  fb-try-login-automatic()
+  #$('#getfullname').show()
+  #$('#fullnameinput').focus()
+
+inject-facebook-tag = ->
+  console.log 'inject-facebook-tag called'
+  e = document.createElement('script')
+  e.async = true
+  e.src = '//connect.facebook.net/en_US/sdk.js'
+  document.getElementById('fb-root').appendChild e
+
+export dont-have-full-name = ->
+  inject-facebook-tag()
+
+export fbButtonOnlogin = ->
+  fb-try-login-manual()
+
+#export fb-login-button-clicked = ->
+#  #FB.login ->
+#  #  fb-try-login-manual()
+
 $(document).ready ->
   forcehttps()
   setvar 'hideoption', true
@@ -243,8 +343,8 @@ $(document).ready ->
     return
   updatecookies()
   root.fullname = first-non-null root.fullname, getvar('fullname') #, 'Anonymous User'
-  if root.fullname? and root.fullname != 'Anonymous User'
+  if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
     have-full-name()
   else
-    $('#fullnameinput').focus()
+    dont-have-full-name()
 

@@ -18,9 +18,37 @@ html(lang='en')
     script(src='logging_client.js')
     script(src='study1.js')
 
+    #fb-root
+    #fbloginpage(style='margin-left: 170px; margin-top: 10px')
+      img(src='feedlearn-128px.png' style='position: absolute; left: 10px')
+      h1 FeedLearn
+      h3 A tool that teaches you Japanese by showing quizzes in your Facebook feed
+      img(src='feedlearn-screenshot.png' style='border-radius: 15px')
+      h3 Study Japanese with FeedLearn!
+      div If you would like to try FeedLearn, you can join our user study right now!
+      //- div FeedLearn is a Chrome extension, so you must be using the Chrome browser. FeedLearn does not post to your wall or access any private data.
+      div The user study is 3 weeks long. You will learn 50 Japanese words and take a vocabulary quiz each week. You can opt-out anytime.
+      div To install FeedLearn and participate in the user study, please login below using Facebook (we do not post to your wall).
+      div(style='padding-bottom: 10px')
+      div.fb-login-button#fbloginbutton(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' onlogin='fbButtonOnlogin()')
+      div(style='padding-bottom: 10px')
+      h3 Study Description
+      div This is a research study about seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.
+      div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you view your Facebook news feed.
+      div The study lasts for 3 weeks. You can opt out anytime.
+      div On each week, you will take a vocabulary test on the 50 new words you will be studying.
+      div You will then study the words for a week, using one of 3 different approaches:
+      div(style='margin-left: 10px') • One week, you will be shown vocabulary quizzes directly in your feed
+      div(style='margin-left: 10px') • Another week, you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.
+      div(style='margin-left: 10px') • Another week, you will be sent daily email reminders to study Japanese on the FeedLearn site.
+      div At the end of the week, you will take another vocabulary test to see what you have learned.
+      div We do not access any of your private data or post anything on your Facebook wall.
+      h3 Contact Information
+      div If you have questions, ask 
+        a(href='mailto:geza@cs.stanford.edu') Geza Kovacs
 
-    #getfullname(style='margin-left: 10px; margin-top: 10px')
-      div(style='font-size: 20px; margin-bottom: 10px') Welcome to the FeedLearn study! What is your email?
+    #getfullname(style='margin-left: 10px; margin-top: 10px; display: none')
+      div(style='font-size: 20px; margin-bottom: 10px') Welcome to the FeedLearn study! What is your name?
       input#fullnameinput.form-control(onkeyup='console.log(event.keyCode); if (event.keyCode == 13) document.getElementById("fullnamesubmitbutton").click()' style='width: 350px; display: inline-block; margin-right: 10px')
       button#fullnamesubmitbutton.btn.btn-primary(style='width: 100px' onclick='fullNameSubmitted()') Submit
 
@@ -35,29 +63,24 @@ html(lang='en')
               span#consentcheck.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
               span Welcome to the FeedLearn study
               span#fullnamedisplay 
-              span ! Please read and agree to this consent form
+              span ! Please read the study desciption
         #collapseOne.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingOne')
           .panel-body
-            p Please read the following consent form and agree to it:
-            h4 Description
-            p You are invited to participate in a research study on seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream. You will be asked to take a vocabulary pretest in Japanese. Then, you will install our Chrome extension, and use it for 3 weeks. Our extension will occasionally display vocabulary flashcards while you view your Facebook news feed. It will not access your Facebook data or post anything on your wall. After each week, you will be sent another vocabulary test to see what you have learned that week.
-            h4 Time Involvement
-            p  Your participation will take approximately 1 hour of time total, across a duration of 3 weeks.
-            h4 Risks and Benefits
-            p There are no foreseen risks associated with this study. The benefits are that you might learn a few new foreign-language words. We cannot and do not guarantee or promise that you will receive any benefits from this study.
-            h4 Payments
-            p You will receive a $25 Amazon gift card as payment for your participation.
-            h4 Subject's Rights
-            p If you have read this form and have decided to participate in this project, please understand your participation is voluntary and you have the right to withdraw your consent or discontinue participation at any time without penalty or loss of benefits to which you are otherwise entitled.  The alternative is not to participate.  You have the right to refuse to answer particular questions.  Your individual privacy will be maintained in all published and written data resulting from the study.
+            h4 Study Description
+            div This is a research study about seeing whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.
+            div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you view your Facebook news feed.
+            div The study lasts for 3 weeks. You can opt out anytime.
+            div On each week, you will take a vocabulary test on the 50 new words you will be studying.
+            div You will then study the words for a week, using one of 3 different approaches:
+            div(style='margin-left: 10px') • One week, you will be shown vocabulary quizzes directly in your feed
+            div(style='margin-left: 10px') • Another week, you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.
+            div(style='margin-left: 10px') • Another week, you will be sent daily email reminders to study Japanese on the FeedLearn site.
+            div At the end of the week, you will take another vocabulary test to see what you have learned.
+            div We do not access any of your private data or post anything on your Facebook wall.
             h4 Contact Information
-            i Questions
-            p If you have any questions, concerns or complaints about this research, its procedures, risks and benefits, contact the Protocol Director, Geza Kovacs
-              span 
-              a(href='mailto:geza@cs.stanford.edu') &lt;geza@cs.stanford.edu&gt;
-            i Independent Contact
-            p If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906.  You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306.
-            p
-              b The extra copy of this consent form is for you to keep. Please print a copy of this page for your records.
+            div If you have questions, ask 
+              a(href='mailto:geza@cs.stanford.edu') Geza Kovacs
+            br
             #consentdisplay
             button#consentbutton.btn.btn-lg.btn-primary(onclick='consentAgreed()') I agree to these conditions
 
@@ -67,10 +90,10 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseThree' aria-expanded='false' aria-controls='collapseThree')
               span#extensioninstalledcheck.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Install FeedLearn Chrome Extension
+              span Install the FeedLearn Chrome Extension
         #collapseThree.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
           .panel-body
-            p Please now install the FeedLearn chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
+            p Please now install the FeedLearn Chrome extension, which will inject vocabulary into your Facebook feed. Please do not uninstall it until the conclusion of this study.
             #extensioninstalleddisplay The FeedLearn extension has not yet been installed. If you just installed it, please refresh this page.
             button#extensioninstallbutton.btn.btn-lg.btn-primary(onclick='installChromeExtension()') Install FeedLearn Chrome Extension
 
@@ -80,15 +103,19 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
               span#pretest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Pre-test for First Week Vocabulary (50 Japanese words)
+              span Start Studying Week 1 Vocabulary
         #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
           .panel-body
-            p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
+            h4 Pre-Test for Week 1 Vocbulary
+            p Please follow this link to take a vocab test on the 50 words you will be studying over week 1. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
             #pretest1donedisplay
             button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Japanese Vocabulary
+            div(style='height: 30px')
+            h4 Study Week 1 Vocabulary
+            #week1desc WEEK1
 
 
-      .panel.panel-default
+      //-.panel.panel-default
         #headingFour.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseFour' aria-expanded='false' aria-controls='collapseFour')
@@ -97,9 +124,9 @@ html(lang='en')
         #collapseFour.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingThree')
           .panel-body
             p#week1desc WEEK1
-            p Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            #startweek1donedisplay
-            button#startweek1button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
+            //- p Click the button below to automatically configure the chrome extension and start the Week 1 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            //- #startweek1donedisplay
+            //- button#startweek1button.btn.btn-lg.btn-primary(onclick='startWeek1()') Start Week 1 Study Period
 
 
       .panel.panel-default
@@ -107,10 +134,10 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseFive' aria-expanded='false' aria-controls='collapseFive')
               span#posttest1check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Post-test for First Week Vocabulary (50 Japanese words)
+              span Post-Test for Week 1 Vocabulary
         #collapseFive.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingFive')
           .panel-body
-            p Please follow this link to take a post-test on the 50 words you studied during the first week.
+            p Please follow this link to take a vocabulary test on the 50 words you studied during week 1.
             #posttest1donedisplay
             button#posttest1button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the post-test for Week 1 Japanese Vocabulary
 
@@ -120,15 +147,19 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseSix' aria-expanded='false' aria-controls='collapseSix')
               span#pretest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Pre-test for Second Week Vocabulary (50 Japanese words)
+              span Start Studying Week 2 Vocabulary
         #collapseSix.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSix')
           .panel-body
-            p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
+            h4 Pre-Test for Week 2 Vocbulary
+            p Please follow this link to take a vocab test on the 50 words you will be studying over week 2. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
             #pretest2donedisplay
             button#pretest2button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Japanese Vocabulary
+            div(style='height: 30px')
+            h4 Study Week 2 Vocbulary
+            #week2desc WEEK2
 
 
-      .panel.panel-default
+      //-.panel.panel-default
         #headingSeven.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseSeven' aria-expanded='false' aria-controls='collapseSeven')
@@ -137,9 +168,9 @@ html(lang='en')
         #collapseSeven.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSeven')
           .panel-body
             p#week2desc WEEK2
-            p Click the button below to automatically configure the chrome extension and start the Week 2 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            #startweek2donedisplay
-            button#startweek2button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
+            //- p Click the button below to automatically configure the chrome extension and start the Week 2 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            //- #startweek2donedisplay
+            //- button#startweek2button.btn.btn-lg.btn-primary(onclick='startWeek2()') Start Week 2 Study Period
 
 
       .panel.panel-default
@@ -147,10 +178,10 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseEight' aria-expanded='false' aria-controls='collapseEight')
               span#posttest2check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Post-test for Second Week Vocabulary (50 Japanese words)
+              span Post-Test for Week 2 Vocabulary
         #collapseEight.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingEight')
           .panel-body
-            p Please follow this link to take a post-test on the 50 words you studied during the second week.
+            p Please follow this link to take a vocabulary test on the 50 words you studied during week 2.
             #posttest2donedisplay
             button#posttest2button.btn.btn-lg.btn-primary(onclick='openPosttest2()') Take the post-test for Week 2 Japanese Vocabulary
 
@@ -160,15 +191,19 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseNine' aria-expanded='false' aria-controls='collapseNine')
               span#pretest3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Pre-test for Third Week Vocabulary (50 Japanese words)
+              span Start Studying Week 3 Vocabulary
         #collapseNine.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingNine')
           .panel-body
-            p Please follow this link to take a pre-test. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
+            h4 Pre-Test for Week 3 Vocbulary
+            p Please follow this link to take a vocab test on the 50 words you will be studying over week 3. We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words, just try answering all the questions.
             #pretest3donedisplay
             button#pretest3button.btn.btn-lg.btn-primary(onclick='openPretest3()') Take the pre-test for Week 3 Japanese Vocabulary
+            div(style='height: 30px')
+            h4 Study Week 3 Vocabulary
+            #week3desc WEEK3
 
 
-      .panel.panel-default
+      //-.panel.panel-default
         #headingTen.panel-heading(role='tab')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseTen' aria-expanded='false' aria-controls='collapseTen')
@@ -177,9 +212,9 @@ html(lang='en')
         #collapseTen.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTen')
           .panel-body
             p#week3desc WEEK3
-            p Click the button below to automatically configure the chrome extension and start the Week 3 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
-            #startweek3donedisplay
-            button#startweek3button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
+            //- p Click the button below to automatically configure the chrome extension and start the Week 3 study period (7 days). We will email you afer 7 days when it is time for you to take the vocabulary test.
+            //- #startweek3donedisplay
+            //- button#startweek3button.btn.btn-lg.btn-primary(onclick='startWeek3()') Start Week 3 Study Period
 
 
       .panel.panel-default
@@ -187,11 +222,10 @@ html(lang='en')
           h4.panel-title
             a(data-toggle='collapse' data-parent='#accordion' href='#collapseEleven' aria-expanded='false' aria-controls='collapseEleven')
               span#posttest3check.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
-              span Post-test for Third Week Vocabulary (50 Japanese words)
+              span Post-test for Week 3 Vocabulary
         #collapseEleven.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingEleven')
           .panel-body
-            p Please follow this link to take a post-test on the 50 words you studied during the second week.
+            p Please follow this link to take a vocabulary test on the 50 words you studied during week 3.
             #posttest3donedisplay
             button#posttest3button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Japanese Vocabulary
-
 

@@ -348,11 +348,9 @@
     }
   };
   out$.gotoQuizPage = gotoQuizPage = function(){
-    var hideoption;
     $('.mainpage').hide();
     $('#quizpage').show();
-    hideoption = getvar('hideoption');
-    if (hideoption != null && hideoption !== 'false' && hideoption !== false) {
+    if (true) {
       $('#optionbutton').hide();
       $('#showanswersbutton').css({
         marginRight: '0px',
@@ -497,8 +495,12 @@
       window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
       return;
     }
+    if (getvar('fullname') == null) {
+      window.location = '/study1';
+      return;
+    }
     setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'none'));
     setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
     updatecookies();
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
