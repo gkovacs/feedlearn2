@@ -457,6 +457,14 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location.href = '/study1'
     return
+  if not window.chrome?
+    toastr.options = {
+      showDuration: 0
+      hideDuration: 0
+      timeOut: 0
+      extendedTimeOut: 0
+    }
+    toastr.error 'FeedLearn currently only supports the Google Chrome browser'
   root.fullname = first-non-null root.fullname, getvar('fullname') #, 'Anonymous User'
   updatecookies()
   prevent-accordion-collapsing()
