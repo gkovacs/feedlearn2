@@ -295,27 +295,41 @@
     return getConditionsCollection(function(conditionsCollection){
       return conditionsCollection.find().toArray(function(err, conditionsResults){
         return getEventsCollection(function(eventsCollection){
-          return eventsCollection.find().toArray(err2, function(eventsResults){
-            var events_dictionary, i$, len$, x, output, ref$, curobj, res$, k, v, events_dict;
+          return eventsCollection.find().toArray(function(err2, eventsResults){
+            var events_dictionary, i$, len$, x, output, ref$, curobj, res$, k, v, events_dict, ref1$;
             events_dictionary = {};
-            for (i$ = 0, len$ = eventsResults.length; i$ < len$; ++i$) {
-              x = eventsResults[i$];
-              events_dictionary[x._id] = x;
+            if (eventsResults != null) {
+              for (i$ = 0, len$ = eventsResults.length; i$ < len$; ++i$) {
+                x = eventsResults[i$];
+                if (x._id != null) {
+                  events_dictionary[x._id] = x;
+                }
+              }
             }
             output = [];
-            for (i$ = 0, len$ = (ref$ = conditionsResults).length; i$ < len$; ++i$) {
-              x = ref$[i$];
-              res$ = {};
-              for (k in x) {
-                v = x[k];
-                res$[k] = v;
-              }
-              curobj = res$;
-              events_dict = events_dictionary[curobj._id] != null;
-              if (events_dict != null) {
-                for (k in events_dict) {
-                  v = events_dict[k];
-                  curobj[k] = v;
+            if (conditionsResults != null) {
+              for (i$ = 0, len$ = (ref$ = conditionsResults).length; i$ < len$; ++i$) {
+                x = ref$[i$];
+                res$ = {};
+                for (k in x) {
+                  v = x[k];
+                  res$[k] = v;
+                }
+                curobj = res$;
+                if (events_dictionary[curobj._id] != null) {
+                  events_dict = events_dictionary[curobj._id];
+                  if (events_dict != null) {
+                    for (k in events_dict) {
+                      v = events_dict[k];
+                      curobj[k] = v;
+                    }
+                    if (curobj != null && curobj._id != null && curobj.condition != null) {
+                      for (k in ref1$ = cookiesFromEventsConditionUsername(events_dict, curobj.condition, curobj._id)) {
+                        v = ref1$[k];
+                        curobj[k] = v;
+                      }
+                    }
+                  }
                 }
               }
               output.push(curobj);
