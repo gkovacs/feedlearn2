@@ -86,7 +86,7 @@
     return window.open('matching?vocab=japanese3&type=posttest');
   };
   out$.installChromeExtension = installChromeExtension = function(){
-    return window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf');
+    return chrome.webstore.install('https://chrome.google.com/webstore/detail/ebmjdfhplinmlajmdcmhkikideknlgkf');
   };
   out$.startWeek1 = startWeek1 = function(){
     if (!alertPrereqs(['pretest1'])) {

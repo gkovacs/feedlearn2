@@ -79,7 +79,9 @@ export open-posttest3 = ->
   window.open('matching?vocab=japanese3&type=posttest')
 
 export install-chrome-extension = ->
-  window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
+  #window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
+  chrome.webstore.install('https://chrome.google.com/webstore/detail/ebmjdfhplinmlajmdcmhkikideknlgkf')
+  #chrome.webstore.install()
 
 export start-week1 = ->
   if not alert-prereqs ['pretest1']
