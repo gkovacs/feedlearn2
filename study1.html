@@ -37,7 +37,7 @@
       <div id="fbloginbutton" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" scope="public_profile,email" onlogin="fbButtonOnlogin()" class="fb-login-button"></div>
       <div style="padding-bottom: 10px"></div>
       <h3>Study Description</h3>
-      <div>This is a research study to see whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.</div>
+      <div>This is a study to see whether we can help you learn Japanese vocabulary while you browse your Facebook news feed.</div>
       <div>You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.</div>
       <div>The study lasts for 3 weeks. Each week, you will:</div>
       <div style="margin-left: 10px">1) Take a vocab pre-test on the 50 new words you will be studying that week</div>
@@ -45,7 +45,7 @@
       <div style="margin-left: 20px">• One week, you will be shown vocabulary quizzes directly in your feed</div>
       <div style="margin-left: 20px">• Another week, you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.</div>
       <div style="margin-left: 20px">• Another week, you will be sent daily email reminders to study Japanese on the FeedLearn site.</div>
-      <div style="margin-left: 10px">3) At the end of the week, you will take another vocabulary test to see what you have learned.</div>
+      <div style="margin-left: 10px">3) At the end of the week, you will take a vocab post-test to see what you have learned.</div>
       <div>We do not access any of your private data or post anything on your Facebook wall. You can leave the study anytime.</div>
       <h3>Contact Information</h3>
       <div>If you have questions, ask <a href="mailto:geza@cs.stanford.edu">Geza Kovacs</a></div>
@@ -58,20 +58,20 @@
     <div id="accordion" role="tablist" aria-multiselectable="true" style="display: none" class="panel-group">
       <div class="panel panel-default">
         <div id="headingOne" role="tab" class="panel-heading">
-          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><span id="consentcheck" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Welcome to the FeedLearn study</span><span id="fullnamedisplay"> </span><span>! Please read the study desciption</span></a></h4>
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><span id="consentcheck" style="visibility: hidden; margin-right: 7px" class="glyphicon glyphicon-ok"></span><span>Welcome to FeedLearn</span><span id="fullnamedisplay"> </span><span>! Please read the study desciption</span></a></h4>
         </div>
         <div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="panel-collapse collapse">
           <div class="panel-body">
             <h4>Study Description</h4>
-            <div>This is a research study to see whether we can help you learn Japanese vocabulary while browsing your Facebook news stream.</div>
+            <div>This is a study to see whether we can help you learn Japanese vocabulary while you browse your Facebook news feed.</div>
             <div>You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.</div>
             <div>The study lasts for 3 weeks. Each week, you will:</div>
             <div style="margin-left: 10px">1) Take a vocab pre-test on the 50 new words you will be studying that week</div>
-            <div style="margin-left: 10px">2) Study the words, using one of the following 3 approaches</div>
-            <div style="margin-left: 20px">• One week, you will be shown vocabulary quizzes directly in your feed</div>
-            <div style="margin-left: 20px">• Another week, you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.</div>
-            <div style="margin-left: 20px">• Another week, you will be sent daily email reminders to study Japanese on the FeedLearn site.</div>
-            <div style="margin-left: 10px">3) At the end of the week, you will take another vocabulary test to see what you have learned.</div>
+            <div style="margin-left: 10px">2) Study the words, using a different tool each week:</div>
+            <div style="margin-left: 20px"><span>• On week 1,</span><span> </span><span id="week1format">you will be shown vocabulary quizzes directly in your feed</span></div>
+            <div style="margin-left: 20px"><span>• On week 2,</span><span> </span><span id="week2format">you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.</span></div>
+            <div style="margin-left: 20px"><span>• On week 3,</span><span> </span><span id="week3format">you will be sent daily email reminders to study Japanese on the FeedLearn site.</span></div>
+            <div style="margin-left: 10px">3) At the end of the week, you will take a vocab post-test to see what you have learned.</div>
             <div>We do not access any of your private data or post anything on your Facebook wall. You can leave the study anytime.</div>
             <h4>Contact Information</h4>
             <div>If you have questions, ask <a href="mailto:geza@cs.stanford.edu">Geza Kovacs</a></div><br>
@@ -89,7 +89,7 @@
             <div>Please now install the FeedLearn Chrome extension, which will show you vocabulary as you browse your Facebook feed.</div>
             <div>Please do not uninstall the extension until the conclusion of this study.</div>
             <div><b>After installing the FeedLearn extension, please do the pre-test for week 1</b><span> </span><span>(the extension will not activate until you have taken the pre-test).</span></div><br>
-            <div id="extensioninstalleddisplay"><span>The FeedLearn extension is not yet installed. If you just installed it, try refreshing this page. If the install button does not work, </span><span> </span><a href="https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf" target="_blank">click here</a></div>
+            <div id="extensioninstalleddisplay"><span>The FeedLearn extension is not yet installed. If you just installed it</span><span> </span><a href="/study1">reload this page</a><span>.</span><span> </span><span>If the install button does not work,</span><span> </span><a href="https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf" target="_blank">click here</a><span>.</span></div>
             <button id="extensioninstallbutton" onclick="installChromeExtension()" class="btn btn-lg btn-primary">Install FeedLearn Chrome Extension</button>
           </div>
         </div>

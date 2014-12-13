@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, showStudyFormatDescriptions, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog;
@@ -360,6 +360,17 @@
       return openPartThatNeedsDoing();
     });
   };
+  out$.showStudyFormatDescriptions = showStudyFormatDescriptions = function(){
+    var studyformatdescriptions;
+    studyformatdescriptions = {
+      'interactive': 'you will be shown vocabulary quizzes directly in your feed',
+      'link': 'you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.',
+      'none': 'you will be sent daily email reminders to study Japanese on the FeedLearn site.'
+    };
+    $('#week1format').text(studyformatdescriptions[root.studyorder[0]]);
+    $('#week2format').text(studyformatdescriptions[root.studyorder[1]]);
+    return $('#week3format').text(studyformatdescriptions[root.studyorder[2]]);
+  };
   out$.haveFullName = haveFullName = function(){
     $('#getfullname').hide();
     $('#fbloginpage').hide();
@@ -373,6 +384,7 @@
       setvar('condition', root.condition);
       root.studyorder = condition_to_order[condition];
       setStudyorder(root.studyorder);
+      showStudyFormatDescriptions();
       refreshCompletedParts();
       return setInterval(function(){
         return refreshCompletedParts();

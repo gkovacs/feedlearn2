@@ -355,6 +355,16 @@ refresh-completed-parts = ->
         break
     open-part-that-needs-doing()
 
+export showStudyFormatDescriptions = ->
+  studyformatdescriptions = {
+    'interactive': 'you will be shown vocabulary quizzes directly in your feed'
+    'link': 'you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.'
+    'none': 'you will be sent daily email reminders to study Japanese on the FeedLearn site.'
+  }
+  $('#week1format').text studyformatdescriptions[root.studyorder[0]]
+  $('#week2format').text studyformatdescriptions[root.studyorder[1]]
+  $('#week3format').text studyformatdescriptions[root.studyorder[2]]
+
 export have-full-name = ->
   #setvar 'fullname', root.fullname
   $('#getfullname').hide()
@@ -367,6 +377,7 @@ export have-full-name = ->
     setvar 'condition', root.condition
     root.studyorder = condition_to_order[condition]
     set-studyorder root.studyorder
+    show-study-format-descriptions()
     refresh-completed-parts()
     setInterval ->
       refresh-completed-parts()
