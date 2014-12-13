@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -565,12 +565,24 @@
     };
   };
   getuserlist = function(callback){
+    return getconditions(function(conditions){
+      var usersArray;
+      usersArray = dictToKeys(conditions);
+      return callback(usersArray);
+    });
+  };
+  getuserlist_old = function(callback){
     return getvardict('conditions', function(conditions){
       var usersArray;
       usersArray = dictToKeys(conditions);
       return callback(usersArray);
     });
   };
+  app.get('/getuserlist', function(req, res){
+    return getuserlist(function(userlist){
+      return res.send(JSON.stringify(userlist));
+    });
+  });
   asyncMapNoerr = function(list, func, callback){
     return async.map(list, addErrToCallback(func), function(err, results){
       return callback(results);

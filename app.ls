@@ -461,9 +461,18 @@ add-err-to-callback = (f) ->
       callback(null, results)
 
 getuserlist = (callback) ->
+  getconditions (conditions) ->
+    users-array = dict-to-keys conditions
+    callback users-array
+
+getuserlist_old = (callback) ->
   getvardict 'conditions', (conditions) ->
     users-array = dict-to-keys conditions
     callback users-array
+
+app.get '/getuserlist', (req, res) ->
+  getuserlist (userlist) ->
+    res.send JSON.stringify userlist
 
 async-map-noerr = (list, func, callback) ->
   async.map list, add-err-to-callback(func), (err, results) ->
