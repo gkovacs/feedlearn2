@@ -330,8 +330,20 @@
       return eventsCollection.findOne({
         _id: username
       }, function(err, result){
-        var updateinfo;
-        if (result != null && result[eventname] != null) {
+        var newbody, updateinfo;
+        if (result == null) {
+          newbody = {
+            _id: username,
+            username: username
+          };
+          newbody[eventname] = Date.now();
+          eventsCollection.save(newbody, function(){
+            res.send('done');
+            db.close();
+          });
+          return;
+        }
+        if (result[eventname] != null) {
           res.send('already set timestamp for event');
           db.close();
           return;

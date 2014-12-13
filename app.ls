@@ -294,7 +294,15 @@ settimestampforuserevent_express = (data, res) ->
     return
   get-events-collection (events-collection, db) ->
     events-collection.findOne {_id: username}, (err, result) ->
-      if result? and result[eventname]?
+      if not result?
+        newbody = {_id: username, username: username}
+        newbody[eventname] = Date.now()
+        events-collection.save newbody, ->
+          res.send 'done'
+          db.close()
+          return
+        return
+      if result[eventname]?
         res.send 'already set timestamp for event'
         db.close()
         return
