@@ -43,6 +43,10 @@ get-vars-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('vars'), db
 
+get-events-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('events'), db
+
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('logs'), db
@@ -208,6 +212,15 @@ setvar_express = (data, res) ->
 app.get '/setvar_get', getify(setvar_express)
 
 getuserevents = (username, callback) ->
+  get-events-collection (collection, db) ->
+    collection.findOne {_id: username}, (err, result) ->
+      if not result?
+        callback {}
+      else
+        callback result
+      db.close()
+
+getuserevents_old = (username, callback) ->
   getvardict ('evts|' + username), callback
 
 app.get '/getuserevents', (req, res) ->
@@ -218,6 +231,23 @@ app.get '/getuserevents', (req, res) ->
     #console.log JSON.stringify events
     res.send <| JSON.stringify events
     return
+
+getalluserevents_old = (callback) ->
+  getuserlist (userlist) ->
+    get-user-and-events = (username, callback) ->
+      getuserevents username, (output) ->
+        output.username = username
+        callback(output)
+    async-map-noerr userlist, get-user-and-events, callback
+
+getalluserevents = (callback) ->
+  get-events-collection (events-collection) ->
+    events-collection.find().toArray (err, results) ->
+      callback results
+
+app.get '/getalluserevents', (req, res) ->
+  getalluserevents (results-array) ->
+    res.send JSON.stringify results-array
 
 getusereventsandcookies = (username, callback) ->
   getuserevents username, (events) ->
@@ -236,7 +266,7 @@ app.get '/getallusereventsandcookies', (req, res) ->
   getallusereventsandcookies (results-array) ->
     res.send JSON.stringify results-array
 
-settimestampforuserevent_express = (data, res) ->
+settimestampforuserevent_express_old = (data, res) ->
   {username, eventname} = data
   #console.log 'settimestampforuserevent_express'
   #console.log username
@@ -254,19 +284,38 @@ settimestampforuserevent_express = (data, res) ->
         res.send 'done'
         return
 
+settimestampforuserevent_express = (data, res) ->
+  {username, eventname} = data
+  #console.log 'settimestampforuserevent_express'
+  #console.log username
+  #console.log eventname
+  if not username? or not eventname?
+    res.send 'need username and eventname'
+    return
+  get-events-collection (events-collection, db) ->
+    events-collection.findOne {_id: username}, (err, result) ->
+      if result? and result[eventname]?
+        res.send 'already set timestamp for event'
+        db.close()
+        return
+      updateinfo = {}
+      updateinfo[eventname] = Date.now()
+      events-collection.update {_id: username}, {$set: updateinfo}, ->
+        res.send 'done'
+        db.close()
+        return
+
 app.get '/removeuserevent_get', (req, res) ->
   {username, eventname} = req.query
   if not username? or not eventname?
     res.send 'need username and eventname'
     return
-  getuserevents username, (events) ->
-    if events[eventname]?
-      delete events[eventname]
-      setvardict ('evts|' + username), events, ->
-        res.send 'done'
-        return
-    else
-      res.send 'eventname was not in the events list'
+  get-events-collection (events-collection, db) ->
+    updateinfo = {}
+    updateinfo[eventname] = ''
+    events-collection.update {_id: username}, {$unset: updateinfo}, ->
+      res.send 'done'
+      db.close()
       return
 
 app.get '/settimestampforuserevent_get', getify(settimestampforuserevent_express)
