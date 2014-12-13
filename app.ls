@@ -258,11 +258,33 @@ getusereventsandcookies = (username, callback) ->
       callback output
 
 getallusereventsandcookies = (callback) ->
-  getuserlist (userlist) ->
-    async-map-noerr userlist, getusereventsandcookies, callback
+  get-conditions-collection (conditions-collection) ->
+    conditions-collection.find().toArray (err, conditions-results) ->
+      get-events-collection (events-collection) ->
+        events-collection.find().toArray (err2), (events-results) ->
+          events_dictionary = {}
+          for x in events-results
+            events_dictionary[x._id] = x
+          output = []
+          for x in conditions-results
+            curobj = {[k,v] for k,v of x}
+            events_dict = events_dictionary[curobj._id]?
+            if events_dict?
+              for k,v of events_dict
+                curobj[k] = v
+            output.push curobj
+          callback output
 
 
 app.get '/getallusereventsandcookies', (req, res) ->
+  getallusereventsandcookies (results-array) ->
+    res.send JSON.stringify results-array
+
+getallusereventsandcookies_old = (callback) ->
+  getuserlist (userlist) ->
+    async-map-noerr userlist, getusereventsandcookies, callback
+
+app.get '/getallusereventsandcookies_old', (req, res) ->
   getallusereventsandcookies (results-array) ->
     res.send JSON.stringify results-array
 

@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express_old, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -292,11 +292,51 @@
     });
   };
   getallusereventsandcookies = function(callback){
+    return getConditionsCollection(function(conditionsCollection){
+      return conditionsCollection.find().toArray(function(err, conditionsResults){
+        return getEventsCollection(function(eventsCollection){
+          return eventsCollection.find().toArray(err2, function(eventsResults){
+            var events_dictionary, i$, len$, x, output, ref$, curobj, res$, k, v, events_dict;
+            events_dictionary = {};
+            for (i$ = 0, len$ = eventsResults.length; i$ < len$; ++i$) {
+              x = eventsResults[i$];
+              events_dictionary[x._id] = x;
+            }
+            output = [];
+            for (i$ = 0, len$ = (ref$ = conditionsResults).length; i$ < len$; ++i$) {
+              x = ref$[i$];
+              res$ = {};
+              for (k in x) {
+                v = x[k];
+                res$[k] = v;
+              }
+              curobj = res$;
+              events_dict = events_dictionary[curobj._id] != null;
+              if (events_dict != null) {
+                for (k in events_dict) {
+                  v = events_dict[k];
+                  curobj[k] = v;
+                }
+              }
+              output.push(curobj);
+            }
+            return callback(output);
+          });
+        });
+      });
+    });
+  };
+  app.get('/getallusereventsandcookies', function(req, res){
+    return getallusereventsandcookies(function(resultsArray){
+      return res.send(JSON.stringify(resultsArray));
+    });
+  });
+  getallusereventsandcookies_old = function(callback){
     return getuserlist(function(userlist){
       return asyncMapNoerr(userlist, getusereventsandcookies, callback);
     });
   };
-  app.get('/getallusereventsandcookies', function(req, res){
+  app.get('/getallusereventsandcookies_old', function(req, res){
     return getallusereventsandcookies(function(resultsArray){
       return res.send(JSON.stringify(resultsArray));
     });
