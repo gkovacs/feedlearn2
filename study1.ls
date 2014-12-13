@@ -317,10 +317,12 @@ prevent-accordion-collapsing = ->
   setup-accordion-elem 'collapseSix'
   setup-accordion-elem 'collapseNine'
 
+root.is_first_time_fetching_events = true
+
 refresh-completed-parts = ->
   num_events_prev = -1
   get-user-events (events) ->
-    have_new_events = false
+    have_new_events = root.is_first_time_fetching_events
     for k,v of events
       if not root.completed-parts[k]?
         root.completed-parts[k] = v
@@ -330,6 +332,7 @@ refresh-completed-parts = ->
       #  have_new_events = true
     if not have_new_events
       return
+    root.is_first_time_fetching_events = false
     if events.consentagreed?
       show-consent-agreed(events.consentagreed)
     for num in [1,2,3]

@@ -313,12 +313,13 @@
     setupAccordionElem('collapseSix');
     return setupAccordionElem('collapseNine');
   };
+  root.is_first_time_fetching_events = true;
   refreshCompletedParts = function(){
     var num_events_prev;
     num_events_prev = -1;
     return getUserEvents(function(events){
       var have_new_events, k, v, i$, ref$, len$, num;
-      have_new_events = false;
+      have_new_events = root.is_first_time_fetching_events;
       for (k in events) {
         v = events[k];
         if (root.completedParts[k] == null) {
@@ -329,6 +330,7 @@
       if (!have_new_events) {
         return;
       }
+      root.is_first_time_fetching_events = false;
       if (events.consentagreed != null) {
         showConsentAgreed(events.consentagreed);
       }
