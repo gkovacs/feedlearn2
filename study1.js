@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, postJson, postStartEvent, addlog, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog;
@@ -85,8 +85,18 @@
     }
     return window.open('matching?vocab=japanese3&type=posttest');
   };
+  out$.chromeExtensionInstallFinished = chromeExtensionInstallFinished = function(){
+    $('#extensioninstalledcheck').css('visibility', 'visible');
+    $('#extensioninstalleddisplay').css('color', 'green').text('FeedLearn Chrome Extension has been installed!');
+    return $('#extensioninstallbutton').attr('disabled', true);
+  };
   out$.installChromeExtension = installChromeExtension = function(){
-    return chrome.webstore.install();
+    var url, successCallback;
+    if ((typeof chrome != 'undefined' && chrome !== null) && chrome.webstore != null && chrome.webstore.install != null) {
+      return chrome.webstore.install(url = 'https://chrome.google.com/webstore/detail/ebmjdfhplinmlajmdcmhkikideknlgkf', successCallback = chromeExtensionInstallFinished);
+    } else {
+      return window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf');
+    }
   };
   out$.startWeek1 = startWeek1 = function(){
     if (!alertPrereqs(['pretest1'])) {

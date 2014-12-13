@@ -78,10 +78,21 @@ export open-posttest3 = ->
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
+export chromeExtensionInstallFinished = ->
+  $('#extensioninstalledcheck').css 'visibility', 'visible'
+  $('#extensioninstalleddisplay').css('color', 'green').text 'FeedLearn Chrome Extension has been installed!'
+  $('#extensioninstallbutton').attr 'disabled', true
+
 export install-chrome-extension = ->
   #window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
   #chrome.webstore.install('https://chrome.google.com/webstore/detail/ebmjdfhplinmlajmdcmhkikideknlgkf')
-  chrome.webstore.install()
+  if chrome? and chrome.webstore? and chrome.webstore.install?
+    chrome.webstore.install(
+      url='https://chrome.google.com/webstore/detail/ebmjdfhplinmlajmdcmhkikideknlgkf',
+      successCallback=chromeExtensionInstallFinished
+    )
+  else
+    window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
 
 export start-week1 = ->
   if not alert-prereqs ['pretest1']
