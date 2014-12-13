@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getusereventsandcookies, getallusereventsandcookies, settimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -35,6 +35,11 @@
   getGrid = function(callback){
     return getMongoDb(function(db){
       return callback(Grid(db), db);
+    });
+  };
+  getVarsCollection = function(callback){
+    return getMongoDb(function(db){
+      return callback(db.collection('vars'), db);
     });
   };
   getLogsCollection = function(callback){
@@ -113,6 +118,35 @@
     });
     return res.sendfile('feedlearn-email-japanese.png');
   });
+  getvar_new = function(varname, callback){
+    return getVarsCollection(function(varsCollection, db){
+      return varsCollection.findOne({
+        _id: varname
+      }, function(err, result){
+        if (result == null || result.val == null) {
+          callback(null);
+          db.close();
+          return;
+        }
+        callback(result.val);
+        return db.close();
+      });
+    });
+  };
+  setvar_new = function(varname, val, callback){
+    return getVarsCollection(function(varsCollection, db){
+      return varsCollection.save({
+        _id: varname,
+        name: varname,
+        val: val
+      }, function(err, result){
+        if (callback != null) {
+          callback(val);
+        }
+        return db.close();
+      });
+    });
+  };
   getvar = function(varname, callback){
     return getGrid(function(grid, db){
       var key;

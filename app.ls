@@ -39,6 +39,10 @@ get-grid = (callback) ->
   get-mongo-db (db) ->
     callback Grid(db), db
 
+get-vars-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('vars'), db
+
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('logs'), db
@@ -117,6 +121,23 @@ app.get '/viewlogfb', (req, res) ->
 app.get '/email-japanese.png', (req, res) ->
   addlogemail {type: 'emailopened', username: req.query.emailuser, timesent: req.query.timesent, timeopened: Date.now()}
   res.sendfile 'feedlearn-email-japanese.png'
+
+getvar_new = (varname, callback) ->
+  get-vars-collection (vars-collection, db) ->
+    vars-collection.findOne {_id: varname}, (err, result) ->
+      if not result? or not result.val?
+        callback null
+        db.close()
+        return
+      callback result.val
+      db.close()
+
+setvar_new = (varname, val, callback) ->
+  get-vars-collection (vars-collection, db) ->
+    vars-collection.save {_id: varname, name: varname, val: val}, (err, result) ->
+      if callback?
+        callback val
+      db.close()
 
 getvar = (varname, callback) ->
   get-grid (grid, db) ->
