@@ -279,7 +279,7 @@ getallusereventsandcookies = (callback) ->
                   if curobj? and curobj._id? and curobj.condition?
                     for k,v of cookies-from-events-condition-username(events_dict, curobj.condition, curobj._id)
                       curobj[k] = v
-            output.push curobj
+              output.push curobj
           callback output
 
 

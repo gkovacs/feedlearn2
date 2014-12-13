@@ -331,8 +331,8 @@
                     }
                   }
                 }
+                output.push(curobj);
               }
-              output.push(curobj);
             }
             return callback(output);
           });
