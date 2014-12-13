@@ -29,8 +29,10 @@ alert-prereqs = (plist) ->
   return true
 
 export consent-agreed = ->
-  #$('#collapseOne').data 'allowcollapse', true
-  #$('#collapseOne').collapse('hide')
+  $('#collapseOne').data 'allowcollapse', true
+  $('#collapseOne').collapse('hide')
+  root.completed-parts.consentagreed = Date.now()
+  open-part-that-needs-doing()
   #forcecollapse $('#collapseOne')
   #$('#collapseTwo').collapse('show')
   show-consent-agreed()
@@ -82,6 +84,9 @@ export chromeExtensionInstallFinished = ->
   $('#extensioninstalledcheck').css 'visibility', 'visible'
   $('#extensioninstalleddisplay').css('color', 'green').text 'FeedLearn Chrome Extension has been installed!'
   $('#extensioninstallbutton').attr 'disabled', true
+  $('#collapseThree').data 'allowcollapse', true
+  $('#collapseThree').collapse('hide')
+  open-part-that-needs-doing()
 
 export install-chrome-extension = ->
   #window.open('https://chrome.google.com/webstore/detail/feed-learn/ebmjdfhplinmlajmdcmhkikideknlgkf')
@@ -315,10 +320,16 @@ prevent-accordion-collapsing = ->
 refresh-completed-parts = ->
   num_events_prev = -1
   get-user-events (events) ->
-    if Object.keys(events).length == num_events_prev
+    have_new_events = false
+    for k,v of events
+      if not root.completed-parts[k]?
+        root.completed-parts[k] = v
+        have_new_events = true
+      #if v != root.completed-parts[k]
+      #  root.completed-parts[k] = v
+      #  have_new_events = true
+    if not have_new_events
       return
-    num_events_prev := Object.keys(events).length
-    root.completed-parts = events
     if events.consentagreed?
       show-consent-agreed(events.consentagreed)
     for num in [1,2,3]

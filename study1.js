@@ -31,6 +31,10 @@
     return true;
   };
   out$.consentAgreed = consentAgreed = function(){
+    $('#collapseOne').data('allowcollapse', true);
+    $('#collapseOne').collapse('hide');
+    root.completedParts.consentagreed = Date.now();
+    openPartThatNeedsDoing();
     showConsentAgreed();
     return postStartEvent('consentagreed');
   };
@@ -88,7 +92,10 @@
   out$.chromeExtensionInstallFinished = chromeExtensionInstallFinished = function(){
     $('#extensioninstalledcheck').css('visibility', 'visible');
     $('#extensioninstalleddisplay').css('color', 'green').text('FeedLearn Chrome Extension has been installed!');
-    return $('#extensioninstallbutton').attr('disabled', true);
+    $('#extensioninstallbutton').attr('disabled', true);
+    $('#collapseThree').data('allowcollapse', true);
+    $('#collapseThree').collapse('hide');
+    return openPartThatNeedsDoing();
   };
   out$.installChromeExtension = installChromeExtension = function(){
     var url, successCallback;
@@ -310,12 +317,18 @@
     var num_events_prev;
     num_events_prev = -1;
     return getUserEvents(function(events){
-      var i$, ref$, len$, num;
-      if (Object.keys(events).length === num_events_prev) {
+      var have_new_events, k, v, i$, ref$, len$, num;
+      have_new_events = false;
+      for (k in events) {
+        v = events[k];
+        if (root.completedParts[k] == null) {
+          root.completedParts[k] = v;
+          have_new_events = true;
+        }
+      }
+      if (!have_new_events) {
         return;
       }
-      num_events_prev = Object.keys(events).length;
-      root.completedParts = events;
       if (events.consentagreed != null) {
         showConsentAgreed(events.consentagreed);
       }
