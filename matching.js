@@ -111,6 +111,7 @@
     param = getUrlParameters();
     if (param.type === 'posttest') {
       $('#testtype').text('Post-Test');
+      $('#pretestonly').hide();
     }
     if (getPretestNum() !== 0) {
       $('#weeknum').text(getPretestNum());

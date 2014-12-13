@@ -70,6 +70,7 @@ $(document).ready ->
   param = getUrlParameters()
   if param.type == 'posttest'
     $('#testtype').text 'Post-Test'
+    $('#pretestonly').hide()
   if get-pretest-num() != 0
     $('#weeknum').text get-pretest-num()
   flashcard_set = get-flashcard-set()
