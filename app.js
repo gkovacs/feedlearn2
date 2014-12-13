@@ -351,7 +351,7 @@
     });
   };
   app.get('/getallusereventsandcookies_old', function(req, res){
-    return getallusereventsandcookies(function(resultsArray){
+    return getallusereventsandcookies_old(function(resultsArray){
       return res.send(JSON.stringify(resultsArray));
     });
   });

@@ -292,7 +292,7 @@ getallusereventsandcookies_old = (callback) ->
     async-map-noerr userlist, getusereventsandcookies, callback
 
 app.get '/getallusereventsandcookies_old', (req, res) ->
-  getallusereventsandcookies (results-array) ->
+  getallusereventsandcookies_old (results-array) ->
     res.send JSON.stringify results-array
 
 settimestampforuserevent_express_old = (data, res) ->
