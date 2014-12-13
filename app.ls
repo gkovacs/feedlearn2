@@ -275,6 +275,7 @@ getallusereventsandcookies = (callback) ->
             output.push curobj
           callback output
 
+
 app.get '/getallusereventsandcookies', (req, res) ->
   getallusereventsandcookies (results-array) ->
     res.send JSON.stringify results-array
