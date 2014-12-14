@@ -16,6 +16,12 @@ values_over_1 = (dict) ->
     output[k] = 1.0 / v
   return output
 
+values_over_1_exp = (dict) ->
+  output = {}
+  for k,v of dict
+    output[k] = Math.pow(2.0, Math.max(-v, -30))
+  return output
+
 normalize_values_to_sum_to_1 = (dict) ->
   output = {}
   current_sum = 0
@@ -128,7 +134,7 @@ root.qnum = 0
 root.numtries = 0
 
 get_kanji_probabilities = ->
-  return normalize_values_to_sum_to_1 values_over_1(root.srs_words)
+  return normalize_values_to_sum_to_1 values_over_1_exp(root.srs_words)
 
 export select_kanji_from_srs = ->
   randval = Math.random()

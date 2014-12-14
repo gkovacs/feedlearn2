@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -13,6 +13,15 @@
     for (k in dict) {
       v = dict[k];
       output[k] = 1.0 / v;
+    }
+    return output;
+  };
+  values_over_1_exp = function(dict){
+    var output, k, v;
+    output = {};
+    for (k in dict) {
+      v = dict[k];
+      output[k] = Math.pow(2.0, Math.max(-v, -30));
     }
     return output;
   };
@@ -165,7 +174,7 @@
   root.qnum = 0;
   root.numtries = 0;
   get_kanji_probabilities = function(){
-    return normalize_values_to_sum_to_1(values_over_1(root.srs_words));
+    return normalize_values_to_sum_to_1(values_over_1_exp(root.srs_words));
   };
   out$.select_kanji_from_srs = select_kanji_from_srs = function(){
     var randval, cursum, k, ref$, v;
