@@ -19,7 +19,7 @@ export getUrlParameters = ->
 export setvar = (varname, varval) ->
   if localStorage?
     localStorage.setItem varname, varval
-  $.cookie varname, varval
+  $.cookie varname, varval, {expires: 365, path: '/'}
   return
 
 export getvar = (varname) ->
