@@ -28,7 +28,10 @@
     if (typeof localStorage != 'undefined' && localStorage !== null) {
       localStorage.setItem(varname, varval);
     }
-    $.cookie(varname, varval);
+    $.cookie(varname, varval, {
+      expires: 365,
+      path: '/'
+    });
   };
   out$.getvar = getvar = function(varname){
     var output;
