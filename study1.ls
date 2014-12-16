@@ -350,7 +350,7 @@ refresh-completed-parts = ->
       #  show-studyperiod-started(num, events['week' + num + 'startstudy'])
     for num in [3,2,1]
       #if events['week' + num + 'startstudy']?
-      if events['pretest' + num]?
+      if events['pretest' + num]? or num == 1
         config-week(num)
         break
     open-part-that-needs-doing()
