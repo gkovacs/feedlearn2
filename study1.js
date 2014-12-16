@@ -485,7 +485,7 @@
       };
       toastr.error('FeedLearn currently only supports the Google Chrome browser');
     }
-    root.fullname = firstNonNull(root.fullname, getvar('fullname'));
+    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
     updatecookies();
     preventAccordionCollapsing();
     if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
