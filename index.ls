@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents} = root # commonlib.ls
 {addlog} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
@@ -373,7 +373,7 @@ goto-page = (page) ->
 root.qcontext = null
 
 export show-controlpage = ->
-  $('#mainviewpage').hide()
+  $('.outermainpage').hide()
   $('#controlviewpage').show()
   lang = getvar('lang')
   langname = language_names[lang]
@@ -399,6 +399,131 @@ exclude-param = (...params) ->
     delete output[param]
   return output
 
+get-required-test = ->
+  pretest1 = getevent 'pretest1'
+  pretest2 = getevent 'pretest2'
+  pretest3 = getevent 'pretest3'
+  posttest1 = getevent 'posttest1'
+  posttest2 = getevent 'posttest2'
+  posttest3 = getevent 'posttest3'
+  nowtime = Date.now()
+  if not pretest1?
+    return 'pretest1'
+  if pretest1? and not posttest2? and (nowtime > 1000*3600*24*7 + pretest1)
+    return 'posttest1'
+  if posttest1? and not pretest2?
+    return 'pretest2'
+  if pretest2? and not posttest2? and (nowtime > 1000*3600*24*7 + pretest2)
+    return 'posttest2'
+  if posttest2? and not pretest3?
+    return 'pretest3'
+  if pretest3? and not posttest3? and (nowtime > 1000*3600*24*7 + pretest3)
+    return 'posttest3'
+  return null
+
+export openvocabtestlink = ->
+  window.open root.required-test-link
+
+show-required-test = (required-test) ->
+  $('.outermainpage').hide()
+  $('#requiredtestpage').show()
+  root.required-test = required-test
+  required-test-type = 'pretest'
+  if required-test.indexOf('posttest') == 0
+    required-test-type = 'posttest'
+  switch required-test-type
+  | 'pretest' =>  $('.requiredtesttype').text 'Pre-Test'
+  | 'posttest' => $('.requiredtesttype').text 'Post-Test'
+  required-test-week = required-test.split('pretest').join('').split('posttest').join('') |> parseInt
+  $('.requiredtestweek').text required-test-week
+  root.required-test-link = '/matching?' + $.param({vocab: 'japanese' + required-test-week, type: required-test-type})
+  root.check-required-test-taken = setInterval ->
+    updatecookiesandevents ->
+      if get-required-test() != root.required-test # have taken it
+        window.location = window.location # refresh current page
+  , 1000
+
+export fb-try-login-manual = ->
+  FB.get-login-status (loginstatus) ->
+    if loginstatus.status != 'connected'
+      return
+    FB.api '/me', (response) ->
+      if response.name?
+        setvar 'fullname', response.name
+        addlog {type: 'fblogin', logintype: 'manual', fblogin: response}
+        have-full-name()
+
+export fbButtonOnlogin = ->
+  fb-try-login-manual()
+
+export show-fb-login-page = ->
+  $('.outermainpage').hide()
+  $('#fbloginpage').show()
+
+
+have-full-name = ->
+  $('.outermainpage').hide()
+  $('#mainviewpage').show()
+  param = getUrlParameters()
+  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
+  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+  #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
+  set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+  if param.facebook? and param.facebook != 'false' and param.facebook != false
+    root.qcontext = 'facebook'
+    condition = getvar('format')
+    addlog {type: 'feedinsert'}
+    required-test = get-required-test()
+    if required-test?
+      show-required-test(required-test)
+      return
+    if condition? and condition == 'link'
+      #window.location = '/control'
+      show-controlpage()
+      return
+  else if param.email? and param.email != 'false' and param.email != false
+    root.qcontext = 'emailvisit'
+    addlog {type: 'emailvisit'}
+  else
+    root.qcontext = 'website'
+    addlog {type: 'webvisit'}
+  goto-page <| first-non-null param.page, 'quiz'
+
+inject-facebook-tag = ->
+  console.log 'inject-facebook-tag called'
+  e = document.createElement('script')
+  e.async = true
+  e.src = '//connect.facebook.net/en_US/sdk.js'
+  document.getElementById('fb-root').appendChild e
+
+dont-have-full-name = ->
+  inject-facebook-tag()
+
+export fb-try-login-automatic = ->
+  FB.get-login-status (loginstatus) ->
+    if loginstatus.status != 'connected'
+      #window.location = '/study1' # need manual login now
+      show-fb-login-page()
+      return
+    FB.api '/me', (response) ->
+      if response.name?
+        setvar 'fullname', response.name
+        addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+        have-full-name()
+
+window.fbAsyncInit = ->
+  console.log 'fbAsyncInit called'
+  appid = '1582092298679557'
+  if window.location.href.indexOf('http://localhost') == 0
+    appid = '1582095062012614'
+  FB.init {
+    appId  : appid
+    cookie : true  # enable cookies to allow the server to access the session
+    xfbml  : true #true # true,  # parse social plugins on this page
+    version: 'v2.1' # use version 2.1
+  }
+  fb-try-login-automatic()
+
 $(document).ready ->
   forcehttps()
   param = getUrlParameters()
@@ -407,26 +532,13 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
     return
-  if not getvar('fullname')?
-    window.location = '/study1'
-    return
-  updatecookies ->
-    set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
-    set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
-    #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
-    set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
-    if param.facebook? and param.facebook != 'false' and param.facebook != false
-      root.qcontext = 'facebook'
-      condition = getvar('format')
-      addlog {type: 'feedinsert'}
-      if condition? and condition == 'link'
-        #window.location = '/control'
-        show-controlpage()
-        return
-    else if param.email? and param.email != 'false' and param.email != false
-      root.qcontext = 'emailvisit'
-      addlog {type: 'emailvisit'}
+  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username')
+  #if not getvar('fullname')? and not getvar('username')
+  #  window.location = '/study1'
+  #  return
+  updatecookiesandevents ->
+    if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
+      have-full-name()
     else
-      root.qcontext = 'website'
-      addlog {type: 'webvisit'}
-    goto-page <| first-non-null param.page, 'quiz'
+      dont-have-full-name()
+    

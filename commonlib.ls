@@ -29,6 +29,17 @@ export getvar = (varname) ->
       return output
   return $.cookie varname
 
+export getevent = (varname) ->
+  strval = getvar varname
+  if not strval?
+    return null
+  try
+    parsedval = parseInt strval
+    return parsedval if isFinite(parsedval)
+    return null
+  catch error
+    return null
+
 export get-user-events = (callback) ->
   $.get '/getuserevents?' + $.param({username: get-user-name()}), (events) ->
     callback <| JSON.parse events
@@ -63,6 +74,35 @@ export updatecookies = (callback) ->
     callback() if callback?
     return
   $.getJSON ('/cookiesforuser?' + $.param({username: username})), (cookies) ->
+    #console.log cookies
+    if not cookies.username?
+      callback() if callback?
+      return
+    if cookies.username != username
+      callback() if callback?
+      return
+    needrefresh = false
+    for k,v of cookies
+      #console.log k
+      #console.log v
+      if k == 'username'
+        continue
+      if not v?
+        continue
+      curv = getvar(k)
+      if (not curv?) or v.toString() != curv.toString()
+        needrefresh = true
+        setvar k, v
+    #if needrefresh
+    #  window.location = window.location
+    callback() if callback?
+
+export updatecookiesandevents = (callback) ->
+  username = get-user-name()
+  if not username? or username == 'Anonymous User' or username.length == 0
+    callback() if callback?
+    return
+  $.getJSON ('/getusereventsandcookies?' + $.param({username: username})), (cookies) ->
     #console.log cookies
     if not cookies.username?
       callback() if callback?

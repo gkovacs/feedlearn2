@@ -1,9 +1,9 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents;
   addlog = root.addlog;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
   root.srs_words = null;
@@ -465,7 +465,7 @@
   root.qcontext = null;
   out$.showControlpage = showControlpage = function(){
     var lang, langname;
-    $('#mainviewpage').hide();
+    $('.outermainpage').hide();
     $('#controlviewpage').show();
     lang = getvar('lang');
     langname = language_names[lang];
@@ -495,6 +495,175 @@
     }
     return output;
   };
+  getRequiredTest = function(){
+    var pretest1, pretest2, pretest3, posttest1, posttest2, posttest3, nowtime;
+    pretest1 = getevent('pretest1');
+    pretest2 = getevent('pretest2');
+    pretest3 = getevent('pretest3');
+    posttest1 = getevent('posttest1');
+    posttest2 = getevent('posttest2');
+    posttest3 = getevent('posttest3');
+    nowtime = Date.now();
+    if (pretest1 == null) {
+      return 'pretest1';
+    }
+    if (pretest1 != null && posttest2 == null && nowtime > 1000 * 3600 * 24 * 7 + pretest1) {
+      return 'posttest1';
+    }
+    if (posttest1 != null && pretest2 == null) {
+      return 'pretest2';
+    }
+    if (pretest2 != null && posttest2 == null && nowtime > 1000 * 3600 * 24 * 7 + pretest2) {
+      return 'posttest2';
+    }
+    if (posttest2 != null && pretest3 == null) {
+      return 'pretest3';
+    }
+    if (pretest3 != null && posttest3 == null && nowtime > 1000 * 3600 * 24 * 7 + pretest3) {
+      return 'posttest3';
+    }
+    return null;
+  };
+  out$.openvocabtestlink = openvocabtestlink = function(){
+    return window.open(root.requiredTestLink);
+  };
+  showRequiredTest = function(requiredTest){
+    var requiredTestType, requiredTestWeek;
+    $('.outermainpage').hide();
+    $('#requiredtestpage').show();
+    root.requiredTest = requiredTest;
+    requiredTestType = 'pretest';
+    if (requiredTest.indexOf('posttest') === 0) {
+      requiredTestType = 'posttest';
+    }
+    switch (requiredTestType) {
+    case 'pretest':
+      $('.requiredtesttype').text('Pre-Test');
+      break;
+    case 'posttest':
+      $('.requiredtesttype').text('Post-Test');
+    }
+    requiredTestWeek = parseInt(
+    requiredTest.split('pretest').join('').split('posttest').join(''));
+    $('.requiredtestweek').text(requiredTestWeek);
+    root.requiredTestLink = '/matching?' + $.param({
+      vocab: 'japanese' + requiredTestWeek,
+      type: requiredTestType
+    });
+    return root.checkRequiredTestTaken = setInterval(function(){
+      return updatecookiesandevents(function(){
+        if (getRequiredTest() !== root.requiredTest) {
+          return window.location = window.location;
+        }
+      });
+    }, 1000);
+  };
+  out$.fbTryLoginManual = fbTryLoginManual = function(){
+    return FB.getLoginStatus(function(loginstatus){
+      if (loginstatus.status !== 'connected') {
+        return;
+      }
+      return FB.api('/me', function(response){
+        if (response.name != null) {
+          setvar('fullname', response.name);
+          addlog({
+            type: 'fblogin',
+            logintype: 'manual',
+            fblogin: response
+          });
+          return haveFullName();
+        }
+      });
+    });
+  };
+  out$.fbButtonOnlogin = fbButtonOnlogin = function(){
+    return fbTryLoginManual();
+  };
+  out$.showFbLoginPage = showFbLoginPage = function(){
+    $('.outermainpage').hide();
+    return $('#fbloginpage').show();
+  };
+  haveFullName = function(){
+    var param, condition, requiredTest;
+    $('.outermainpage').hide();
+    $('#mainviewpage').show();
+    param = getUrlParameters();
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
+    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+    setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
+    if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
+      root.qcontext = 'facebook';
+      condition = getvar('format');
+      addlog({
+        type: 'feedinsert'
+      });
+      requiredTest = getRequiredTest();
+      if (requiredTest != null) {
+        showRequiredTest(requiredTest);
+        return;
+      }
+      if (condition != null && condition === 'link') {
+        showControlpage();
+        return;
+      }
+    } else if (param.email != null && param.email !== 'false' && param.email !== false) {
+      root.qcontext = 'emailvisit';
+      addlog({
+        type: 'emailvisit'
+      });
+    } else {
+      root.qcontext = 'website';
+      addlog({
+        type: 'webvisit'
+      });
+    }
+    return gotoPage(firstNonNull(param.page, 'quiz'));
+  };
+  injectFacebookTag = function(){
+    var e;
+    console.log('inject-facebook-tag called');
+    e = document.createElement('script');
+    e.async = true;
+    e.src = '//connect.facebook.net/en_US/sdk.js';
+    return document.getElementById('fb-root').appendChild(e);
+  };
+  dontHaveFullName = function(){
+    return injectFacebookTag();
+  };
+  out$.fbTryLoginAutomatic = fbTryLoginAutomatic = function(){
+    return FB.getLoginStatus(function(loginstatus){
+      if (loginstatus.status !== 'connected') {
+        showFbLoginPage();
+        return;
+      }
+      return FB.api('/me', function(response){
+        if (response.name != null) {
+          setvar('fullname', response.name);
+          addlog({
+            type: 'fblogin',
+            logintype: 'automatic',
+            fblogin: response
+          });
+          return haveFullName();
+        }
+      });
+    });
+  };
+  window.fbAsyncInit = function(){
+    var appid;
+    console.log('fbAsyncInit called');
+    appid = '1582092298679557';
+    if (window.location.href.indexOf('http://localhost') === 0) {
+      appid = '1582095062012614';
+    }
+    FB.init({
+      appId: appid,
+      cookie: true,
+      xfbml: true,
+      version: 'v2.1'
+    });
+    return fbTryLoginAutomatic();
+  };
   $(document).ready(function(){
     var param;
     forcehttps();
@@ -505,37 +674,13 @@
       window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
       return;
     }
-    if (getvar('fullname') == null) {
-      window.location = '/study1';
-      return;
-    }
-    return updatecookies(function(){
-      var condition;
-      setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
-      setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
-      setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
-      if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
-        root.qcontext = 'facebook';
-        condition = getvar('format');
-        addlog({
-          type: 'feedinsert'
-        });
-        if (condition != null && condition === 'link') {
-          showControlpage();
-          return;
-        }
-      } else if (param.email != null && param.email !== 'false' && param.email !== false) {
-        root.qcontext = 'emailvisit';
-        addlog({
-          type: 'emailvisit'
-        });
+    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
+    return updatecookiesandevents(function(){
+      if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
+        return haveFullName();
       } else {
-        root.qcontext = 'website';
-        addlog({
-          type: 'webvisit'
-        });
+        return dontHaveFullName();
       }
-      return gotoPage(firstNonNull(param.page, 'quiz'));
     });
   });
 }).call(this);

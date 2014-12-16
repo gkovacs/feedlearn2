@@ -291,6 +291,17 @@
       });
     });
   };
+  app.get('/getusereventsandcookies', function(req, res){
+    var username;
+    username = req.query.username;
+    if (username == null) {
+      res.send('{}');
+      return;
+    }
+    return getusereventsandcookies(username, function(userevents){
+      res.send(JSON.stringify(userevents));
+    });
+  });
   getallusereventsandcookies = function(callback){
     return getConditionsCollection(function(conditionsCollection){
       return conditionsCollection.find().toArray(function(err, conditionsResults){

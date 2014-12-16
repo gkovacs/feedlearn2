@@ -257,6 +257,15 @@ getusereventsandcookies = (username, callback) ->
         output[k] = v
       callback output
 
+app.get '/getusereventsandcookies', (req, res) ->
+  {username} = req.query
+  if not username?
+    res.send '{}'
+    return
+  getusereventsandcookies username, (userevents) ->
+    res.send <| JSON.stringify userevents
+    return
+
 getallusereventsandcookies = (callback) ->
   get-conditions-collection (conditions-collection) ->
     conditions-collection.find().toArray (err, conditions-results) ->

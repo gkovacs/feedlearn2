@@ -1,6 +1,6 @@
 root = exports ? this
 
-{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies, updatecookiesandevents} = root # commonlib.ls
 {post-json, post-start-event, addlog} = root # logging_client.ls
 
 root.skip-prereqs = false
@@ -466,7 +466,7 @@ $(document).ready ->
     }
     toastr.error 'FeedLearn currently only supports the Google Chrome browser'
   root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username') #, 'Anonymous User'
-  updatecookies ->
+  updatecookiesandevents ->
     prevent-accordion-collapsing()
     if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
       have-full-name()

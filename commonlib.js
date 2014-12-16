@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, setvar, getvar, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, firstNonNull, getUrlParameters, setvar, getvar, getevent, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, updatecookiesandevents, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.firstNonNull = firstNonNull = function(){
     var args, i$, len$, x;
@@ -42,6 +42,23 @@
       }
     }
     return $.cookie(varname);
+  };
+  out$.getevent = getevent = function(varname){
+    var strval, parsedval, error;
+    strval = getvar(varname);
+    if (strval == null) {
+      return null;
+    }
+    try {
+      parsedval = parseInt(strval);
+      if (isFinite(parsedval)) {
+        return parsedval;
+      }
+      return null;
+    } catch (e$) {
+      error = e$;
+      return null;
+    }
   };
   out$.getUserEvents = getUserEvents = function(callback){
     return $.get('/getuserevents?' + $.param({
@@ -92,6 +109,51 @@
       return;
     }
     return $.getJSON('/cookiesforuser?' + $.param({
+      username: username
+    }), function(cookies){
+      var needrefresh, k, v, curv;
+      if (cookies.username == null) {
+        if (callback != null) {
+          callback();
+        }
+        return;
+      }
+      if (cookies.username !== username) {
+        if (callback != null) {
+          callback();
+        }
+        return;
+      }
+      needrefresh = false;
+      for (k in cookies) {
+        v = cookies[k];
+        if (k === 'username') {
+          continue;
+        }
+        if (v == null) {
+          continue;
+        }
+        curv = getvar(k);
+        if (curv == null || v.toString() !== curv.toString()) {
+          needrefresh = true;
+          setvar(k, v);
+        }
+      }
+      if (callback != null) {
+        return callback();
+      }
+    });
+  };
+  out$.updatecookiesandevents = updatecookiesandevents = function(callback){
+    var username;
+    username = getUserName();
+    if (username == null || username === 'Anonymous User' || username.length === 0) {
+      if (callback != null) {
+        callback();
+      }
+      return;
+    }
+    return $.getJSON('/getusereventsandcookies?' + $.param({
       username: username
     }), function(cookies){
       var needrefresh, k, v, curv;

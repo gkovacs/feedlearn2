@@ -21,8 +21,9 @@
     <script src="flashcards.js"></script>
     <script src="logging_client.js"></script>
     <script src="index.js"></script>
+    <div id="fb-root"></div>
     <audio id="speechsynth" style="display: none" src="error.mp3"></audio>
-    <div id="mainviewpage" style="background-color: white" class="bluebackground">
+    <div id="mainviewpage" style="background-color: white" class="bluebackground outermainpage">
       <div id="quizpage" style="display: none" class="mainpage">
         <div style="padding-top: 12px; position: absolute"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png"></div>
         <div id="questionmessage" style="font-size: 18px; text-align: center"></div>
@@ -70,7 +71,7 @@
         <div style="margin-top: 20px">TODO discussion forum goes here</div>
       </div>
     </div>
-    <div id="controlviewpage" style="background-color: white; display: none" onclick="openfeedlearnlink()" class="bluebackgroundcontrol">
+    <div id="controlviewpage" style="background-color: white; display: none" onclick="openfeedlearnlink()" class="bluebackgroundcontrol outermainpage">
       <div style="padding-top: 12px"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png">
         <div style="display: inline-block; vertical-align: top; margin-left: 10px"><span style="font-weight: bold; font-size: 15px; color: #3b5998; vertical-align: top; ">FeedLearn</span><br><span style="font-size: 13px; color: #9197a3">Just now</span></div>
       </div>
@@ -82,6 +83,21 @@
           <div style="color: grey; font-size: 12px; margin-top: 20px">FEEDLEARN.HEROKUAPP.COM</div>
         </div>
       </div>
+    </div>
+    <div id="requiredtestpage" style="background-color: white; display: none" class="bluebackground outermainpage">
+      <div style="padding-top: 12px"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png">
+        <div style="display: inline-block; vertical-align: top; margin-left: 10px"><span style="font-weight: bold; font-size: 15px; color: #3b5998; vertical-align: top; ">FeedLearn</span><br><span style="font-size: 13px; color: #9197a3">Just now</span></div>
+      </div>
+      <div style="padding-top: 12px"><span>Before continuing to study vocabulary with FeedLearn, please take the Vocabulary </span><span> </span><span class="requiredtesttype">TESTTYPE</span><span> </span><span>for week</span><span> </span><span class="requiredtestweek">WEEKNUM</span><span>:</span></div>
+      <button style="margin-top: 20px" onclick="openvocabtestlink()" class="btn-lg btn-primary"><span>Take Vocabulary </span><span> </span><span class="requiredtesttype">TESTYPE</span><span> </span><span>for Week</span><span> </span><span class="requiredtestweek">WEEKNUM</span></button>
+    </div>
+    <div id="fbloginpage" style="background-color: white; display: none" class="bluebackground outermainpage">
+      <div style="padding-top: 12px"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png">
+        <div style="display: inline-block; vertical-align: top; margin-left: 10px"><span style="font-weight: bold; font-size: 15px; color: #3b5998; vertical-align: top; ">FeedLearn</span><br><span style="font-size: 13px; color: #9197a3">Just now</span></div>
+      </div>
+      <div style="padding-top: 12px"><span>Before continuing to study vocabulary with FeedLearn, please login with Facebook. We use your login to keep track of your progress, we will not post on your wall or access private data:</span></div>
+      <div style="padding-bottom: 12px"></div>
+      <div id="fbloginbutton" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" scope="public_profile,email" onlogin="fbButtonOnlogin()" class="fb-login-button"></div>
     </div>
   </body>
 </html>
