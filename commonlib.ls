@@ -43,6 +43,9 @@ export get-user-name = ->
   root.fullname = getvar 'fullname'
   if root.fullname?
     return root.fullname
+  root.fullname = getvar 'username'
+  if root.fullname?
+    return root.fullname
   return 'Anonymous User'
 
 export printcb = (...args) ->

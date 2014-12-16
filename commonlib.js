@@ -62,6 +62,10 @@
     if (root.fullname != null) {
       return root.fullname;
     }
+    root.fullname = getvar('username');
+    if (root.fullname != null) {
+      return root.fullname;
+    }
     return 'Anonymous User';
   };
   out$.printcb = printcb = function(){
