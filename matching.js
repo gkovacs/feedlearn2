@@ -101,7 +101,11 @@
       lang: param.vocab,
       answers: getCurrentAnswers()
     });
-    $('#submitmessage').css('color', 'green').html('Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions');
+    if (param.source != null && param.source === 'facebook') {
+      $('#submitmessage').css('color', 'green').html('Answers submitted! You can now return to your <a href="https://www.facebook.com/" target="_blank">Facebook feed</a> to study vocabulary with FeedLearn.');
+    } else {
+      $('#submitmessage').css('color', 'green').html('Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions');
+    }
     $('#submitbutton').attr('disabled', true);
     return postStartEvent(param.type + getPretestNum());
   };

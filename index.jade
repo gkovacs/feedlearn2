@@ -108,7 +108,7 @@ html(lang='en')
           br
           span(style='font-size: 13px; color: #9197a3') Just now
       div(style='padding-top: 12px')
-        span Before continuing to study vocabulary with FeedLearn, please take the Vocabulary 
+        span To continue studying vocabulary using FeedLearn, please take the Vocabulary 
         span 
         span.requiredtesttype TESTTYPE
         span 
@@ -116,7 +116,10 @@ html(lang='en')
         span 
         span.requiredtestweek WEEKNUM
         span 
-        span.cansubmitblank (if you don't know any of the words on the pre-test, you can submit it blank)
+        span words.
+        span 
+        span.pretestexplanation This test helps us determine what words you need to study this week. If you don't know any of the words on the pre-test, you can submit it blank.
+        span.posttestexplanation This test helps us determine which words you have learned this week.
       button.btn.btn-lg.btn-primary(style='margin-top: 20px' onclick='openvocabtestlink()')
         span Take Vocabulary 
         span 
@@ -125,6 +128,8 @@ html(lang='en')
         span for Week
         span 
         span.requiredtestweek WEEKNUM
+        span 
+        span Words
     .bluebackground.outermainpage#fbloginpage(style='background-color: white; display: none')
       div(style='padding-top: 12px')
         img(style='border-style: solid; border-width: 1px; border-color: grey' src='feedlearn-40px.png')
@@ -133,6 +138,6 @@ html(lang='en')
           br
           span(style='font-size: 13px; color: #9197a3') Just now
       div(style='padding-top: 12px')
-        span Before continuing to study vocabulary with FeedLearn, please login with Facebook. We use your login only to keep track of your progress. We will not post on your wall or access private data:
+        span Welcome to FeedLearn! To start studying vocabulary with FeedLearn, please login with Facebook. We use your login only to keep track of your progress. We will not post on your wall or access any private data:
       div(style='padding-bottom: 12px')
       div.fb-login-button#fbloginbutton(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' scope="public_profile,email" onlogin='fbButtonOnlogin()')

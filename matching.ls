@@ -61,7 +61,10 @@ export submit-answers = ->
   param = getUrlParameters()
   addlog {type: 'vocabquiz', quiztype: param.type, lang: param.vocab, answers: getCurrentAnswers()}
   #alert 'Answers submitted!'
-  $('#submitmessage').css('color', 'green').html 'Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions'
+  if param.source? and param.source == 'facebook'
+    $('#submitmessage').css('color', 'green').html 'Answers submitted! You can now return to your <a href="https://www.facebook.com/" target="_blank">Facebook feed</a> to study vocabulary with FeedLearn.'
+  else
+    $('#submitmessage').css('color', 'green').html 'Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions'
   $('#submitbutton').attr 'disabled', true
   post-start-event(param.type + get-pretest-num())
 

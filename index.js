@@ -539,17 +539,21 @@
     switch (requiredTestType) {
     case 'pretest':
       $('.requiredtesttype').text('Pre-Test');
+      $('.posttestexplanation').hide();
+      $('.pretestexplanation').show();
       break;
     case 'posttest':
       $('.requiredtesttype').text('Post-Test');
-      $('.cansubmitblank').hide();
+      $('.pretestexplanation').hide();
+      $('.posttestexplanation').show();
     }
     requiredTestWeek = parseInt(
     requiredTest.split('pretest').join('').split('posttest').join(''));
     $('.requiredtestweek').text(requiredTestWeek);
     root.requiredTestLink = '/matching?' + $.param({
       vocab: 'japanese' + requiredTestWeek,
-      type: requiredTestType
+      type: requiredTestType,
+      source: 'facebook'
     });
     return root.checkRequiredTestTaken = setInterval(function(){
       return updatecookiesandevents(function(){

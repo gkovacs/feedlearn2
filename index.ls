@@ -434,12 +434,15 @@ show-required-test = (required-test) ->
   switch required-test-type
   | 'pretest' =>
     $('.requiredtesttype').text 'Pre-Test'
+    $('.posttestexplanation').hide()
+    $('.pretestexplanation').show()
   | 'posttest' =>
     $('.requiredtesttype').text 'Post-Test'
-    $('.cansubmitblank').hide()
+    $('.pretestexplanation').hide()
+    $('.posttestexplanation').show()
   required-test-week = required-test.split('pretest').join('').split('posttest').join('') |> parseInt
   $('.requiredtestweek').text required-test-week
-  root.required-test-link = '/matching?' + $.param({vocab: 'japanese' + required-test-week, type: required-test-type})
+  root.required-test-link = '/matching?' + $.param({vocab: 'japanese' + required-test-week, type: required-test-type, source: 'facebook'})
   root.check-required-test-taken = setInterval ->
     updatecookiesandevents ->
       if get-required-test() != root.required-test # have taken it
