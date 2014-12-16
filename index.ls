@@ -465,29 +465,30 @@ have-full-name = ->
   $('.outermainpage').hide()
   $('#mainviewpage').show()
   param = getUrlParameters()
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
-  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
-  #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
-  set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
-  if param.facebook? and param.facebook != 'false' and param.facebook != false
-    root.qcontext = 'facebook'
-    condition = getvar('format')
-    addlog {type: 'feedinsert'}
-    required-test = get-required-test()
-    if required-test?
-      show-required-test(required-test)
-      return
-    if condition? and condition == 'link'
-      #window.location = '/control'
-      show-controlpage()
-      return
-  else if param.email? and param.email != 'false' and param.email != false
-    root.qcontext = 'emailvisit'
-    addlog {type: 'emailvisit'}
-  else
-    root.qcontext = 'website'
-    addlog {type: 'webvisit'}
-  goto-page <| first-non-null param.page, 'quiz'
+  updatecookiesandevents ->
+    set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
+    set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+    #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
+    set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+    if param.facebook? and param.facebook != 'false' and param.facebook != false
+      root.qcontext = 'facebook'
+      condition = getvar('format')
+      addlog {type: 'feedinsert'}
+      required-test = get-required-test()
+      if required-test?
+        show-required-test(required-test)
+        return
+      if condition? and condition == 'link'
+        #window.location = '/control'
+        show-controlpage()
+        return
+    else if param.email? and param.email != 'false' and param.email != false
+      root.qcontext = 'emailvisit'
+      addlog {type: 'emailvisit'}
+    else
+      root.qcontext = 'website'
+      addlog {type: 'webvisit'}
+    goto-page <| first-non-null param.page, 'quiz'
 
 inject-facebook-tag = ->
   console.log 'inject-facebook-tag called'
@@ -536,9 +537,8 @@ $(document).ready ->
   #if not getvar('fullname')? and not getvar('username')
   #  window.location = '/study1'
   #  return
-  updatecookiesandevents ->
-    if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
-      have-full-name()
-    else
-      dont-have-full-name()
+  if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
+    have-full-name()
+  else
+    dont-have-full-name()
     

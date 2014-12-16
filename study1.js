@@ -372,23 +372,25 @@
     return $('#week3format').text(studyformatdescriptions[root.studyorder[2]]);
   };
   out$.haveFullName = haveFullName = function(){
-    $('#getfullname').hide();
-    $('#fbloginpage').hide();
-    $('#accordion').show();
-    $('#fullnamedisplay').text(' ' + root.fullname);
-    addlog({
-      type: 'study1visit'
-    });
-    return getCondition(function(condition){
-      root.condition = condition;
-      setvar('condition', root.condition);
-      root.studyorder = condition_to_order[condition];
-      setStudyorder(root.studyorder);
-      showStudyFormatDescriptions();
-      refreshCompletedParts();
-      return setInterval(function(){
-        return refreshCompletedParts();
-      }, 2000);
+    return updatecookiesandevents(function(){
+      $('#getfullname').hide();
+      $('#fbloginpage').hide();
+      $('#accordion').show();
+      $('#fullnamedisplay').text(' ' + root.fullname);
+      addlog({
+        type: 'study1visit'
+      });
+      return getCondition(function(condition){
+        root.condition = condition;
+        setvar('condition', root.condition);
+        root.studyorder = condition_to_order[condition];
+        setStudyorder(root.studyorder);
+        showStudyFormatDescriptions();
+        refreshCompletedParts();
+        return setInterval(function(){
+          return refreshCompletedParts();
+        }, 2000);
+      });
     });
   };
   /*
@@ -486,13 +488,11 @@
       toastr.error('FeedLearn currently only supports the Google Chrome browser');
     }
     root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
-    return updatecookiesandevents(function(){
-      preventAccordionCollapsing();
-      if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
-        return haveFullName();
-      } else {
-        return dontHaveFullName();
-      }
-    });
+    preventAccordionCollapsing();
+    if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
+      return haveFullName();
+    } else {
+      return dontHaveFullName();
+    }
   });
 }).call(this);

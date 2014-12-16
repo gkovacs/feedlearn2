@@ -366,22 +366,23 @@ export showStudyFormatDescriptions = ->
   $('#week3format').text studyformatdescriptions[root.studyorder[2]]
 
 export have-full-name = ->
-  #setvar 'fullname', root.fullname
-  $('#getfullname').hide()
-  $('#fbloginpage').hide()
-  $('#accordion').show()
-  $('#fullnamedisplay').text  ' ' + root.fullname
-  addlog {type: 'study1visit'}
-  get-condition (condition) ->
-    root.condition = condition
-    setvar 'condition', root.condition
-    root.studyorder = condition_to_order[condition]
-    set-studyorder root.studyorder
-    show-study-format-descriptions()
-    refresh-completed-parts()
-    setInterval ->
+  updatecookiesandevents ->
+    #setvar 'fullname', root.fullname
+    $('#getfullname').hide()
+    $('#fbloginpage').hide()
+    $('#accordion').show()
+    $('#fullnamedisplay').text  ' ' + root.fullname
+    addlog {type: 'study1visit'}
+    get-condition (condition) ->
+      root.condition = condition
+      setvar 'condition', root.condition
+      root.studyorder = condition_to_order[condition]
+      set-studyorder root.studyorder
+      show-study-format-descriptions()
       refresh-completed-parts()
-    , 2000
+      setInterval ->
+        refresh-completed-parts()
+      , 2000
 
 /*
 fb-login-status-change-callback = (response) ->
@@ -466,10 +467,11 @@ $(document).ready ->
     }
     toastr.error 'FeedLearn currently only supports the Google Chrome browser'
   root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username') #, 'Anonymous User'
-  updatecookiesandevents ->
-    prevent-accordion-collapsing()
-    if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
-      have-full-name()
-    else
-      dont-have-full-name()
+  prevent-accordion-collapsing()
+  if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
+    have-full-name()
+  else
+    dont-have-full-name()
+
+    
 

@@ -584,40 +584,43 @@
     return $('#fbloginpage').show();
   };
   haveFullName = function(){
-    var param, condition, requiredTest;
+    var param;
     $('.outermainpage').hide();
     $('#mainviewpage').show();
     param = getUrlParameters();
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
-    setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
-    if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
-      root.qcontext = 'facebook';
-      condition = getvar('format');
-      addlog({
-        type: 'feedinsert'
-      });
-      requiredTest = getRequiredTest();
-      if (requiredTest != null) {
-        showRequiredTest(requiredTest);
-        return;
+    return updatecookiesandevents(function(){
+      var condition, requiredTest;
+      setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
+      setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+      setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
+      if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
+        root.qcontext = 'facebook';
+        condition = getvar('format');
+        addlog({
+          type: 'feedinsert'
+        });
+        requiredTest = getRequiredTest();
+        if (requiredTest != null) {
+          showRequiredTest(requiredTest);
+          return;
+        }
+        if (condition != null && condition === 'link') {
+          showControlpage();
+          return;
+        }
+      } else if (param.email != null && param.email !== 'false' && param.email !== false) {
+        root.qcontext = 'emailvisit';
+        addlog({
+          type: 'emailvisit'
+        });
+      } else {
+        root.qcontext = 'website';
+        addlog({
+          type: 'webvisit'
+        });
       }
-      if (condition != null && condition === 'link') {
-        showControlpage();
-        return;
-      }
-    } else if (param.email != null && param.email !== 'false' && param.email !== false) {
-      root.qcontext = 'emailvisit';
-      addlog({
-        type: 'emailvisit'
-      });
-    } else {
-      root.qcontext = 'website';
-      addlog({
-        type: 'webvisit'
-      });
-    }
-    return gotoPage(firstNonNull(param.page, 'quiz'));
+      return gotoPage(firstNonNull(param.page, 'quiz'));
+    });
   };
   injectFacebookTag = function(){
     var e;
@@ -675,12 +678,10 @@
       return;
     }
     root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
-    return updatecookiesandevents(function(){
-      if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
-        return haveFullName();
-      } else {
-        return dontHaveFullName();
-      }
-    });
+    if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
+      return haveFullName();
+    } else {
+      return dontHaveFullName();
+    }
   });
 }).call(this);
