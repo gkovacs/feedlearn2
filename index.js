@@ -495,7 +495,7 @@
     }
     return output;
   };
-  getRequiredTest = function(){
+  out$.getRequiredTest = getRequiredTest = function(){
     var pretest1, pretest2, pretest3, posttest1, posttest2, posttest3, nowtime;
     pretest1 = getevent('pretest1');
     pretest2 = getevent('pretest2');
@@ -507,7 +507,7 @@
     if (pretest1 == null) {
       return 'pretest1';
     }
-    if (pretest1 != null && posttest2 == null && nowtime > 1000 * 3600 * 24 * 7 + pretest1) {
+    if (pretest1 != null && posttest1 == null && nowtime > 1000 * 3600 * 24 * 7 + pretest1) {
       return 'posttest1';
     }
     if (posttest1 != null && pretest2 == null) {
@@ -542,6 +542,7 @@
       break;
     case 'posttest':
       $('.requiredtesttype').text('Post-Test');
+      $('.cansubmitblank').hide();
     }
     requiredTestWeek = parseInt(
     requiredTest.split('pretest').join('').split('posttest').join(''));
@@ -589,21 +590,25 @@
     $('#mainviewpage').show();
     param = getUrlParameters();
     return updatecookiesandevents(function(){
-      var condition, requiredTest;
+      var requiredTest, condition;
       setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
       setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
       setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
+      requiredTest = getRequiredTest();
+      if (requiredTest != null) {
+        showRequiredTest(requiredTest);
+        addlog({
+          type: 'showrequiredtest',
+          requiredtest: requiredTest
+        });
+        return;
+      }
       if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
         root.qcontext = 'facebook';
         condition = getvar('format');
         addlog({
           type: 'feedinsert'
         });
-        requiredTest = getRequiredTest();
-        if (requiredTest != null) {
-          showRequiredTest(requiredTest);
-          return;
-        }
         if (condition != null && condition === 'link') {
           showControlpage();
           return;

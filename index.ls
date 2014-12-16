@@ -399,7 +399,7 @@ exclude-param = (...params) ->
     delete output[param]
   return output
 
-get-required-test = ->
+export get-required-test = ->
   pretest1 = getevent 'pretest1'
   pretest2 = getevent 'pretest2'
   pretest3 = getevent 'pretest3'
@@ -409,7 +409,7 @@ get-required-test = ->
   nowtime = Date.now()
   if not pretest1?
     return 'pretest1'
-  if pretest1? and not posttest2? and (nowtime > 1000*3600*24*7 + pretest1)
+  if pretest1? and not posttest1? and (nowtime > 1000*3600*24*7 + pretest1)
     return 'posttest1'
   if posttest1? and not pretest2?
     return 'pretest2'
@@ -432,8 +432,11 @@ show-required-test = (required-test) ->
   if required-test.indexOf('posttest') == 0
     required-test-type = 'posttest'
   switch required-test-type
-  | 'pretest' =>  $('.requiredtesttype').text 'Pre-Test'
-  | 'posttest' => $('.requiredtesttype').text 'Post-Test'
+  | 'pretest' =>
+    $('.requiredtesttype').text 'Pre-Test'
+  | 'posttest' =>
+    $('.requiredtesttype').text 'Post-Test'
+    $('.cansubmitblank').hide()
   required-test-week = required-test.split('pretest').join('').split('posttest').join('') |> parseInt
   $('.requiredtestweek').text required-test-week
   root.required-test-link = '/matching?' + $.param({vocab: 'japanese' + required-test-week, type: required-test-type})
@@ -470,14 +473,15 @@ have-full-name = ->
     set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
     #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
     set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+    required-test = get-required-test()
+    if required-test?
+      show-required-test(required-test)
+      addlog {type: 'showrequiredtest', requiredtest: required-test}
+      return
     if param.facebook? and param.facebook != 'false' and param.facebook != false
       root.qcontext = 'facebook'
       condition = getvar('format')
       addlog {type: 'feedinsert'}
-      required-test = get-required-test()
-      if required-test?
-        show-required-test(required-test)
-        return
       if condition? and condition == 'link'
         #window.location = '/control'
         show-controlpage()

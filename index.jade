@@ -115,7 +115,8 @@ html(lang='en')
         span for week
         span 
         span.requiredtestweek WEEKNUM
-        span :
+        span 
+        span.cansubmitblank (if you don't know any of the words on the pre-test, you can submit it blank)
       button.btn.btn-lg.btn-primary(style='margin-top: 20px' onclick='openvocabtestlink()')
         span Take Vocabulary 
         span 
@@ -132,6 +133,6 @@ html(lang='en')
           br
           span(style='font-size: 13px; color: #9197a3') Just now
       div(style='padding-top: 12px')
-        span Before continuing to study vocabulary with FeedLearn, please login with Facebook. We use your login to keep track of your progress, we will not post on your wall or access private data:
+        span Before continuing to study vocabulary with FeedLearn, please login with Facebook. We use your login only to keep track of your progress. We will not post on your wall or access private data:
       div(style='padding-bottom: 12px')
       div.fb-login-button#fbloginbutton(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' scope="public_profile,email" onlogin='fbButtonOnlogin()')

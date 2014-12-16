@@ -351,6 +351,39 @@ settimestampforuserevent_express = (data, res) ->
         db.close()
         return
 
+changetimestampforuserevent_express = (data, res) ->
+  {username, eventname, newval} = data
+  if not newval?
+    res.send 'need newval'
+    return
+  newval = parseInt newval
+  if not isFinite newval
+    res.send 'newval not valid'
+    return
+  if not username? or not eventname?
+    res.send 'need username and eventname'
+    return
+  get-events-collection (events-collection, db) ->
+    events-collection.findOne {_id: username}, (err, result) ->
+      if not result?
+        newbody = {_id: username, username: username}
+        newbody[eventname] = newval
+        events-collection.save newbody, ->
+          res.send 'done'
+          db.close()
+          return
+        return
+      #if result[eventname]?
+      #  res.send 'already set timestamp for event'
+      #  db.close()
+      #  return
+      updateinfo = {}
+      updateinfo[eventname] = newval
+      events-collection.update {_id: username}, {$set: updateinfo}, ->
+        res.send 'done'
+        db.close()
+        return
+
 app.get '/removeuserevent_get', (req, res) ->
   {username, eventname} = req.query
   if not username? or not eventname?
@@ -366,6 +399,7 @@ app.get '/removeuserevent_get', (req, res) ->
 
 app.get '/settimestampforuserevent_get', getify(settimestampforuserevent_express)
 
+app.get '/changetimestampforuserevent_get', getify(changetimestampforuserevent_express)
 
 minidx = (list) ->
   minval = Infinity
