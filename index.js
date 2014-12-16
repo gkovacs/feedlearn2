@@ -508,8 +508,8 @@
       window.location = '/study1';
       return;
     }
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'chinese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'none'));
+    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
+    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
     setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
     updatecookies();
     if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
