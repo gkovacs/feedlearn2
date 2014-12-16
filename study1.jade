@@ -35,30 +35,56 @@ html(lang='en')
       h3 Start learning Japanese with FeedLearn!
       div FeedLearn is a Chrome extension that teaches you basic Japanese words by showing you quizzes as you browse your Facebook feed.
       div
-        b You do not need to know any Japanese beforehand to use it!
+        b You do not need to know any Japanese
+        span 
+        span - it is designed for beginners.
+      br
       div If you would like to try FeedLearn, you can join our user study to learn 150 basic Japanese words over 3 weeks.
       //- div FeedLearn is a Chrome extension, so you must be using the Chrome browser. FeedLearn does not post to your wall or access any private data.
-      div Each week, you will take a vocab test and learn 50 Japanese words with one of 3 tools.
-      div To install FeedLearn and participate in the user study, please login below using Facebook (we do not post to your wall).
+      div Each week, you will take a vocabulary test and learn 50 Japanese words with one of 3 tools.
+      div
+        span To install FeedLearn and participate in the user study, please login below using Facebook (we
+        span 
+        b do not post
+        span 
+        span to your wall):
       div(style='padding-bottom: 10px')
       div.fb-login-button#fbloginbutton(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' scope="public_profile,email" onlogin='fbButtonOnlogin()')
       div(style='padding-bottom: 10px')
       h3 Study Description
       div This is a study where we try to help you learn basic Japanese vocabulary as you browse your Facebook news feed.
       div
-        b You do not need to know any Japanese beforehand to participate.
+        b You do not need to know any Japanese 
+        span 
+        span - it is designed for beginners.
       div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.
+      br
       div The study lasts for 3 weeks. Each week, you will:
-      div(style='margin-left: 10px') 1) Take a vocab pre-test on the 50 new words you will be studying that week
-      div(style='margin-left: 10px') 2) Study the words, using one of the following 3 approaches
+      div(style='margin-left: 10px') 1) Take a vocabulary pre-test on the 50 new words you will be studying that week
+      div(style='margin-left: 10px') 2) Study the words, using one of the following 3 approaches:
       div(style='margin-left: 20px') • One week, you will be shown vocabulary quizzes directly in your feed
       div(style='margin-left: 20px') • Another week, you will be shown links in your feed asking you to go to the FeedLearn site to do the quizzes.
       div(style='margin-left: 20px') • Another week, you will be sent daily email reminders to study Japanese on the FeedLearn site.
-      div(style='margin-left: 10px') 3) At the end of the week, you will take a vocab post-test to see what you have learned.
-      div We do not access any of your private data or post anything on your Facebook wall. You can leave the study anytime.
+      div(style='margin-left: 10px') 3) At the end of the week, you will take a vocabulary post-test to see what you have learned.
+      br
+      div
+        span We
+        span 
+        b do not post
+        span 
+        span anything on your Facebook wall. We
+        span 
+        b do not access
+        span 
+        span any of your private data. You can leave the study at any time.
+      div To install FeedLearn and participate in the user study, please login below using Facebook:
+      div(style='padding-bottom: 10px')
+      div.fb-login-button#fbloginbutton2(data-max-rows='1' data-size='xlarge' data-show-faces='false' data-auto-logout-link='false' scope="public_profile,email" onlogin='fbButtonOnlogin()')
+      div(style='padding-bottom: 10px')
       h3 Contact Information
       div If you have questions, ask 
         a(href='mailto:geza@cs.stanford.edu') Geza Kovacs
+        span , Computer Science Department, Stanford University
 
     #getfullname(style='margin-left: 10px; margin-top: 10px; display: none')
       div(style='font-size: 20px; margin-bottom: 10px') Welcome to the FeedLearn study! What is your name?
@@ -82,10 +108,13 @@ html(lang='en')
             h4 Study Description
             div This is a study where we try to help you learn basic Japanese vocabulary as you browse your Facebook news feed.
             div
-              b You do not need to know any Japanese beforehand to participate.
+              b You do not need to know any Japanese
+              span 
+              span - it is designed for beginners.
             div You will first install our Chrome extension, FeedLearn. This extension will show you vocabulary flashcards while you browse your Facebook news feed.
+            br
             div The study lasts for 3 weeks. Each week, you will:
-            div(style='margin-left: 10px') 1) Take a vocab pre-test on the 50 new words you will be studying that week
+            div(style='margin-left: 10px') 1) Take a vocabulary pre-test on the 50 new words you will be studying that week
             div(style='margin-left: 10px') 2) Study the words, using a different tool each week:
             div(style='margin-left: 20px')
               span • On week 1,
@@ -99,11 +128,23 @@ html(lang='en')
               span • On week 3,
               span 
               span#week3format you will be sent daily email reminders to study Japanese on the FeedLearn site.
-            div(style='margin-left: 10px') 3) At the end of the week, you will take a vocab post-test to see what you have learned.
-            div We do not access any of your private data or post anything on your Facebook wall. You can leave the study anytime.
+            div(style='margin-left: 10px') 3) At the end of the week, you will take a vocabulary post-test to see what you have learned.
+            br
+            div
+              span We
+              span 
+              b do not post
+              span 
+              span anything on your Facebook wall. We
+              span 
+              b do not access
+              span 
+              span any of your private data. You can leave the study at any time.
+            div(style='padding-bottom: 10px')
             h4 Contact Information
             div If you have questions, ask 
               a(href='mailto:geza@cs.stanford.edu') Geza Kovacs
+              span , Computer Science Department, Stanford University
             br
             #consentdisplay
             button#consentbutton.btn.btn-lg.btn-primary(onclick='consentAgreed()') I agree to these conditions
@@ -146,8 +187,8 @@ html(lang='en')
         #collapseTwo.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTwo')
           .panel-body
             h4 Pre-Test for Week 1 Vocabulary
-            div Please follow this link to take a vocab test on the 50 words you will be studying over week 1.
-            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words.
+            div Please follow this link to take a vocabulary test on the 50 words you will be studying over week 1.
+            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know these words, you can just submit it blank.
             br
             #pretest1donedisplay
             button#pretest1button.btn.btn-lg.btn-primary(onclick='openPretest1()') Take the pre-test for Week 1 Vocabulary
@@ -157,7 +198,7 @@ html(lang='en')
             div(style='height: 30px')
             h4 Post-Test for Week 1 Vocabulary
             div#week1posttesttime Please first take the pre-test for week 1 vocabulary, then wait a week before taking the post-test.
-            div This is a vocab test on the 50 words you studied during week 1.
+            div This is a vocabulary test on the 50 words you studied during week 1.
             br
             #posttest1donedisplay
             button#posttest1button.btn.btn-lg.btn-primary(onclick='openPosttest1()') Take the post-test for Week 1 Vocabulary
@@ -199,8 +240,8 @@ html(lang='en')
         #collapseSix.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingSix')
           .panel-body
             h4 Pre-Test for Week 2 Vocabulary
-            div Please follow this link to take a vocab test on the 50 words you will be studying over week 2.
-            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words.
+            div Please follow this link to take a vocabulary test on the 50 words you will be studying over week 2.
+            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know these words, you can just submit it blank.
             br
             #pretest2donedisplay
             button#pretest2button.btn.btn-lg.btn-primary(onclick='openPretest2()') Take the pre-test for Week 2 Vocabulary
@@ -210,7 +251,7 @@ html(lang='en')
             div(style='height: 30px')
             h4 Post-Test for Week 2 Vocabulary
             div#week2posttesttime Please first take the pre-test for week 2 vocabulary, then wait a week before taking the post-test.
-            div This is a vocab test on the 50 words you studied during week 2.
+            div This is a vocabulary test on the 50 words you studied during week 2.
             br
             #posttest2donedisplay
             button#posttest2button.btn.btn-lg.btn-primary(onclick='openPosttest2()') Take the post-test for Week 2 Vocabulary
@@ -252,8 +293,8 @@ html(lang='en')
         #collapseNine.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingNine')
           .panel-body
             h4 Pre-Test for Week 3 Vocabulary
-            div Please follow this link to take a vocab test on the 50 words you will be studying over week 3.
-            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know any of these words.
+            div Please follow this link to take a vocabulary test on the 50 words you will be studying over week 3.
+            div We don't expect you to know any Japanese beforehand, so don't worry if you don't know these words, you can just submit it blank.
             br
             #pretest3donedisplay
             button#pretest3button.btn.btn-lg.btn-primary(onclick='openPretest3()') Take the pre-test for Week 3 Japanese Vocabulary
@@ -263,7 +304,7 @@ html(lang='en')
             div(style='height: 30px')
             h4 Post-Test for Week 3 Vocabulary
             div#week3posttesttime Please first take the pre-test for week 3 vocabulary, then wait a week before taking the post-test.
-            div This is a vocab test on the 50 words you studied during week 3.
+            div This is a vocabulary test on the 50 words you studied during week 3.
             br
             #posttest3donedisplay
             button#posttest3button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Vocabulary
