@@ -525,6 +525,18 @@ window.fbAsyncInit = ->
   }
   fb-try-login-automatic()
 
+export clearcookies = ->
+  for k in Object.keys $.cookie()
+    $.removeCookie k
+
+export clearlocalstorage = ->
+  for k in Object.keys localStorage
+    localStorage.removeItem k
+
+export clearcookiesandlocalstorage = ->
+  clearcookies()
+  clearlocalstorage()
+
 $(document).ready ->
   forcehttps()
   param = getUrlParameters()
