@@ -350,7 +350,7 @@ refresh-completed-parts = ->
       #  show-studyperiod-started(num, events['week' + num + 'startstudy'])
     for num in [3,2,1]
       #if events['week' + num + 'startstudy']?
-      if events['pretest' + num]? or num == 1
+      if events['pretest' + num]? #or num == 1
         config-week(num)
         break
     open-part-that-needs-doing()
@@ -466,10 +466,10 @@ $(document).ready ->
     }
     toastr.error 'FeedLearn currently only supports the Google Chrome browser'
   root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username') #, 'Anonymous User'
-  updatecookies()
-  prevent-accordion-collapsing()
-  if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
-    have-full-name()
-  else
-    dont-have-full-name()
+  updatecookies ->
+    prevent-accordion-collapsing()
+    if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
+      have-full-name()
+    else
+      dont-have-full-name()
 

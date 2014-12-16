@@ -352,7 +352,7 @@
       }
       for (i$ = 0, len$ = (ref$ = [3, 2, 1]).length; i$ < len$; ++i$) {
         num = ref$[i$];
-        if (events['pretest' + num] != null || num === 1) {
+        if (events['pretest' + num] != null) {
           configWeek(num);
           break;
         }
@@ -486,12 +486,13 @@
       toastr.error('FeedLearn currently only supports the Google Chrome browser');
     }
     root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
-    updatecookies();
-    preventAccordionCollapsing();
-    if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
-      return haveFullName();
-    } else {
-      return dontHaveFullName();
-    }
+    return updatecookies(function(){
+      preventAccordionCollapsing();
+      if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
+        return haveFullName();
+      } else {
+        return dontHaveFullName();
+      }
+    });
   });
 }).call(this);

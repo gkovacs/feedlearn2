@@ -403,6 +403,7 @@
   };
   out$.setFullName = setFullName = function(newfullname){
     if (newfullname != null && newfullname.length > 0) {
+      root.fullname = newfullname;
       setvar('fullname', newfullname);
     }
   };
@@ -495,7 +496,7 @@
     return output;
   };
   $(document).ready(function(){
-    var param, condition;
+    var param;
     forcehttps();
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
@@ -508,31 +509,33 @@
       window.location = '/study1';
       return;
     }
-    setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
-    setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
-    setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
-    updatecookies();
-    if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
-      root.qcontext = 'facebook';
-      condition = getvar('format');
-      addlog({
-        type: 'feedinsert'
-      });
-      if (condition != null && condition === 'link') {
-        showControlpage();
-        return;
+    return updatecookies(function(){
+      var condition;
+      setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
+      setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+      setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
+      if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
+        root.qcontext = 'facebook';
+        condition = getvar('format');
+        addlog({
+          type: 'feedinsert'
+        });
+        if (condition != null && condition === 'link') {
+          showControlpage();
+          return;
+        }
+      } else if (param.email != null && param.email !== 'false' && param.email !== false) {
+        root.qcontext = 'emailvisit';
+        addlog({
+          type: 'emailvisit'
+        });
+      } else {
+        root.qcontext = 'website';
+        addlog({
+          type: 'webvisit'
+        });
       }
-    } else if (param.email != null && param.email !== 'false' && param.email !== false) {
-      root.qcontext = 'emailvisit';
-      addlog({
-        type: 'emailvisit'
-      });
-    } else {
-      root.qcontext = 'website';
-      addlog({
-        type: 'webvisit'
-      });
-    }
-    return gotoPage(firstNonNull(param.page, 'quiz'));
+      return gotoPage(firstNonNull(param.page, 'quiz'));
+    });
   });
 }).call(this);

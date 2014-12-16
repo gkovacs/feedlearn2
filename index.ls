@@ -323,6 +323,7 @@ export change-feed-insertion-format = ->
 
 export set-full-name = (newfullname) ->
   if newfullname? and newfullname.length > 0
+    root.fullname = newfullname
     setvar('fullname', newfullname)
   return
 
@@ -409,23 +410,23 @@ $(document).ready ->
   if not getvar('fullname')?
     window.location = '/study1'
     return
-  set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
-  set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
-  #set-full-name <| first-non-null param.fullname, param.username, getvar('fullname'), 'Anonymous User'
-  set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
-  updatecookies()
-  if param.facebook? and param.facebook != 'false' and param.facebook != false
-    root.qcontext = 'facebook'
-    condition = getvar('format')
-    addlog {type: 'feedinsert'}
-    if condition? and condition == 'link'
-      #window.location = '/control'
-      show-controlpage()
-      return
-  else if param.email? and param.email != 'false' and param.email != false
-    root.qcontext = 'emailvisit'
-    addlog {type: 'emailvisit'}
-  else
-    root.qcontext = 'website'
-    addlog {type: 'webvisit'}
-  goto-page <| first-non-null param.page, 'quiz'
+  updatecookies ->
+    set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
+    set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+    #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
+    set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+    if param.facebook? and param.facebook != 'false' and param.facebook != false
+      root.qcontext = 'facebook'
+      condition = getvar('format')
+      addlog {type: 'feedinsert'}
+      if condition? and condition == 'link'
+        #window.location = '/control'
+        show-controlpage()
+        return
+    else if param.email? and param.email != 'false' and param.email != false
+      root.qcontext = 'emailvisit'
+      addlog {type: 'emailvisit'}
+    else
+      root.qcontext = 'website'
+      addlog {type: 'webvisit'}
+    goto-page <| first-non-null param.page, 'quiz'

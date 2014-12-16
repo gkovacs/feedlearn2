@@ -82,10 +82,13 @@
       return window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com');
     }
   };
-  out$.updatecookies = updatecookies = function(){
+  out$.updatecookies = updatecookies = function(callback){
     var username;
     username = getUserName();
     if (username == null || username === 'Anonymous User' || username.length === 0) {
+      if (callback != null) {
+        callback();
+      }
       return;
     }
     return $.getJSON('/cookiesforuser?' + $.param({
@@ -93,9 +96,15 @@
     }), function(cookies){
       var needrefresh, k, v, curv;
       if (cookies.username == null) {
+        if (callback != null) {
+          callback();
+        }
         return;
       }
       if (cookies.username !== username) {
+        if (callback != null) {
+          callback();
+        }
         return;
       }
       needrefresh = false;
@@ -113,8 +122,8 @@
           setvar(k, v);
         }
       }
-      if (needrefresh) {
-        return window.location = window.location;
+      if (callback != null) {
+        return callback();
       }
     });
   };

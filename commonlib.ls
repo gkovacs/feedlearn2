@@ -57,15 +57,18 @@ export forcehttps = ->
   if window.location.href.indexOf('http://feedlearn.herokuapp.com') == 0
     window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com')
 
-export updatecookies = ->
+export updatecookies = (callback) ->
   username = get-user-name()
   if not username? or username == 'Anonymous User' or username.length == 0
+    callback() if callback?
     return
   $.getJSON ('/cookiesforuser?' + $.param({username: username})), (cookies) ->
     #console.log cookies
     if not cookies.username?
+      callback() if callback?
       return
     if cookies.username != username
+      callback() if callback?
       return
     needrefresh = false
     for k,v of cookies
@@ -79,5 +82,6 @@ export updatecookies = ->
       if (not curv?) or v.toString() != curv.toString()
         needrefresh = true
         setvar k, v
-    if needrefresh
-      window.location = window.location
+    #if needrefresh
+    #  window.location = window.location
+    callback() if callback?
