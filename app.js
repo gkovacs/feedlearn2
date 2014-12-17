@@ -371,7 +371,7 @@
             continue;
           }
           starttime = maximum(pretestTimes);
-          if (starttime == null || !isFinite(startime)) {
+          if (starttime == null || !isFinite(starttime)) {
             continue;
           }
           dayselapsed = Math.floor(

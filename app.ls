@@ -308,13 +308,12 @@ app.get '/getuserswhoneedemails', (req, res) ->
         if pretest-times.length == 0
           continue
         starttime = maximum pretest-times
-        if not starttime? or not isFinite(startime)
+        if not starttime? or not isFinite(starttime)
           continue
         dayselapsed = (Date.now() - starttime) / (1000*3600*24) |> Math.floor
         if 0 <= dayselapsed <= 6
           output.push {username: x.username, starttime, dayselapsed}
     res.send JSON.stringify output
-
 
 app.get '/gettesttimes', (req, res) ->
   getallusereventsandcookies (results-array) ->
