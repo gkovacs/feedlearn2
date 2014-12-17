@@ -185,7 +185,7 @@ It should look like this:<br><br>
 </div>
 '''
 none-description = '''
-This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="https://feedlearn.herokuapp.com/?webvisit=true">FeedLearn website</a> to study.<br>
+This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="https://feedlearn.herokuapp.com/?webvisit=true" target="_blank">FeedLearn website</a> to study.<br>
 The email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>
 It should look like this:<br><br>
 
