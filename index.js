@@ -480,7 +480,7 @@
       type: 'linkopen',
       linkopen: 'link'
     });
-    return window.open('https://feedlearn.herokuapp.com');
+    return window.open('https://feedlearn.herokuapp.com/?webvisit=true');
   };
   shallowCopy = function(dict){
     return $.extend({}, dict);

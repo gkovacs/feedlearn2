@@ -388,7 +388,7 @@ export show-controlpage = ->
 
 export openfeedlearnlink = ->
   addlog {type: 'linkopen', linkopen: 'link'}
-  window.open('https://feedlearn.herokuapp.com')
+  window.open('https://feedlearn.herokuapp.com/?webvisit=true')
 
 shallow-copy = (dict) ->
   return $.extend {}, dict
