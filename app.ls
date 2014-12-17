@@ -59,7 +59,7 @@ get-logs-email-collection = (callback) ->
 
 get-logs-fb-collection = (callback) ->
   get-mongo-db2 (db) ->
-    callback db.collection('fblogs3'), db
+    callback db.collection('fblogs4'), db
 
 # Express initialization
 
