@@ -315,6 +315,7 @@ app.get '/getuserswhoneedemails', (req, res) ->
           output.push {username: x.username, starttime, dayselapsed}
     res.send JSON.stringify output
 
+
 app.get '/gettesttimes', (req, res) ->
   getallusereventsandcookies (results-array) ->
     output = []
