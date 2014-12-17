@@ -356,6 +356,48 @@
       return res.send(JSON.stringify(resultsArray));
     });
   });
+  app.get('/gettesttimes', function(req, res){
+    return getallusereventsandcookies(function(resultsArray){
+      var output, i$, len$, userinfo, j$, ref$, len1$, num;
+      output = [];
+      for (i$ = 0, len$ = resultsArray.length; i$ < len$; ++i$) {
+        userinfo = resultsArray[i$];
+        for (j$ = 0, len1$ = (ref$ = [1, 2, 3]).length; j$ < len1$; ++j$) {
+          num = ref$[j$];
+          if (userinfo['pretest' + num] != null && userinfo['posttest' + num] == null) {
+            output.push({
+              username: userinfo.username,
+              test: 'pretest' + num,
+              time: userinfo['pretest' + num] + 1000 * 3600 * 24 * 7
+            });
+            break;
+          }
+        }
+      }
+      return res.send(JSON.stringify(output));
+    });
+  });
+  app.get('/gettesttimesreadable', function(req, res){
+    return getallusereventsandcookies(function(resultsArray){
+      var output, i$, len$, userinfo, j$, ref$, len1$, num;
+      output = [];
+      for (i$ = 0, len$ = resultsArray.length; i$ < len$; ++i$) {
+        userinfo = resultsArray[i$];
+        for (j$ = 0, len1$ = (ref$ = [1, 2, 3]).length; j$ < len1$; ++j$) {
+          num = ref$[j$];
+          if (userinfo['pretest' + num] != null && userinfo['posttest' + num] == null) {
+            output.push({
+              username: userinfo.username,
+              test: 'pretest' + num,
+              time: new Date(userinfo['pretest' + num] + 1000 * 3600 * 24 * 7).toString()
+            });
+            break;
+          }
+        }
+      }
+      return res.send(JSON.stringify(output));
+    });
+  });
   getallusereventsandcookies_old = function(callback){
     return getuserlist(function(userlist){
       return asyncMapNoerr(userlist, getusereventsandcookies, callback);

@@ -296,6 +296,26 @@ app.get '/getallusereventsandcookies', (req, res) ->
   getallusereventsandcookies (results-array) ->
     res.send JSON.stringify results-array
 
+app.get '/gettesttimes', (req, res) ->
+  getallusereventsandcookies (results-array) ->
+    output = []
+    for userinfo in results-array
+      for num in [1, 2, 3]
+        if userinfo['pretest' + num]? and not userinfo['posttest' + num]?
+          output.push {username: userinfo.username, test: 'pretest' + num, time: userinfo['pretest' + num] + 1000*3600*24*7}
+          break
+    res.send JSON.stringify output
+
+app.get '/gettesttimesreadable', (req, res) ->
+  getallusereventsandcookies (results-array) ->
+    output = []
+    for userinfo in results-array
+      for num in [1, 2, 3]
+        if userinfo['pretest' + num]? and not userinfo['posttest' + num]?
+          output.push {username: userinfo.username, test: 'pretest' + num, time: new Date(userinfo['pretest' + num] + 1000*3600*24*7).toString()}
+          break
+    res.send JSON.stringify output
+
 getallusereventsandcookies_old = (callback) ->
   getuserlist (userlist) ->
     async-map-noerr userlist, getusereventsandcookies, callback
