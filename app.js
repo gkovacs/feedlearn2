@@ -91,8 +91,10 @@
   app.get('/study1', get_study1);
   app.get('/study1.html', get_study1);
   app.get('/viewlog', function(req, res){
+    var body;
+    body = req.query;
     return getLogsCollection(function(logs, db){
-      return logs.find().toArray(function(err, results){
+      return logs.find(body).toArray(function(err, results){
         res.send(JSON.stringify(results));
         return db.close();
       });

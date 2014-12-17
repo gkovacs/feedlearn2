@@ -105,8 +105,9 @@ app.get '/study1', get_study1
 app.get '/study1.html', get_study1
 
 app.get '/viewlog', (req, res) ->
+  body = req.query
   get-logs-collection (logs, db) ->
-    logs.find().toArray (err, results) ->
+    logs.find(body).toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
 
