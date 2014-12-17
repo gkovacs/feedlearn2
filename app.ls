@@ -5,6 +5,8 @@ require! {
   'async'
 }
 
+{filter, maximum} = require 'prelude-ls'
+
 # mongo
 
 mongo = require 'mongodb'
@@ -296,6 +298,18 @@ getallusereventsandcookies = (callback) ->
 app.get '/getallusereventsandcookies', (req, res) ->
   getallusereventsandcookies (results-array) ->
     res.send JSON.stringify results-array
+
+app.get '/getuserswhoneedemails', (req, res) ->
+  getallusereventsandcookies (userevent-info) ->
+    output = []
+    for x in userevent-info
+      if x.format == 'none'
+        pretest-times = filter (?), [x.pretest1, x.pretest2, x.pretest3]
+        starttime = maximum pretest-times
+        dayselapsed = (Date.now() - starttime) / (1000*3600*24) |> Math.floor
+        if 0 <= dayselapsed <= 6
+          output.push {username: x.username, starttime, dayselapsed}
+    res.send JSON.stringify output
 
 app.get '/gettesttimes', (req, res) ->
   getallusereventsandcookies (results-array) ->

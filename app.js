@@ -1,9 +1,10 @@
 (function(){
-  var express, path, bodyParser, async, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, ref$, filter, maximum, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
   async = require('async');
+  ref$ = require('prelude-ls'), filter = ref$.filter, maximum = ref$.maximum;
   mongo = require('mongodb');
   MongoClient = mongo.MongoClient, Grid = mongo.Grid;
   mongourl = process.env.MONGOHQ_URL;
@@ -356,6 +357,32 @@
   app.get('/getallusereventsandcookies', function(req, res){
     return getallusereventsandcookies(function(resultsArray){
       return res.send(JSON.stringify(resultsArray));
+    });
+  });
+  app.get('/getuserswhoneedemails', function(req, res){
+    return getallusereventsandcookies(function(usereventInfo){
+      var output, i$, len$, x, pretestTimes, starttime, dayselapsed;
+      output = [];
+      for (i$ = 0, len$ = usereventInfo.length; i$ < len$; ++i$) {
+        x = usereventInfo[i$];
+        if (x.format === 'none') {
+          pretestTimes = filter(fn$, [x.pretest1, x.pretest2, x.pretest3]);
+          starttime = maximum(pretestTimes);
+          dayselapsed = Math.floor(
+          (Date.now() - starttime) / (1000 * 3600 * 24));
+          if (0 <= dayselapsed && dayselapsed <= 6) {
+            output.push({
+              username: x.username,
+              starttime: starttime,
+              dayselapsed: dayselapsed
+            });
+          }
+        }
+      }
+      return res.send(JSON.stringify(output));
+      function fn$(it){
+        return it != null;
+      }
     });
   });
   app.get('/gettesttimes', function(req, res){
