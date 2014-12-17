@@ -1,9 +1,9 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, getUserName, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps, getUserName = root.getUserName;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
   addlog = root.addlog, postStartEvent = root.postStartEvent;
   out$.selectChanged = selectChanged = function(){
@@ -119,6 +119,15 @@
     }
     if (getPretestNum() !== 0) {
       $('#weeknum').text(getPretestNum());
+    }
+    root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
+    if (root.fullname != null) {
+      setvar('fullname', root.fullname);
+    }
+    root.fullname = getUserName();
+    if (root.fullname == null || root.fullname === '' || root.fullname === 'Anonymous User') {
+      window.location.href = '/study1';
+      return;
     }
     flashcard_set = getFlashcardSet();
     flashcards = flashcard_sets[flashcard_set];

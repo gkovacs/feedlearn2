@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index, map, sort, sort-by} = require \prelude-ls
 
-{first-non-null, getUrlParameters, forcehttps} = root # commonlib.ls
+{first-non-null, getUrlParameters, forcehttps, get-user-name} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
 {addlog, post-start-event} = root # logging_client.ls
 
@@ -76,6 +76,13 @@ $(document).ready ->
     $('#pretestonly').hide()
   if get-pretest-num() != 0
     $('#weeknum').text get-pretest-num()
+  root.fullname = first-non-null param.fullname, param.username, param.user, param.name
+  if root.fullname?
+    setvar 'fullname', root.fullname
+  root.fullname = get-user-name()
+  if not root.fullname? or root.fullname == '' or root.fullname == 'Anonymous User'
+    window.location.href = '/study1'
+    return
   flashcard_set = get-flashcard-set()
   flashcards = flashcard_sets[flashcard_set]
   select-options = [ '--- select a word ---' ].concat <| map (.english), flashcards |> sort
