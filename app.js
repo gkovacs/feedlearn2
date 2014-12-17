@@ -367,7 +367,13 @@
         x = usereventInfo[i$];
         if (x.format === 'none') {
           pretestTimes = filter(fn$, [x.pretest1, x.pretest2, x.pretest3]);
+          if (pretestTimes.length === 0) {
+            continue;
+          }
           starttime = maximum(pretestTimes);
+          if (starttime == null || !isFinite(startime)) {
+            continue;
+          }
           dayselapsed = Math.floor(
           (Date.now() - starttime) / (1000 * 3600 * 24));
           if (0 <= dayselapsed && dayselapsed <= 6) {

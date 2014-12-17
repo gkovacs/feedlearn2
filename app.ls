@@ -305,7 +305,11 @@ app.get '/getuserswhoneedemails', (req, res) ->
     for x in userevent-info
       if x.format == 'none'
         pretest-times = filter (?), [x.pretest1, x.pretest2, x.pretest3]
+        if pretest-times.length == 0
+          continue
         starttime = maximum pretest-times
+        if not starttime? or not isFinite(startime)
+          continue
         dayselapsed = (Date.now() - starttime) / (1000*3600*24) |> Math.floor
         if 0 <= dayselapsed <= 6
           output.push {username: x.username, starttime, dayselapsed}
