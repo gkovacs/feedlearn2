@@ -59,7 +59,7 @@ get-pretest-num = ->
 
 export submit-answers = ->
   param = getUrlParameters()
-  addlog {type: 'vocabquiz', quiztype: param.type, lang: param.vocab, answers: getCurrentAnswers()}
+  addlog {type: 'vocabquiz', quiztype: param.type, vocab: get-flashcard-set(), answers: getCurrentAnswers()}
   #alert 'Answers submitted!'
   if param.source? and param.source == 'facebook'
     $('#submitmessage').css('color', 'green').html 'Answers submitted! You can now return to your <a href="https://www.facebook.com/" target="_blank">Facebook feed</a> to study vocabulary with FeedLearn.'
@@ -98,4 +98,4 @@ $(document).ready ->
     $('#englishwordlist').append <| J('div.engwordopt').css({margin-top: '0px', display: 'inline-block', vertical-align: 'top', margin-right: '25px', margin-bottom: '20px', background-color: 'lightblue', border-radius: '10px', padding-left: '5px', padding-right: '5px', padding-top: '5px', padding-bottom: '5px'}).append J('span').text(wordinfo.english)
     $('#englishwords').append <| J('option').attr('value', wordinfo.english)
   $('.engselect').select2()
-  addlog {type: 'vocabquizvisited', quiztype: param.type, lang: param.vocab}
+  addlog {type: 'vocabquizvisited', quiztype: param.type, vocab: get-flashcard-set()}

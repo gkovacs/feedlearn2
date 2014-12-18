@@ -98,7 +98,7 @@
     addlog({
       type: 'vocabquiz',
       quiztype: param.type,
-      lang: param.vocab,
+      vocab: getFlashcardSet(),
       answers: getCurrentAnswers()
     });
     if (param.source != null && param.source === 'facebook') {
@@ -178,7 +178,7 @@
     return addlog({
       type: 'vocabquizvisited',
       quiztype: param.type,
-      lang: param.vocab
+      vocab: getFlashcardSet()
     });
     function fn$(it){
       return it.romaji;
