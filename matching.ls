@@ -6,7 +6,7 @@ J = $.jade
 
 {first-non-null, getUrlParameters, forcehttps, get-user-name} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
-{addlog, post-start-event} = root # logging_client.ls
+{addlog, addlogquiz, post-start-event} = root # logging_client.ls
 
 export select-changed = ->
   #console.log 'select changed'
@@ -60,6 +60,7 @@ get-pretest-num = ->
 export submit-answers = ->
   param = getUrlParameters()
   addlog {type: 'vocabquiz', quiztype: param.type, vocab: get-flashcard-set(), answers: getCurrentAnswers()}
+  addlogquiz {type: 'vocabquiz', quiztype: param.type, vocab: get-flashcard-set(), answers: getCurrentAnswers()}
   #alert 'Answers submitted!'
   if param.source? and param.source == 'facebook'
     $('#submitmessage').css('color', 'green').html 'Answers submitted! You can now return to your <a href="https://www.facebook.com/" target="_blank">Facebook feed</a> to study vocabulary with FeedLearn.'

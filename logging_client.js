@@ -1,5 +1,5 @@
 (function(){
-  var root, getvar, getUserName, postJson, postStartEvent, mklogdata, addlog, addlogfblogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, getvar, getUserName, postJson, postStartEvent, mklogdata, addlog, addlogfblogin, addlogquiz, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   getvar = root.getvar, getUserName = root.getUserName;
   out$.postJson = postJson = function(url, jsondata, callback){
@@ -43,5 +43,10 @@
     var data;
     data = mklogdata(logdata);
     return postJson('/addlogfblogin', data);
+  };
+  out$.addlogquiz = addlogquiz = function(logdata){
+    var data;
+    data = mklogdata(logdata);
+    return postJson('/addlogquiz', data);
   };
 }).call(this);

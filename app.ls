@@ -61,9 +61,13 @@ get-logs-fblogin-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('fblogin'), db
 
+get-logs-quiz-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('quiz'), db
+
 get-logs-fb-collection = (callback) ->
   get-mongo-db2 (db) ->
-    callback db.collection('fblogs5'), db
+    callback db.collection('fblogs6'), db
 
 # Express initialization
 
@@ -126,6 +130,13 @@ app.get '/viewlogemail', (req, res) ->
 app.get '/viewlogfblogin', (req, res) ->
   body = req.query
   get-logs-fblogin-collection (logs, db) ->
+    logs.find(body).toArray (err, results) ->
+      res.send <| JSON.stringify results
+      db.close()
+
+app.get '/viewlogquiz', (req, res) ->
+  body = req.query
+  get-logs-quiz-collection (logs, db) ->
     logs.find(body).toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
@@ -680,20 +691,6 @@ app.get '/addlog_get', (req, res) ->
         res.send <| 'successful insertion'
       db.close()
 
-app.get '/addlogfblogin_get', (req, res) ->
-  username = req.query.username
-  if not username?
-    res.send 'need to provide username'
-    return
-  #console.log req.body
-  get-logs-fblogin-collection (logs, db) ->
-    logs.insert req.query, (err, docs) ->
-      if err?
-        res.send <| 'error upon insertion: ' + JSON.stringify(err)
-      else
-        res.send <| 'successful insertion'
-      db.close()
-
 app.get '/addlogfb_get', (req, res) ->
   username = req.query.username
   if not username?
@@ -775,6 +772,20 @@ app.post '/addlogfblogin', (req, res) ->
     return
   #console.log req.body
   get-logs-fblogin-collection (logs, db) ->
+    logs.insert req.body, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
+      db.close()
+
+app.post '/addlogquiz', (req, res) ->
+  username = req.body.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-quiz-collection (logs, db) ->
     logs.insert req.body, (err, docs) ->
       if err?
         res.send <| 'error upon insertion: ' + JSON.stringify(err)

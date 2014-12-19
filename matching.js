@@ -1,11 +1,11 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, getUserName, flashcard_sets, language_names, flashcard_name_aliases, addlog, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, getUserName, flashcard_sets, language_names, flashcard_name_aliases, addlog, addlogquiz, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps, getUserName = root.getUserName;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
-  addlog = root.addlog, postStartEvent = root.postStartEvent;
+  addlog = root.addlog, addlogquiz = root.addlogquiz, postStartEvent = root.postStartEvent;
   out$.selectChanged = selectChanged = function(){
     var selected_words, i$, ref$, len$, idx, x, curword, newidx, results$ = [];
     $('#submitmessage').text('');
@@ -96,6 +96,12 @@
     var param;
     param = getUrlParameters();
     addlog({
+      type: 'vocabquiz',
+      quiztype: param.type,
+      vocab: getFlashcardSet(),
+      answers: getCurrentAnswers()
+    });
+    addlogquiz({
       type: 'vocabquiz',
       quiztype: param.type,
       vocab: getFlashcardSet(),

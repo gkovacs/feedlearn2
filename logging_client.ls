@@ -38,3 +38,7 @@ export addlog = (logdata) ->
 export addlogfblogin = (logdata) ->
   data = mklogdata logdata
   post-json '/addlogfblogin', data
+
+export addlogquiz = (logdata) ->
+  data = mklogdata logdata
+  post-json '/addlogquiz', data
