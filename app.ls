@@ -57,6 +57,10 @@ get-logs-email-collection = (callback) ->
   get-mongo-db (db) ->
     callback db.collection('emaillogs'), db
 
+get-logs-fblogin-collection = (callback) ->
+  get-mongo-db (db) ->
+    callback db.collection('fblogin'), db
+
 get-logs-fb-collection = (callback) ->
   get-mongo-db2 (db) ->
     callback db.collection('fblogs5'), db
@@ -116,6 +120,13 @@ app.get '/viewlog', (req, res) ->
 app.get '/viewlogemail', (req, res) ->
   get-logs-email-collection (logs, db) ->
     logs.find().toArray (err, results) ->
+      res.send <| JSON.stringify results
+      db.close()
+
+app.get '/viewlogfblogin', (req, res) ->
+  body = req.query
+  get-logs-fblogin-collection (logs, db) ->
+    logs.find(body).toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
 
@@ -669,6 +680,20 @@ app.get '/addlog_get', (req, res) ->
         res.send <| 'successful insertion'
       db.close()
 
+app.get '/addlogfblogin_get', (req, res) ->
+  username = req.query.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-fblogin-collection (logs, db) ->
+    logs.insert req.query, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
+      db.close()
+
 app.get '/addlogfb_get', (req, res) ->
   username = req.query.username
   if not username?
@@ -743,3 +768,16 @@ app.post '/addlogfb', (req, res) ->
         res.send <| 'successful insertion'
       db.close()
 
+app.post '/addlogfblogin', (req, res) ->
+  username = req.body.username
+  if not username?
+    res.send 'need to provide username'
+    return
+  #console.log req.body
+  get-logs-fblogin-collection (logs, db) ->
+    logs.insert req.body, (err, docs) ->
+      if err?
+        res.send <| 'error upon insertion: ' + JSON.stringify(err)
+      else
+        res.send <| 'successful insertion'
+      db.close()

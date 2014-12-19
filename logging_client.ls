@@ -19,7 +19,7 @@ export post-json = (url, jsondata, callback) ->
 export post-start-event = (eventname) ->
   post-json '/settimestampforuserevent', {username: get-user-name(), eventname: eventname}
 
-export addlog = (logdata) ->
+mklogdata = (logdata) ->
   data = $.extend {}, logdata
   data.username = get-user-name()
   data.lang = getvar('lang')
@@ -29,4 +29,12 @@ export addlog = (logdata) ->
   data.condition = getvar('condition')
   data.time = Date.now()
   data.timeloc = new Date().toString()
+  return data
+
+export addlog = (logdata) ->
+  data = mklogdata logdata
   post-json '/addlog', data
+
+export addlogfblogin = (logdata) ->
+  data = mklogdata logdata
+  post-json '/addlogfblogin', data

@@ -1,10 +1,10 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, addlog, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents;
-  addlog = root.addlog;
+  addlog = root.addlog, addlogfblogin = root.addlogfblogin;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
   root.srs_words = null;
   values_over_1 = function(dict){
@@ -576,6 +576,11 @@
             logintype: 'manual',
             fblogin: response
           });
+          addlogfblogin({
+            type: 'fblogin',
+            logintype: 'manual',
+            fblogin: response
+          });
           return haveFullName();
         }
       });
@@ -652,6 +657,11 @@
         if (response.name != null) {
           setvar('fullname', response.name);
           addlog({
+            type: 'fblogin',
+            logintype: 'automatic',
+            fblogin: response
+          });
+          addlogfblogin({
             type: 'fblogin',
             logintype: 'automatic',
             fblogin: response

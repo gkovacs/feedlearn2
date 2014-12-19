@@ -1,5 +1,5 @@
 (function(){
-  var root, getvar, getUserName, postJson, postStartEvent, addlog, out$ = typeof exports != 'undefined' && exports || this;
+  var root, getvar, getUserName, postJson, postStartEvent, mklogdata, addlog, addlogfblogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   getvar = root.getvar, getUserName = root.getUserName;
   out$.postJson = postJson = function(url, jsondata, callback){
@@ -21,7 +21,7 @@
       eventname: eventname
     });
   };
-  out$.addlog = addlog = function(logdata){
+  mklogdata = function(logdata){
     var data;
     data = $.extend({}, logdata);
     data.username = getUserName();
@@ -32,6 +32,16 @@
     data.condition = getvar('condition');
     data.time = Date.now();
     data.timeloc = new Date().toString();
+    return data;
+  };
+  out$.addlog = addlog = function(logdata){
+    var data;
+    data = mklogdata(logdata);
     return postJson('/addlog', data);
+  };
+  out$.addlogfblogin = addlogfblogin = function(logdata){
+    var data;
+    data = mklogdata(logdata);
+    return postJson('/addlogfblogin', data);
   };
 }).call(this);

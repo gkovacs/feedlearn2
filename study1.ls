@@ -1,7 +1,7 @@
 root = exports ? this
 
 {first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies, updatecookiesandevents} = root # commonlib.ls
-{post-json, post-start-event, addlog} = root # logging_client.ls
+{post-json, post-start-event, addlog, addlogfblogin} = root # logging_client.ls
 
 root.skip-prereqs = false
 
@@ -390,6 +390,7 @@ fb-login-status-change-callback = (response) ->
 
   setvar 'fullname', response.name
   addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+  addlogfblogin {type: 'fblogin', logintype: 'automatic', fblogin: response}
   #window.location.href = '/study1'
   have-full-name()
 */
@@ -402,6 +403,7 @@ export fb-try-login-automatic = ->
       if response.name?
         setvar 'fullname', response.name
         addlog {type: 'fblogin', logintype: 'automatic', fblogin: response}
+        addlogfblogin {type: 'fblogin', logintype: 'automatic', fblogin: response}
         have-full-name()
 
 export fb-try-login-manual = ->
@@ -412,6 +414,7 @@ export fb-try-login-manual = ->
       if response.name?
         setvar 'fullname', response.name
         addlog {type: 'fblogin', logintype: 'manual', fblogin: response}
+        addlogfblogin {type: 'fblogin', logintype: 'manual', fblogin: response}
         have-full-name()
 
 window.fbAsyncInit = ->
