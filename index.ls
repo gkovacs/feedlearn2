@@ -550,6 +550,7 @@ $(document).ready ->
   forcehttps()
   param = getUrlParameters()
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name
+  root.quizid = param.quizid ? randstr()
   if root.fullname?
     setvar 'fullname', root.fullname
     window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))

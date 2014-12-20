@@ -1,0 +1,26 @@
+{
+  "name": "randstr",
+  "version": "1.0.5",
+  "main": "randstr.js",
+  "homepage": "https://github.com/gkovacs/randstr",
+  "authors": [
+    "Alex Chao",
+    "Geza Kovacs (http://github.com/gkovacs)"
+  ],
+  "description": "A simple function can be used to generate a random string with the specified length.",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "random",
+    "string"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

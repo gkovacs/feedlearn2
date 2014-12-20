@@ -707,10 +707,13 @@
     return clearlocalstorage();
   };
   $(document).ready(function(){
-    var param;
+    var param, ref$;
     forcehttps();
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
+    root.quizid = (ref$ = param.quizid) != null
+      ? ref$
+      : randstr();
     if (root.fullname != null) {
       setvar('fullname', root.fullname);
       window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
