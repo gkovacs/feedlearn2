@@ -388,7 +388,7 @@ export show-controlpage = ->
 
 export openfeedlearnlink = ->
   addlog {type: 'linkopen', linkopen: 'link'}
-  window.open('https://feedlearn.herokuapp.com/?webvisit=true')
+  window.open('https://feedlearn.herokuapp.com/?webvisit=true&fromfeedlink=true')
 
 shallow-copy = (dict) ->
   return $.extend {}, dict
@@ -467,6 +467,16 @@ export show-fb-login-page = ->
   $('.outermainpage').hide()
   $('#fbloginpage').show()
 
+set-visit-source = ->
+  param = getUrlParameters()
+  if param.email? and param.email != 'false' and param.email != false
+    root.visitsource = 'email'
+  else if param.fromfeedlink? and param.fromfeedlink != 'false' and param.fromfeedlink != false
+    root.visitsource = 'feedlink'
+  else if param.facebook? and param.facebook != 'false' and param.facebook != false
+    root.visitsource = 'feedembed'
+  else
+    root.visitsource = 'direct'
 
 have-full-name = ->
   $('.outermainpage').hide()
@@ -477,6 +487,7 @@ have-full-name = ->
     set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
     #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
     set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
+    set-visit-source()
     required-test = get-required-test()
     if required-test?
       show-required-test(required-test)

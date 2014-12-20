@@ -34,6 +34,9 @@
     if (root.quizid != null) {
       data.quizid = root.quizid;
     }
+    if (root.visitsource != null) {
+      data.visitsource = root.visitsource;
+    }
     data.condition = getvar('condition');
     data.time = Date.now();
     data.timeloc = new Date().toString();

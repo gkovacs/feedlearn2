@@ -29,6 +29,8 @@ mklogdata = (logdata) ->
     data.qcontext = root.qcontext
   if root.quizid?
     data.quizid = root.quizid
+  if root.visitsource?
+    data.visitsource = root.visitsource
   data.condition = getvar('condition')
   data.time = Date.now()
   data.timeloc = new Date().toString()

@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -480,7 +480,7 @@
       type: 'linkopen',
       linkopen: 'link'
     });
-    return window.open('https://feedlearn.herokuapp.com/?webvisit=true');
+    return window.open('https://feedlearn.herokuapp.com/?webvisit=true&fromfeedlink=true');
   };
   shallowCopy = function(dict){
     return $.extend({}, dict);
@@ -593,6 +593,19 @@
     $('.outermainpage').hide();
     return $('#fbloginpage').show();
   };
+  setVisitSource = function(){
+    var param;
+    param = getUrlParameters();
+    if (param.email != null && param.email !== 'false' && param.email !== false) {
+      return root.visitsource = 'email';
+    } else if (param.fromfeedlink != null && param.fromfeedlink !== 'false' && param.fromfeedlink !== false) {
+      return root.visitsource = 'feedlink';
+    } else if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
+      return root.visitsource = 'feedembed';
+    } else {
+      return root.visitsource = 'direct';
+    }
+  };
   haveFullName = function(){
     var param;
     $('.outermainpage').hide();
@@ -603,6 +616,7 @@
       setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
       setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
       setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
+      setVisitSource();
       requiredTest = getRequiredTest();
       if (requiredTest != null) {
         showRequiredTest(requiredTest);
