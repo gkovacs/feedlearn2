@@ -91,7 +91,7 @@
     root.srs_words = {};
     for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
-      root.srs_words[wordinfo.kanji] = 1;
+      root.srs_words[wordinfo.kanji] = 5;
     }
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };

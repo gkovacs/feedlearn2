@@ -101,16 +101,14 @@
   };
   app.get('/study1', get_study1);
   app.get('/study1.html', get_study1);
-  app.get('/viewlog', function(req, res){
-    var body;
-    body = req.query;
-    return getLogsCollection(function(logs, db){
-      return logs.find(body).toArray(function(err, results){
-        res.send(JSON.stringify(results));
-        return db.close();
-      });
-    });
-  });
+  /*
+  app.get '/viewlog', (req, res) ->
+    body = req.query
+    get-logs-collection (logs, db) ->
+      logs.find(body).toArray (err, results) ->
+        res.send <| JSON.stringify results
+        db.close()
+  */
   app.get('/viewlogemail', function(req, res){
     return getLogsEmailCollection(function(logs, db){
       return logs.find().toArray(function(err, results){
@@ -139,14 +137,13 @@
       });
     });
   });
-  app.get('/viewlogfb', function(req, res){
-    return getLogsFbCollection(function(logs, db){
-      return logs.find().toArray(function(err, results){
-        res.send(JSON.stringify(results));
-        return db.close();
-      });
-    });
-  });
+  /*
+  app.get '/viewlogfb', (req, res) ->
+    get-logs-fb-collection (logs, db) ->
+      logs.find().toArray (err, results) ->
+        res.send <| JSON.stringify results
+        db.close()
+  */
   app.get('/email-japanese.png', function(req, res){
     addlogemail({
       type: 'emailopened',

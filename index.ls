@@ -69,7 +69,7 @@ load-srs-words = ->
   console.log 'rebuildling srs_' + getvar('lang')
   root.srs_words = {}
   for wordinfo in flashcard_sets[getvar('lang')]
-    root.srs_words[wordinfo.kanji] = 1
+    root.srs_words[wordinfo.kanji] = 5
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
