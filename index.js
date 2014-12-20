@@ -597,13 +597,13 @@
     var param;
     param = getUrlParameters();
     if (param.email != null && param.email !== 'false' && param.email !== false) {
-      return root.visitsource = 'email';
+      root.visitsource = 'email';
     } else if (param.fromfeedlink != null && param.fromfeedlink !== 'false' && param.fromfeedlink !== false) {
-      return root.visitsource = 'feedlink';
+      root.visitsource = 'feedlink';
     } else if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
-      return root.visitsource = 'feedembed';
+      root.visitsource = 'feedembed';
     } else {
-      return root.visitsource = 'direct';
+      root.visitsource = 'direct';
     }
   };
   haveFullName = function(){

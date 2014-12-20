@@ -114,12 +114,14 @@ get_study1 = (req, res) ->
 app.get '/study1', get_study1
 app.get '/study1.html', get_study1
 
+/*
 app.get '/viewlog', (req, res) ->
   body = req.query
   get-logs-collection (logs, db) ->
     logs.find(body).toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
+*/
 
 app.get '/viewlogemail', (req, res) ->
   get-logs-email-collection (logs, db) ->
@@ -141,11 +143,13 @@ app.get '/viewlogquiz', (req, res) ->
       res.send <| JSON.stringify results
       db.close()
 
+/*
 app.get '/viewlogfb', (req, res) ->
   get-logs-fb-collection (logs, db) ->
     logs.find().toArray (err, results) ->
       res.send <| JSON.stringify results
       db.close()
+*/
 
 app.get '/email-japanese.png', (req, res) ->
   addlogemail {type: 'emailopened', username: req.query.emailuser, timesent: req.query.timesent, timeopened: Date.now()}
