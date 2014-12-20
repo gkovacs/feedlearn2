@@ -51,7 +51,7 @@ get-events-collection = (callback) ->
 
 get-logs-collection = (callback) ->
   get-mongo-db (db) ->
-    callback db.collection('logs'), db
+    callback db.collection('logs2'), db
 
 get-logs-email-collection = (callback) ->
   get-mongo-db (db) ->

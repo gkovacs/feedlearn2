@@ -50,7 +50,7 @@
   };
   getLogsCollection = function(callback){
     return getMongoDb(function(db){
-      return callback(db.collection('logs'), db);
+      return callback(db.collection('logs2'), db);
     });
   };
   getLogsEmailCollection = function(callback){

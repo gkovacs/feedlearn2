@@ -727,7 +727,7 @@
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
     root.quizid = (ref$ = param.quizid) != null
       ? ref$
-      : randstr();
+      : randstr(25);
     if (root.fullname != null) {
       setvar('fullname', root.fullname);
       window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
