@@ -477,6 +477,7 @@ set-visit-source = ->
     root.visitsource = 'feedembed'
   else
     root.visitsource = 'direct'
+  return
 
 have-full-name = ->
   $('.outermainpage').hide()
