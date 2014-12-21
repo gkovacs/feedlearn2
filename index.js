@@ -132,10 +132,11 @@
     seenidx = {};
     seenidx[elem.idx] = true;
     while (output.length < n) {
-      newidx = selectIdx(list);
+      elem = selectElem(list);
+      newidx = elem.idx;
       if (seenidx[newidx] == null) {
         seenidx[newidx] = true;
-        output.push(list[newidx]);
+        output.push(elem);
       }
     }
     return output;
@@ -611,6 +612,7 @@
     $('.outermainpage').hide();
     $('#mainviewpage').show();
     param = getUrlParameters();
+    root.openedtime = Date.now();
     return updatecookiesandevents(function(){
       var requiredTest, condition;
       setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
@@ -647,7 +649,15 @@
           type: 'webvisit'
         });
       }
-      return gotoPage(firstNonNull(param.page, 'quiz'));
+      gotoPage(firstNonNull(param.page, 'quiz'));
+      return $(document).mousemove(function(){
+        if (root.firstmousemove == null) {
+          root.firstmousemove = true;
+          return addlog({
+            type: 'firstmousemove'
+          });
+        }
+      });
     });
   };
   injectFacebookTag = function(){

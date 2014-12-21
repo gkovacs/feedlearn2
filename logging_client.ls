@@ -25,13 +25,15 @@ mklogdata = (logdata) ->
   data.lang = getvar('lang')
   data.format = getvar('format')
   data.scriptformat = getvar('scriptformat')
+  data.condition = getvar('condition')
   if root.qcontext?
     data.qcontext = root.qcontext
   if root.quizid?
     data.quizid = root.quizid
   if root.visitsource?
     data.visitsource = root.visitsource
-  data.condition = getvar('condition')
+  if root.openedtime?
+    data.openedtime = root.openedtime
   data.time = Date.now()
   data.timeloc = new Date().toString()
   return data

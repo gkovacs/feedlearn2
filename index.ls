@@ -105,10 +105,12 @@ select-n-elem-except-elem = (list, elem, n) ->
   seenidx = {}
   seenidx[elem.idx] = true
   while output.length < n
-    newidx = select-idx list
+    #newidx = select-idx list
+    elem = select-elem list
+    newidx = elem.idx
     if not seenidx[newidx]?
       seenidx[newidx] = true
-      output.push list[newidx]
+      output.push elem
   return output
 
 swap-idx-in-list = (list, idx1, idx2) ->
@@ -483,6 +485,7 @@ have-full-name = ->
   $('.outermainpage').hide()
   $('#mainviewpage').show()
   param = getUrlParameters()
+  root.openedtime = Date.now()
   updatecookiesandevents ->
     set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
     set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
@@ -509,6 +512,10 @@ have-full-name = ->
       root.qcontext = 'website'
       addlog {type: 'webvisit'}
     goto-page <| first-non-null param.page, 'quiz'
+    $(document).mousemove ->
+      if not root.firstmousemove?
+        root.firstmousemove = true
+        addlog {type: 'firstmousemove'}
 
 inject-facebook-tag = ->
   console.log 'inject-facebook-tag called'

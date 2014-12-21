@@ -28,6 +28,7 @@
     data.lang = getvar('lang');
     data.format = getvar('format');
     data.scriptformat = getvar('scriptformat');
+    data.condition = getvar('condition');
     if (root.qcontext != null) {
       data.qcontext = root.qcontext;
     }
@@ -37,7 +38,9 @@
     if (root.visitsource != null) {
       data.visitsource = root.visitsource;
     }
-    data.condition = getvar('condition');
+    if (root.openedtime != null) {
+      data.openedtime = root.openedtime;
+    }
     data.time = Date.now();
     data.timeloc = new Date().toString();
     return data;
