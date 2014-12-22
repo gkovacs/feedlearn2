@@ -481,7 +481,7 @@
       type: 'linkopen',
       linkopen: 'link'
     });
-    return window.open('https://feedlearn.herokuapp.com/?webvisit=true&fromfeedlink=true');
+    return window.open('/?webvisit=true&fromfeedlink=true');
   };
   shallowCopy = function(dict){
     return $.extend({}, dict);

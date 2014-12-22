@@ -65,8 +65,8 @@ export printcb = (...args) ->
 
 export forcehttps = ->
   #if window.location.href.startsWith('http://feedlearn.herokuapp.com')
-  if window.location.href.indexOf('http://feedlearn.herokuapp.com') == 0
-    window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com')
+  if window.location.href.indexOf('http://') == 0 and window.location.href.indexOf('http://localhost') == -1
+    window.location.href = window.location.href.split('http://').join('https://')
 
 export updatecookies = (callback) ->
   username = get-user-name()

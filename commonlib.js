@@ -95,8 +95,8 @@
     return results$;
   };
   out$.forcehttps = forcehttps = function(){
-    if (window.location.href.indexOf('http://feedlearn.herokuapp.com') === 0) {
-      return window.location.href = window.location.href.split('http://feedlearn.herokuapp.com').join('https://feedlearn.herokuapp.com');
+    if (window.location.href.indexOf('http://') === 0 && window.location.href.indexOf('http://localhost') === -1) {
+      return window.location.href = window.location.href.split('http://').join('https://');
     }
   };
   out$.updatecookies = updatecookies = function(callback){
