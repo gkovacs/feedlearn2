@@ -26,6 +26,8 @@ mklogdata = (logdata) ->
   data.format = getvar('format')
   data.scriptformat = getvar('scriptformat')
   data.condition = getvar('condition')
+  data.fbname = getvar('fbname')
+  data.fburl = getvar('fburl')
   if root.qcontext?
     data.qcontext = root.qcontext
   if root.quizid?

@@ -572,7 +572,13 @@ $(document).ready ->
     setvar 'fullname', root.fullname
     window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
     return
-  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username')
+  fbname = getvar 'fbname'
+  if fbname?
+    setvar 'fbname', fbname
+  fburl = getvar 'fburl'
+  if fburl?
+    setvar 'fburl', fburl
+  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username'), fbname
   #if not getvar('fullname')? and not getvar('username')
   #  window.location = '/study1'
   #  return

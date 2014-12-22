@@ -476,7 +476,7 @@
     return fbTryLoginManual();
   };
   $(document).ready(function(){
-    var param;
+    var param, fbname, fburl;
     forcehttps();
     setvar('hideoption', true);
     param = getUrlParameters();
@@ -495,7 +495,15 @@
       };
       toastr.error('FeedLearn currently only supports the Google Chrome browser');
     }
-    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
+    fbname = getvar('fbname');
+    if (fbname != null) {
+      setvar('fbname', fbname);
+    }
+    fburl = getvar('fburl');
+    if (fburl != null) {
+      setvar('fburl', fburl);
+    }
+    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'), fbname);
     preventAccordionCollapsing();
     if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
       return haveFullName();

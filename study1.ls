@@ -462,7 +462,13 @@ $(document).ready ->
       extendedTimeOut: 0
     }
     toastr.error 'FeedLearn currently only supports the Google Chrome browser'
-  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username') #, 'Anonymous User'
+  fbname = getvar 'fbname'
+  if fbname?
+    setvar 'fbname', fbname
+  fburl = getvar 'fburl'
+  if fburl?
+    setvar 'fburl', fburl
+  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username'), fbname #, 'Anonymous User'
   prevent-accordion-collapsing()
   if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
     have-full-name()

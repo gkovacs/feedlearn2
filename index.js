@@ -728,7 +728,7 @@
     return clearlocalstorage();
   };
   $(document).ready(function(){
-    var param, ref$;
+    var param, ref$, fbname, fburl;
     forcehttps();
     param = getUrlParameters();
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
@@ -740,7 +740,15 @@
       window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
       return;
     }
-    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'));
+    fbname = getvar('fbname');
+    if (fbname != null) {
+      setvar('fbname', fbname);
+    }
+    fburl = getvar('fburl');
+    if (fburl != null) {
+      setvar('fburl', fburl);
+    }
+    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'), fbname);
     if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
       return haveFullName();
     } else {
