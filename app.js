@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, ref$, filter, maximum, mongo, MongoClient, Grid, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, ref$, filter, maximum, mongo, MongoClient, Grid, mongohq, mongolab, mongosoup, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -7,8 +7,15 @@
   ref$ = require('prelude-ls'), filter = ref$.filter, maximum = ref$.maximum;
   mongo = require('mongodb');
   MongoClient = mongo.MongoClient, Grid = mongo.Grid;
-  mongourl = process.env.MONGOHQ_URL;
-  mongourl2 = process.env.MONGOLAB_URI;
+  mongohq = process.env.MONGOHQ_URL;
+  mongolab = process.env.MONGOLAB_URI;
+  mongosoup = process.env.MONGOSOUP_URL;
+  mongourl = mongohq;
+  mongourl2 = mongolab;
+  if (mongohq == null && mongolab != null) {
+    mongourl = mongolab;
+    mongourl2 = mongosoup;
+  }
   if (mongourl == null) {
     mongourl = 'mongodb://localhost:27017/default';
   }

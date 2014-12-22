@@ -11,8 +11,16 @@ require! {
 
 mongo = require 'mongodb'
 {MongoClient, Grid} = mongo
-mongourl = process.env.MONGOHQ_URL
-mongourl2 = process.env.MONGOLAB_URI
+
+mongohq = process.env.MONGOHQ_URL
+mongolab = process.env.MONGOLAB_URI
+mongosoup = process.env.MONGOSOUP_URL
+
+mongourl = mongohq
+mongourl2 = mongolab
+if not mongohq? and mongolab?
+  mongourl = mongolab
+  mongourl2 = mongosoup
 if not mongourl?
   mongourl = 'mongodb://localhost:27017/default'
 if not mongourl2?
