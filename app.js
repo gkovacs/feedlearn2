@@ -78,7 +78,7 @@
   };
   getLogsFbCollection = function(callback){
     return getMongoDb2(function(db){
-      return callback(db.collection('fblogs7'), db);
+      return callback(db.collection('fblogs8'), db);
     });
   };
   app = express();
