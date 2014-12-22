@@ -83,6 +83,10 @@
     if (root.fullname != null) {
       return root.fullname;
     }
+    root.fullname = getvar('fbname');
+    if (root.fullname != null) {
+      return root.fullname;
+    }
     return 'Anonymous User';
   };
   out$.printcb = printcb = function(){

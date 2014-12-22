@@ -116,7 +116,7 @@
     return postStartEvent(param.type + getPretestNum());
   };
   $(document).ready(function(){
-    var param, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
+    var param, fbname, fburl, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
     forcehttps();
     param = getUrlParameters();
     if (param.type === 'posttest') {
@@ -125,6 +125,14 @@
     }
     if (getPretestNum() !== 0) {
       $('#weeknum').text(getPretestNum());
+    }
+    fbname = getvar('fbname');
+    if (fbname != null) {
+      setvar('fbname', fbname);
+    }
+    fburl = getvar('fburl');
+    if (fburl != null) {
+      setvar('fburl', fburl);
     }
     root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
     if (root.fullname != null) {

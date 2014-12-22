@@ -77,6 +77,12 @@ $(document).ready ->
     $('#pretestonly').hide()
   if get-pretest-num() != 0
     $('#weeknum').text get-pretest-num()
+  fbname = getvar 'fbname'
+  if fbname?
+    setvar 'fbname', fbname
+  fburl = getvar 'fburl'
+  if fburl?
+    setvar 'fburl', fburl
   root.fullname = first-non-null param.fullname, param.username, param.user, param.name
   if root.fullname?
     setvar 'fullname', root.fullname
