@@ -59,6 +59,7 @@ get-pretest-num = ->
 
 export submit-answers = ->
   param = getUrlParameters()
+  post-start-event(param.type + get-pretest-num())
   addlog {type: 'vocabquiz', quiztype: param.type, vocab: get-flashcard-set(), answers: getCurrentAnswers()}
   addlogquiz {type: 'vocabquiz', quiztype: param.type, vocab: get-flashcard-set(), answers: getCurrentAnswers()}
   #alert 'Answers submitted!'
@@ -67,7 +68,6 @@ export submit-answers = ->
   else
     $('#submitmessage').css('color', 'green').html 'Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions'
   $('#submitbutton').attr 'disabled', true
-  post-start-event(param.type + get-pretest-num())
 
 $(document).ready ->
   forcehttps()

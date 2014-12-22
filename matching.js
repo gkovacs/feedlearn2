@@ -95,6 +95,7 @@
   out$.submitAnswers = submitAnswers = function(){
     var param;
     param = getUrlParameters();
+    postStartEvent(param.type + getPretestNum());
     addlog({
       type: 'vocabquiz',
       quiztype: param.type,
@@ -112,8 +113,7 @@
     } else {
       $('#submitmessage').css('color', 'green').html('Answers submitted! Please return to <a href="https://feedlearn.herokuapp.com/study1" target="_blank">https://feedlearn.herokuapp.com/study1</a> for instructions');
     }
-    $('#submitbutton').attr('disabled', true);
-    return postStartEvent(param.type + getPretestNum());
+    return $('#submitbutton').attr('disabled', true);
   };
   $(document).ready(function(){
     var param, fbname, fburl, flashcard_set, flashcards, selectOptions, i$, ref$, len$, idx, wordinfo, curinput, j$, len1$, engword;
