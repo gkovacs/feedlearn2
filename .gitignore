@@ -1,5 +1,8 @@
 mongodbstore
 node_modules
+.server.csr
+.server.crt
+.server.key
 .DS_Store
 __pycache__
 *.pyc

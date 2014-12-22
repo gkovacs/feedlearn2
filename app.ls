@@ -3,6 +3,7 @@ require! {
   'path'
   'body-parser'
   'async'
+  'fs'
 }
 
 {filter, maximum} = require 'prelude-ls'
@@ -89,7 +90,24 @@ app.set 'views', __dirname
 
 app.set 'port', (process.env.PORT || 5000)
 
-app.listen app.get('port'), '0.0.0.0'
+if not process.env.PORT? # not heroku - is localhost
+  # to generate self-signed certificate:
+  # http://www.akadia.com/services/ssh_test_certificate.html
+  #
+  # openssl genrsa -des3 -out server.key 1024
+  # openssl req -new -key server.key -out server.csr
+  # cp server.key server.key.org
+  # openssl rsa -in server.key.org -out server.key
+  # openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+  require('https').createServer({
+    key: fs.readFileSync('.server.key')
+    cert: fs.readFileSync('.server.crt')
+    requestCert: false
+    rejectUnauthorized: false
+  }, app).listen(5001, '0.0.0.0') # https
+  app.listen 5000, '0.0.0.0' # http
+else
+  app.listen app.get('port'), '0.0.0.0'
 console.log 'Listening on port ' + app.get('port')
 
 # GET statements
