@@ -1,6 +1,6 @@
 root = exports ? this
 
-{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies, updatecookiesandevents} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, get-user-events, get-condition, forcehttps, updatecookies, updatecookiesandevents, getFBAppId} = root # commonlib.ls
 {post-json, post-start-event, addlog, addlogfblogin} = root # logging_client.ls
 
 root.skip-prereqs = false
@@ -185,7 +185,7 @@ It should look like this:<br><br>
 </div>
 '''
 none-description = '''
-This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="https://feedlearn.herokuapp.com/?webvisit=true" target="_blank">FeedLearn website</a> to study.<br>
+This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="/?webvisit=true" target="_blank">FeedLearn website</a> to study.<br>
 The email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>
 It should look like this:<br><br>
 
@@ -419,21 +419,14 @@ export fb-try-login-manual = ->
 
 window.fbAsyncInit = ->
   console.log 'fbAsyncInit called'
-  appid = '1582092298679557'
-  if window.location.href.indexOf('http://localhost') == 0
-    appid = '1582095062012614'
+  appid = getFBAppId()
   FB.init {
     appId  : appid
     cookie : true  # enable cookies to allow the server to access the session
     xfbml  : true #true # true,  # parse social plugins on this page
     version: 'v2.1' # use version 2.1
   }
-  #FB.XFBML.parse document.getElementById('fbloginbutton')
-
-  #FB.get-login-status fb-login-status-change-callback
   fb-try-login-automatic()
-  #$('#getfullname').show()
-  #$('#fullnameinput').focus()
 
 inject-facebook-tag = ->
   console.log 'inject-facebook-tag called'

@@ -1,7 +1,7 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, updatecookiesandevents, postJson, postStartEvent, addlog, addlogfblogin, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, showStudyFormatDescriptions, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, postJson, postStartEvent, addlog, addlogfblogin, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, showStudyFormatDescriptions, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents, getFBAppId = root.getFBAppId;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog, addlogfblogin = root.addlogfblogin;
   root.skipPrereqs = false;
   readableTestNames = {
@@ -168,7 +168,7 @@
   condition_to_order = [['interactive', 'link', 'none'], ['interactive', 'none', 'link'], ['link', 'interactive', 'none'], ['link', 'none', 'interactive'], ['none', 'interactive', 'link'], ['none', 'link', 'interactive']];
   interactiveDescription = 'This week, you will be shown quizzes that you can interact with directly inside your Facebook feed, without leaving it.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not see the quizzes in your Facebook feed.<br>\n</div>';
   linkDescription = 'This week, you will be shown notifications inside your feed asking you to visit the FeedLearn website.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-link-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not see the links in your Facebook feed.\n</div>';
-  noneDescription = 'This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="https://feedlearn.herokuapp.com/?webvisit=true" target="_blank">FeedLearn website</a> to study.<br>\nThe email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-email-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not receive the daily email by the next day at 11AM.\n</div>';
+  noneDescription = 'This week, you will not be shown quizzes in your Facebook feed, but will rather be sent a daily email reminder asking you to visit the <a href="/?webvisit=true" target="_blank">FeedLearn website</a> to study.<br>\nThe email will come around 10AM each day (Pacific Time). Please do not mark it as spam.<br>\nIt should look like this:<br><br>\n\n<img src="feedlearn-email-screenshot.png" style="border-radius: 15px"></img>\n\n<div>\n<br><br>\n<a href="geza@cs.stanford.edu">Email me</a> if you have already finished the pre-test for this week\'s vocabulary, but you do not receive the daily email by the next day at 11AM.\n</div>';
   getDescriptionForFormatAndWeek = function(format, weeknum){
     var firstpart, formatDescription;
     firstpart = (function(){
@@ -452,10 +452,7 @@
   window.fbAsyncInit = function(){
     var appid;
     console.log('fbAsyncInit called');
-    appid = '1582092298679557';
-    if (window.location.href.indexOf('http://localhost') === 0) {
-      appid = '1582095062012614';
-    }
+    appid = getFBAppId();
     FB.init({
       appId: appid,
       cookie: true,

@@ -125,3 +125,11 @@ export updatecookiesandevents = (callback) ->
     #if needrefresh
     #  window.location = window.location
     callback() if callback?
+
+export getFBAppId = ->
+  appid = '1582092298679557'
+  if window.location.href.indexOf('https://feedlearn2.herokuapp.com') == 0
+    appid = '718471924927544'
+  if window.location.href.indexOf('http://localhost') == 0
+    appid = '1582095062012614'
+  return appid

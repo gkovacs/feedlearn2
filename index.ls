@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index} = require \prelude-ls
 
-{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId} = root # commonlib.ls
 {addlog, addlogfblogin} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
@@ -542,9 +542,7 @@ export fb-try-login-automatic = ->
 
 window.fbAsyncInit = ->
   console.log 'fbAsyncInit called'
-  appid = '1582092298679557'
-  if window.location.href.indexOf('http://localhost') == 0
-    appid = '1582095062012614'
+  appid = getFBAppId()
   FB.init {
     appId  : appid
     cookie : true  # enable cookies to allow the server to access the session

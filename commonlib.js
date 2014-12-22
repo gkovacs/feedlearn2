@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, setvar, getvar, getevent, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, updatecookiesandevents, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, firstNonNull, getUrlParameters, setvar, getvar, getevent, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.firstNonNull = firstNonNull = function(){
     var args, i$, len$, x;
@@ -188,5 +188,16 @@
         return callback();
       }
     });
+  };
+  out$.getFBAppId = getFBAppId = function(){
+    var appid;
+    appid = '1582092298679557';
+    if (window.location.href.indexOf('https://feedlearn2.herokuapp.com') === 0) {
+      appid = '718471924927544';
+    }
+    if (window.location.href.indexOf('http://localhost') === 0) {
+      appid = '1582095062012614';
+    }
+    return appid;
   };
 }).call(this);
