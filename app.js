@@ -88,12 +88,7 @@
   app.set('views', __dirname);
   app.set('port', process.env.PORT || 5000);
   if (process.env.PORT == null) {
-    require('https').createServer({
-      key: fs.readFileSync('.server.key'),
-      cert: fs.readFileSync('.server.crt'),
-      requestCert: false,
-      rejectUnauthorized: false
-    }, app).listen(5001, '0.0.0.0');
+    require('self-signed-https')(app).listen(5001, '0.0.0.0');
     app.listen(5000, '0.0.0.0');
   } else {
     app.listen(app.get('port'), '0.0.0.0');
