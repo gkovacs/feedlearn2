@@ -1,5 +1,6 @@
 mongodbstore
 node_modules
+gulpfile.js
 .server.csr
 .server.crt
 .server.key
