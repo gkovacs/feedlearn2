@@ -36,20 +36,34 @@ normalize_values_to_sum_to_1 = (dict) ->
 export word_wrong = (kanji) ->
   curbucket = root.srs_words[kanji]
   if not curbucket?
-    curbucket = 1
-  root.srs_words[kanji] = Math.max(1, curbucket - 1)
+    curbucket = {
+      level: 1
+      practiced: Date.now()
+    }
+  else
+    curbucket.level = Math.max(1, curbucket - 1)
+    curbucket.practiced = Date.now()
+  root.srs_words[kanji] = curbucket
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
 export word_correct = (kanji) ->
   curbucket = root.srs_words[kanji]
   if not curbucket?
-    curbucket = 1
-  root.srs_words[kanji] = curbucket + 1
+    curbucket = {
+      level: 2
+      practiced: Date.now()
+    }
+  else
+    curbucket.level = Math.max(2, curbucket.level + 1)
+    curbucket.practiced = Date.now()
+  root.srs_words[kanji] = curbucket
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
 is_srs_correct = (srs_words) ->
+  if not (srs_words['_format']? and srs_words['_format'] == 'memreflex_progressive_1')
+    return false
   for wordinfo in flashcard_sets[getvar('lang')]
     if not srs_words[wordinfo.kanji]?
       return false
@@ -64,15 +78,18 @@ load-srs-words = ->
         if is_srs_correct root.srs_words
           console.log 'srs_' + getvar('lang') + ' loaded successfully'
           return
+        root.srs_words = null
       catch
         root.srs_words = null
   console.log 'rebuildling srs_' + getvar('lang')
   root.srs_words = {}
   for wordinfo in flashcard_sets[getvar('lang')]
-    root.srs_words[wordinfo.kanji] = 5
+    root.srs_words[wordinfo.kanji] = {
+      level: 0 # 0 = has not yet been introduced
+      practiced: null
+    }
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
-
 
 set-flashcard-set = (new_flashcard_set) ->
   new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set
@@ -139,31 +156,56 @@ get_kanji_probabilities = ->
   return normalize_values_to_sum_to_1 values_over_1_exp(root.srs_words)
 
 export select_kanji_from_srs = ->
-  randval = Math.random()
-  cursum = 0
-  for k,v of get_kanji_probabilities()
-    cursum += v
-    if cursum >= randval
-      return k
-  return k
+  curtime = Date.now()
+  allkanji = root.vocabulary.map((wordinfo) -> wordinfo.kanji)
+  overdue_kanji = allkanji.filter (kanji) ->
+    {level, practiced} = root.srs_words[kanji]
+    if level <= 0
+      return false
+    return curtime >= practiced + 1000 * 5**level
+  if overdue_kanji.length > 0
+    randidx = Math.random() * overdue_kanji.length |> Math.floor
+    return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
+  else # no overdue kanji - pick a new one
+    newkanji = allkanji.filter (kanji) ->
+      {level, practiced} = root.srs_words[kanji]
+      return (level == 0)
+    if newkanji.length > 0 # pick one of the new kanji
+      randidx = Math.random() * newkanji.length |> Math.floor
+      return newkanji[randidx]
+    else # no new kanji left - pick one randomly
+      randidx = Math.random() * allkanji.length |> Math.floor
+      return allkanji[randidx]
+
+is_kanji_first_time = (kanji) ->
+  #return 
+  if not root.srs_words[kanji]?
+    console.log 'srs.words[kanji] does not exist for ' + kanji
+    return true # this should not happen
+  if not root.srs_words[kanji].level?
+    console.log 'srs.words[kanji].level does not exist for ' + kanji
+    return true # this should not happen
+  return (root.srs_words[kanji].level == 0)
 
 export select_word_from_srs = ->
   kanji = select_kanji_from_srs()
   if not kanji?
     # hrrm seems something is going wrong if we are here
     console.log 'did not find kanji from srs'
-    return select-elem root.vocabulary
+    wordinfo = select-elem root.vocabulary
+    return {word: wordinfo, isfirsttime: is_kanji_first_time(wordinfo.kanji)}
   for wordinfo in root.vocabulary
     if wordinfo.kanji == kanji
-      return wordinfo
+      return {word: wordinfo, isfirsttime: is_kanji_first_time(wordinfo.kanji)}
   # hrrm seems something is going wrong if we are here
   console.log 'selected kanji was not in vocabulary'
-  return select-elem root.vocabulary
+  wordinfo = select-elem root.vocabulary
+  return {word: wordinfo, isfirsttime: is_kanji_first_time(wordinfo.kanji)}
 
 export new-question = ->
   #console.log select_kanji_from_srs()
   #word = select-elem root.vocabulary |> deep-copy
-  word = select_word_from_srs() |> deep-copy
+  {word,isfirsttime} = select_word_from_srs() |> deep-copy
   word.correct = true
   root.current-word = word
   otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy

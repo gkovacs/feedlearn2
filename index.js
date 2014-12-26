@@ -1,5 +1,5 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, word_wrong, word_correct, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   findIndex = require('prelude-ls').findIndex;
@@ -46,22 +46,37 @@
     var curbucket;
     curbucket = root.srs_words[kanji];
     if (curbucket == null) {
-      curbucket = 1;
+      curbucket = {
+        level: 1,
+        practiced: Date.now()
+      };
+    } else {
+      curbucket.level = Math.max(1, curbucket - 1);
+      curbucket.practiced = Date.now();
     }
-    root.srs_words[kanji] = Math.max(1, curbucket - 1);
+    root.srs_words[kanji] = curbucket;
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
   out$.word_correct = word_correct = function(kanji){
     var curbucket;
     curbucket = root.srs_words[kanji];
     if (curbucket == null) {
-      curbucket = 1;
+      curbucket = {
+        level: 2,
+        practiced: Date.now()
+      };
+    } else {
+      curbucket.level = Math.max(2, curbucket.level + 1);
+      curbucket.practiced = Date.now();
     }
-    root.srs_words[kanji] = curbucket + 1;
+    root.srs_words[kanji] = curbucket;
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
   is_srs_correct = function(srs_words){
     var i$, ref$, len$, wordinfo;
+    if (!(srs_words['_format'] != null && srs_words['_format'] === 'memreflex_progressive_1')) {
+      return false;
+    }
     for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
       if (srs_words[wordinfo.kanji] == null) {
@@ -81,6 +96,7 @@
             console.log('srs_' + getvar('lang') + ' loaded successfully');
             return;
           }
+          root.srs_words = null;
         } catch (e$) {
           e = e$;
           root.srs_words = null;
@@ -91,7 +107,10 @@
     root.srs_words = {};
     for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
-      root.srs_words[wordinfo.kanji] = 5;
+      root.srs_words[wordinfo.kanji] = {
+        level: 0,
+        practiced: null
+      };
     }
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
@@ -178,38 +197,82 @@
     return normalize_values_to_sum_to_1(values_over_1_exp(root.srs_words));
   };
   out$.select_kanji_from_srs = select_kanji_from_srs = function(){
-    var randval, cursum, k, ref$, v;
-    randval = Math.random();
-    cursum = 0;
-    for (k in ref$ = get_kanji_probabilities()) {
-      v = ref$[k];
-      cursum += v;
-      if (cursum >= randval) {
-        return k;
+    var curtime, allkanji, overdue_kanji, randidx, newkanji;
+    curtime = Date.now();
+    allkanji = root.vocabulary.map(function(wordinfo){
+      return wordinfo.kanji;
+    });
+    overdue_kanji = allkanji.filter(function(kanji){
+      var ref$, level, practiced;
+      ref$ = root.srs_words[kanji], level = ref$.level, practiced = ref$.practiced;
+      if (level <= 0) {
+        return false;
+      }
+      return curtime >= practiced + 1000 * Math.pow(5, level);
+    });
+    if (overdue_kanji.length > 0) {
+      randidx = Math.floor(
+      Math.random() * overdue_kanji.length);
+      return overdue_kanji[randidx];
+    } else {
+      newkanji = allkanji.filter(function(kanji){
+        var ref$, level, practiced;
+        ref$ = root.srs_words[kanji], level = ref$.level, practiced = ref$.practiced;
+        return level === 0;
+      });
+      if (newkanji.length > 0) {
+        randidx = Math.floor(
+        Math.random() * newkanji.length);
+        return newkanji[randidx];
+      } else {
+        randidx = Math.floor(
+        Math.random() * allkanji.length);
+        return allkanji[randidx];
       }
     }
-    return k;
+  };
+  is_kanji_first_time = function(kanji){
+    if (root.srs_words[kanji] == null) {
+      console.log('srs.words[kanji] does not exist for ' + kanji);
+      return true;
+    }
+    if (root.srs_words[kanji].level == null) {
+      console.log('srs.words[kanji].level does not exist for ' + kanji);
+      return true;
+    }
+    return root.srs_words[kanji].level === 0;
   };
   out$.select_word_from_srs = select_word_from_srs = function(){
-    var kanji, i$, ref$, len$, wordinfo;
+    var kanji, wordinfo, i$, ref$, len$;
     kanji = select_kanji_from_srs();
     if (kanji == null) {
       console.log('did not find kanji from srs');
-      return selectElem(root.vocabulary);
+      wordinfo = selectElem(root.vocabulary);
+      return {
+        word: wordinfo,
+        isfirsttime: is_kanji_first_time(wordinfo.kanji)
+      };
     }
     for (i$ = 0, len$ = (ref$ = root.vocabulary).length; i$ < len$; ++i$) {
       wordinfo = ref$[i$];
       if (wordinfo.kanji === kanji) {
-        return wordinfo;
+        return {
+          word: wordinfo,
+          isfirsttime: is_kanji_first_time(wordinfo.kanji)
+        };
       }
     }
     console.log('selected kanji was not in vocabulary');
-    return selectElem(root.vocabulary);
+    wordinfo = selectElem(root.vocabulary);
+    return {
+      word: wordinfo,
+      isfirsttime: is_kanji_first_time(wordinfo.kanji)
+    };
   };
   out$.newQuestion = newQuestion = function(){
-    var word, otherwords, i$, len$, allwords, langname;
-    word = deepCopy(
-    select_word_from_srs());
+    var ref$, word, isfirsttime, otherwords, i$, len$, allwords, langname;
+    ref$ = deepCopy(
+    select_word_from_srs()), word = ref$.word, isfirsttime = ref$.isfirsttime;
     word.correct = true;
     root.currentWord = word;
     otherwords = deepCopy(
