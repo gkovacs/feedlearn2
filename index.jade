@@ -25,6 +25,33 @@ html(lang='en')
     //- audio(style='display: none' src='error.mp3')
     audio#speechsynth(style='display: none' src='error.mp3')
     .bluebackground.outermainpage#mainviewpage(style='background-color: white')
+      #introducewordpage.mainpage(style='display: none')
+        div(style='padding-top: 12px; position: absolute')
+          img(style='border-style: solid; border-width: 1px; border-color: grey' src='feedlearn-40px.png')
+        //- #scorebox(style='position: absolute; right: 5px; border-radius: 10px; width: 50px; height: 50px; background-color: blue')
+        //-  div(style='font-size: 12px') Score:
+        //-  div 
+        div(style='font-size: 18px; text-align: center') New word! Do you want to learn it?
+        #questionworddiv(style='font-size: 30px; text-align: center')
+          span.introducedword(style='font-weight: bold')
+          span#introducedwordaudio.glyphicon.glyphicon-volume-up(onclick='playSoundCurrentWord()' style='cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px')
+          #introducedwordenglish
+        button.btn.btn-lg.btn-default(onclick='introducedwordAlreadyKnow()' style='width: 100%; font-size: 20px; margin-top: 20px')
+          span I already know
+          span 
+          span "
+          span.introducedword
+          span "
+        button.btn.btn-lg.btn-default(onclick='introducedwordAskAgainLater()' style='width: 100%; font-size: 20px')
+          span Ask me again later
+        button.btn.btn-lg.btn-primary(onclick='introducedwordAddToStudyList()' style='width: 100%; font-size: 20px')
+          span Add
+          span 
+          span "
+          span.introducedword
+          span "
+          span 
+          span to my study list
       #quizpage.mainpage(style='display: none')
         div(style='padding-top: 12px; position: absolute')
           img(style='border-style: solid; border-width: 1px; border-color: grey' src='feedlearn-40px.png')

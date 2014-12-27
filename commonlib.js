@@ -99,8 +99,12 @@
     return results$;
   };
   out$.forcehttps = forcehttps = function(){
-    if (window.location.href.indexOf('http://') === 0 && window.location.href.indexOf('http://localhost') === -1) {
-      return window.location.href = window.location.href.split('http://').join('https://');
+    if (window.location.href.indexOf('http://') === 0) {
+      if (window.location.href.indexOf('http://localhost:5000') === 0) {
+        return window.location.href = window.location.href.split('http://localhost:5000').join('https://localhost:5001');
+      } else {
+        return window.location.href = window.location.href.split('http://').join('https://');
+      }
     }
   };
   out$.updatecookies = updatecookies = function(callback){

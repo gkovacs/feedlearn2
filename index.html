@@ -25,6 +25,16 @@
     <div id="fb-root"></div>
     <audio id="speechsynth" style="display: none" src="error.mp3"></audio>
     <div id="mainviewpage" style="background-color: white" class="bluebackground outermainpage">
+      <div id="introducewordpage" style="display: none" class="mainpage">
+        <div style="padding-top: 12px; position: absolute"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png"></div>
+        <div style="font-size: 18px; text-align: center">New word! Do you want to learn it?</div>
+        <div id="questionworddiv" style="font-size: 30px; text-align: center"><span style="font-weight: bold" class="introducedword"></span><span id="introducedwordaudio" onclick="playSoundCurrentWord()" style="cursor: pointer; margin-left: 10px; margin-top: -7px; vertical-align: middle; font-size: 30px" class="glyphicon glyphicon-volume-up"></span>
+          <div id="introducedwordenglish"></div>
+        </div>
+        <button onclick="introducedwordAlreadyKnow()" style="width: 100%; font-size: 20px; margin-top: 20px" class="btn btn-lg btn-default"><span>I already know</span><span> </span><span>"</span><span class="introducedword"></span><span>"</span></button>
+        <button onclick="introducedwordAskAgainLater()" style="width: 100%; font-size: 20px" class="btn btn-lg btn-default"><span>Ask me again later</span></button>
+        <button onclick="introducedwordAddToStudyList()" style="width: 100%; font-size: 20px" class="btn btn-lg btn-primary"><span>Add</span><span> </span><span>"</span><span class="introducedword"></span><span>"</span><span> </span><span>to my study list</span></button>
+      </div>
       <div id="quizpage" style="display: none" class="mainpage">
         <div style="padding-top: 12px; position: absolute"><img style="border-style: solid; border-width: 1px; border-color: grey" src="feedlearn-40px.png"></div>
         <div id="questionmessage" style="font-size: 18px; text-align: center"></div>

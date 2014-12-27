@@ -33,44 +33,46 @@ normalize_values_to_sum_to_1 = (dict) ->
     output[k] = v / current_sum
   return output
 
-export word_wrong = (kanji) ->
-  curbucket = root.srs_words[kanji]
-  if not curbucket?
-    curbucket = {
-      level: 1
-      practiced: Date.now()
-    }
-  else
-    curbucket.level = Math.max(1, curbucket - 1)
-    curbucket.practiced = Date.now()
-  root.srs_words[kanji] = curbucket
+export saveSRS = ->
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
+  return
+
+export word_wrong = (kanji) ->
+  curtime = Date.now()
+  root.srs_words[kanji].practiced = curtime
+  root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].level = 1
+  saveSRS()
   return
 
 export word_correct = (kanji) ->
-  curbucket = root.srs_words[kanji]
-  if not curbucket?
-    curbucket = {
-      level: 2
-      practiced: Date.now()
-    }
-  else
-    curbucket.level = Math.max(2, curbucket.level + 1)
-    curbucket.practiced = Date.now()
-  root.srs_words[kanji] = curbucket
-  localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
+  curtime = Date.now()
+  curlevel = root.srs_words[kanji].level
+  if not (curlevel? and isFinite(curlevel))
+    curlevel = 1
+  root.srs_words[kanji].practiced = curtime
+  root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].level = Math.max(2, curlevel + 1)
+  saveSRS()
   return
 
+export introducedwordAskAgainLater = ->
+  console.log 'ask again later'
+
+export introducedwordAlreadyKnow = ->
+  console.log 'already know'
+
+export introducedwordAddToStudyList = ->
+  console.log 'add to study list'
+
 is_srs_correct = (srs_words) ->
-  if not (srs_words['_format']? and srs_words['_format'] == 'memreflex_progressive_1')
-    return false
   for wordinfo in flashcard_sets[getvar('lang')]
     if not srs_words[wordinfo.kanji]?
       return false
   return true
 
 load-srs-words = ->
-  if localStorage?
+  if localStorage? and localStorage.getItem('srsformat_' + getvar('lang')) == 'memreflex_progressive_1'
     stored_srs = localStorage.getItem('srs_' + getvar('lang'))
     if stored_srs?
       try
@@ -88,7 +90,8 @@ load-srs-words = ->
       level: 0 # 0 = has not yet been introduced
       practiced: null
     }
-  localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
+  saveSRS()
+  localStorage.setItem ('srsformat_' + getvar('lang')), 'memreflex_progressive_1'
   return
 
 set-flashcard-set = (new_flashcard_set) ->
@@ -164,9 +167,12 @@ export select_kanji_from_srs = ->
       return false
     return curtime >= practiced + 1000 * 5**level
   if overdue_kanji.length > 0
+    console.log 'currently overdue:'
+    console.log JSON.stringify overdue_kanji
     randidx = Math.random() * overdue_kanji.length |> Math.floor
     return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
   else # no overdue kanji - pick a new one
+    console.log 'no kanji currently overdue! picking new one'
     newkanji = allkanji.filter (kanji) ->
       {level, practiced} = root.srs_words[kanji]
       return (level == 0)
@@ -202,10 +208,32 @@ export select_word_from_srs = ->
   wordinfo = select-elem root.vocabulary
   return {word: wordinfo, isfirsttime: is_kanji_first_time(wordinfo.kanji)}
 
+export introduce-word = ->
+  $('.mainpage').hide()
+  $('#introducewordpage').show()
+  word = root.current-word
+  if root.scriptformat == 'show romanized only' or word.romaji == word.kanji
+    $('.introducedword').text word.romaji
+  else
+    $('.introducedword').text(word.romaji + ' (' + word.kanji + ')')
+  $('#introducedwordenglish').text(word.english)
+  $('#introducedwordaudio').show()
+  $('#answeroptions').html('')
+  $('#answeroptions').append J('button.btn.btn-default').css({
+    width: '100%'
+    'font-size': '20px'
+  }).attr('type', 'button').text('Already know word')
+  $('#answeroptions').append J('button.btn.btn-default').css({
+    width: '100%'
+    'font-size': '20px'
+  }).attr('type', 'button').text('Add word to study list')
+  return
+
 export new-question = ->
   #console.log select_kanji_from_srs()
   #word = select-elem root.vocabulary |> deep-copy
   {word,isfirsttime} = select_word_from_srs() |> deep-copy
+  root.isfirsttime = isfirsttime
   word.correct = true
   root.current-word = word
   otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
@@ -215,13 +243,19 @@ export new-question = ->
   langname = ['English', current_language_name ]|> select-elem
   root.curq-allwords = allwords
   root.curq-langname = langname
-  addlog {type: 'newquestion', questiontype: root.curq-langname, allwords: root.curq-allwords, word: root.current-word, qnum: root.qnum}
+  if root.isfirsttime
+    addlog {type: 'introduceword', word: root.current-word, qnum: root.qnum}
+  else
+    addlog {type: 'newquestion', questiontype: root.curq-langname, allwords: root.curq-allwords, word: root.current-word, qnum: root.qnum}
   root.qnum += 1
   root.numtries = 0
   root.showedanswers = false
   refresh-question()
 
 export refresh-question = ->
+  if root.isfirsttime
+    introduce-word()
+    return
   $('#showanswersbutton').attr('disabled', false)
   question-with-words root.curq-allwords, root.curq-langname
 
@@ -245,6 +279,8 @@ export play-sound-current-word = ->
 
 
 question-with-words = (allwords, langname) ->
+  $('.mainpage').hide()
+  $('#quizpage').show()
   word-idx = find-index (.correct), allwords
   word = allwords[word-idx]
   if langname == 'English'
