@@ -1,8 +1,8 @@
 (function(){
-  var root, J, findIndex, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, ref$, findIndex, minimumBy, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, saveKanjiSeen, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
-  findIndex = require('prelude-ls').findIndex;
+  ref$ = require('prelude-ls'), findIndex = ref$.findIndex, minimumBy = ref$.minimumBy;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents, getFBAppId = root.getFBAppId;
   addlog = root.addlog, addlogfblogin = root.addlogfblogin;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
@@ -45,6 +45,18 @@
   out$.saveSRS = saveSRS = function(){
     localStorage.setItem('srs_' + getvar('lang'), JSON.stringify(root.srs_words));
   };
+  out$.saveKanjiSeen = saveKanjiSeen = function(kanji, options_list){
+    var curtime, i$, len$, opt;
+    curtime = Date.now();
+    root.srs_words[kanji].seen = curtime;
+    if (options_list != null) {
+      for (i$ = 0, len$ = options_list.length; i$ < len$; ++i$) {
+        opt = options_list[i$];
+        root.srs_words[opt].optseen = curtime;
+      }
+    }
+    saveSRS();
+  };
   out$.word_wrong = word_wrong = function(kanji){
     var curtime;
     curtime = Date.now();
@@ -66,13 +78,34 @@
     saveSRS();
   };
   out$.introducedwordAskAgainLater = introducedwordAskAgainLater = function(){
-    return console.log('ask again later');
+    var kanji, curtime;
+    kanji = root.currentWord.kanji;
+    console.log('ask again later ' + kanji);
+    curtime = Date.now();
+    root.srs_words[kanji].seen = curtime;
+    saveSRS();
+    newQuestion();
   };
   out$.introducedwordAlreadyKnow = introducedwordAlreadyKnow = function(){
-    return console.log('already know');
+    var kanji, curtime;
+    kanji = root.currentWord.kanji;
+    console.log('already know ' + kanji);
+    curtime = Date.now();
+    root.srs_words[kanji].known = true;
+    root.srs_words[kanji].seen = curtime;
+    saveSRS();
+    newQuestion();
   };
   out$.introducedwordAddToStudyList = introducedwordAddToStudyList = function(){
-    return console.log('add to study list');
+    var kanji, curtime;
+    kanji = root.currentWord.kanji;
+    console.log('add to study list ' + kanji);
+    curtime = Date.now();
+    root.srs_words[kanji].seen = curtime;
+    root.srs_words[kanji].level = 1;
+    root.srs_words[kanji].studying = true;
+    saveSRS();
+    newQuestion();
   };
   is_srs_correct = function(srs_words){
     var i$, ref$, len$, wordinfo;
@@ -108,7 +141,11 @@
       wordinfo = ref$[i$];
       root.srs_words[wordinfo.kanji] = {
         level: 0,
-        practiced: null
+        practiced: 0,
+        seen: 0,
+        optseen: 0,
+        known: false,
+        studying: false
       };
     }
     saveSRS();
@@ -197,12 +234,18 @@
     return normalize_values_to_sum_to_1(values_over_1_exp(root.srs_words));
   };
   out$.select_kanji_from_srs = select_kanji_from_srs = function(){
-    var curtime, allkanji, overdue_kanji, randidx, newkanji;
+    var curtime, allkanji, notknown_kanji, studying_kanji, overdue_kanji, newkanji, randidx;
     curtime = Date.now();
     allkanji = root.vocabulary.map(function(wordinfo){
       return wordinfo.kanji;
     });
-    overdue_kanji = allkanji.filter(function(kanji){
+    notknown_kanji = allkanji.filter(function(kanji){
+      return !root.srs_words[kanji].known;
+    });
+    studying_kanji = notknown_kanji.filter(function(kanji){
+      return root.srs_words[kanji].studying;
+    });
+    overdue_kanji = studying_kanji.filter(function(kanji){
       var ref$, level, practiced;
       ref$ = root.srs_words[kanji], level = ref$.level, practiced = ref$.practiced;
       if (level <= 0) {
@@ -213,20 +256,22 @@
     if (overdue_kanji.length > 0) {
       console.log('currently overdue:');
       console.log(JSON.stringify(overdue_kanji));
-      randidx = Math.floor(
-      Math.random() * overdue_kanji.length);
-      return overdue_kanji[randidx];
+      return minimumBy(function(kanji){
+        var ref$;
+        return (ref$ = root.srs_words[kanji].seen) != null ? ref$ : 0;
+      }, overdue_kanji);
     } else {
       console.log('no kanji currently overdue! picking new one');
-      newkanji = allkanji.filter(function(kanji){
+      newkanji = notknown_kanji.filter(function(kanji){
         var ref$, level, practiced;
         ref$ = root.srs_words[kanji], level = ref$.level, practiced = ref$.practiced;
         return level === 0;
       });
       if (newkanji.length > 0) {
-        randidx = Math.floor(
-        Math.random() * newkanji.length);
-        return newkanji[randidx];
+        return minimumBy(function(kanji){
+          var ref$;
+          return (ref$ = root.srs_words[kanji].seen) != null ? ref$ : 0;
+        }, newkanji);
       } else {
         randidx = Math.floor(
         Math.random() * allkanji.length);
@@ -301,8 +346,16 @@
     root.isfirsttime = isfirsttime;
     word.correct = true;
     root.currentWord = word;
-    otherwords = deepCopy(
-    selectNElemExceptElem(root.vocabulary, word, 3));
+    if (root.isfirsttime) {
+      otherwords = [];
+      saveKanjiSeen(word.kanji);
+    } else {
+      otherwords = deepCopy(
+      selectNElemExceptElem(root.vocabulary, word, 3));
+      saveKanjiSeen(word.kanji, otherwords.map(function(it){
+        return it.kanji;
+      }));
+    }
     for (i$ = 0, len$ = otherwords.length; i$ < len$; ++i$) {
       (fn$.call(this, otherwords[i$]));
     }

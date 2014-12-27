@@ -2,7 +2,7 @@ root = exports ? this
 
 J = $.jade
 
-{find-index} = require \prelude-ls
+{find-index, minimum-by} = require \prelude-ls
 
 {first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId} = root # commonlib.ls
 {addlog, addlogfblogin} = root # logging_client.ls
@@ -37,6 +37,15 @@ export saveSRS = ->
   localStorage.setItem ('srs_' + getvar('lang')), JSON.stringify(root.srs_words)
   return
 
+export saveKanjiSeen = (kanji, options_list) ->
+  curtime = Date.now()
+  root.srs_words[kanji].seen = curtime
+  if options_list?
+    for opt in options_list
+      root.srs_words[opt].optseen = curtime
+  saveSRS()
+  return
+
 export word_wrong = (kanji) ->
   curtime = Date.now()
   root.srs_words[kanji].practiced = curtime
@@ -57,13 +66,34 @@ export word_correct = (kanji) ->
   return
 
 export introducedwordAskAgainLater = ->
-  console.log 'ask again later'
+  kanji = root.current-word.kanji
+  console.log 'ask again later ' + kanji
+  curtime = Date.now()
+  root.srs_words[kanji].seen = curtime
+  saveSRS()
+  new-question()
+  return
 
 export introducedwordAlreadyKnow = ->
-  console.log 'already know'
+  kanji = root.current-word.kanji
+  console.log 'already know ' + kanji
+  curtime = Date.now()
+  root.srs_words[kanji].known = true
+  root.srs_words[kanji].seen = curtime
+  saveSRS()
+  new-question()
+  return
 
 export introducedwordAddToStudyList = ->
-  console.log 'add to study list'
+  kanji = root.current-word.kanji
+  console.log 'add to study list ' + kanji
+  curtime = Date.now()
+  root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].level = 1
+  root.srs_words[kanji].studying = true
+  saveSRS()
+  new-question()
+  return
 
 is_srs_correct = (srs_words) ->
   for wordinfo in flashcard_sets[getvar('lang')]
@@ -88,7 +118,11 @@ load-srs-words = ->
   for wordinfo in flashcard_sets[getvar('lang')]
     root.srs_words[wordinfo.kanji] = {
       level: 0 # 0 = has not yet been introduced
-      practiced: null
+      practiced: 0 # never before practiced
+      seen: 0 # never before seen
+      optseen: 0 # never before seen as an option
+      known: false # was already previously known
+      studying: false # is currently studying
     }
   saveSRS()
   localStorage.setItem ('srsformat_' + getvar('lang')), 'memreflex_progressive_1'
@@ -161,7 +195,11 @@ get_kanji_probabilities = ->
 export select_kanji_from_srs = ->
   curtime = Date.now()
   allkanji = root.vocabulary.map((wordinfo) -> wordinfo.kanji)
-  overdue_kanji = allkanji.filter (kanji) ->
+  notknown_kanji = allkanji.filter (kanji) ->
+    return not root.srs_words[kanji].known
+  studying_kanji = notknown_kanji.filter (kanji) ->
+    return root.srs_words[kanji].studying
+  overdue_kanji = studying_kanji.filter (kanji) ->
     {level, practiced} = root.srs_words[kanji]
     if level <= 0
       return false
@@ -169,16 +207,18 @@ export select_kanji_from_srs = ->
   if overdue_kanji.length > 0
     console.log 'currently overdue:'
     console.log JSON.stringify overdue_kanji
-    randidx = Math.random() * overdue_kanji.length |> Math.floor
-    return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
+    #randidx = Math.random() * overdue_kanji.length |> Math.floor
+    #return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
+    return minimum-by ((kanji) -> root.srs_words[kanji].seen ? 0), overdue_kanji
   else # no overdue kanji - pick a new one
     console.log 'no kanji currently overdue! picking new one'
-    newkanji = allkanji.filter (kanji) ->
+    newkanji = notknown_kanji.filter (kanji) ->
       {level, practiced} = root.srs_words[kanji]
       return (level == 0)
     if newkanji.length > 0 # pick one of the new kanji
-      randidx = Math.random() * newkanji.length |> Math.floor
-      return newkanji[randidx]
+      #randidx = Math.random() * newkanji.length |> Math.floor
+      #return newkanji[randidx]
+      return minimum-by ((kanji) -> root.srs_words[kanji].seen ? 0), newkanji
     else # no new kanji left - pick one randomly
       randidx = Math.random() * allkanji.length |> Math.floor
       return allkanji[randidx]
@@ -236,7 +276,12 @@ export new-question = ->
   root.isfirsttime = isfirsttime
   word.correct = true
   root.current-word = word
-  otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
+  if root.isfirsttime
+    otherwords = []
+    saveKanjiSeen word.kanji
+  else
+    otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
+    saveKanjiSeen word.kanji, otherwords.map((.kanji))
   for let elem in otherwords
     elem.correct = false
   allwords = [word] ++ otherwords |> shuffle-list
