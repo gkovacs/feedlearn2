@@ -1,5 +1,5 @@
 (function(){
-  var root, J, ref$, findIndex, minimumBy, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, saveKanjiSeen, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, ref$, findIndex, minimumBy, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, saveKanjiSeen, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, resetSRS, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, to_wordinfo_list, selectOtherOptions, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, minimumBy = ref$.minimumBy;
@@ -49,6 +49,7 @@
     var curtime, i$, len$, opt;
     curtime = Date.now();
     root.srs_words[kanji].seen = curtime;
+    root.srs_words[kanji].optseen = curtime;
     if (options_list != null) {
       for (i$ = 0, len$ = options_list.length; i$ < len$; ++i$) {
         opt = options_list[i$];
@@ -62,6 +63,7 @@
     curtime = Date.now();
     root.srs_words[kanji].practiced = curtime;
     root.srs_words[kanji].seen = curtime;
+    root.srs_words[kanji].optseen = curtime;
     root.srs_words[kanji].level = 1;
     saveSRS();
   };
@@ -74,22 +76,22 @@
     }
     root.srs_words[kanji].practiced = curtime;
     root.srs_words[kanji].seen = curtime;
+    root.srs_words[kanji].optseen = curtime;
     root.srs_words[kanji].level = Math.max(2, curlevel + 1);
     saveSRS();
   };
   out$.introducedwordAskAgainLater = introducedwordAskAgainLater = function(){
     var kanji, curtime;
     kanji = root.currentWord.kanji;
-    console.log('ask again later ' + kanji);
     curtime = Date.now();
     root.srs_words[kanji].seen = curtime;
+    root.srs_words[kanji].optseen = curtime;
     saveSRS();
     newQuestion();
   };
   out$.introducedwordAlreadyKnow = introducedwordAlreadyKnow = function(){
     var kanji, curtime;
     kanji = root.currentWord.kanji;
-    console.log('already know ' + kanji);
     curtime = Date.now();
     root.srs_words[kanji].known = true;
     root.srs_words[kanji].seen = curtime;
@@ -99,7 +101,6 @@
   out$.introducedwordAddToStudyList = introducedwordAddToStudyList = function(){
     var kanji, curtime;
     kanji = root.currentWord.kanji;
-    console.log('add to study list ' + kanji);
     curtime = Date.now();
     root.srs_words[kanji].seen = curtime;
     root.srs_words[kanji].level = 1;
@@ -117,8 +118,26 @@
     }
     return true;
   };
+  out$.resetSRS = resetSRS = function(){
+    var i$, ref$, len$, wordinfo;
+    console.log('rebuildling srs_' + getvar('lang'));
+    root.srs_words = {};
+    for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
+      wordinfo = ref$[i$];
+      root.srs_words[wordinfo.kanji] = {
+        level: 0,
+        practiced: 0,
+        seen: 0,
+        optseen: 0,
+        known: false,
+        studying: false
+      };
+    }
+    saveSRS();
+    localStorage.setItem('srsformat_' + getvar('lang'), 'memreflex_progressive_1');
+  };
   loadSrsWords = function(){
-    var stored_srs, e, i$, ref$, len$, wordinfo;
+    var stored_srs, e;
     if ((typeof localStorage != 'undefined' && localStorage !== null) && localStorage.getItem('srsformat_' + getvar('lang')) === 'memreflex_progressive_1') {
       stored_srs = localStorage.getItem('srs_' + getvar('lang'));
       if (stored_srs != null) {
@@ -135,21 +154,7 @@
         }
       }
     }
-    console.log('rebuildling srs_' + getvar('lang'));
-    root.srs_words = {};
-    for (i$ = 0, len$ = (ref$ = flashcard_sets[getvar('lang')]).length; i$ < len$; ++i$) {
-      wordinfo = ref$[i$];
-      root.srs_words[wordinfo.kanji] = {
-        level: 0,
-        practiced: 0,
-        seen: 0,
-        optseen: 0,
-        known: false,
-        studying: false
-      };
-    }
-    saveSRS();
-    localStorage.setItem('srsformat_' + getvar('lang'), 'memreflex_progressive_1');
+    resetSRS();
   };
   setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
@@ -197,6 +202,63 @@
     }
     return output;
   };
+  to_wordinfo_list = function(kanji_list){
+    var kanji_to_wordinfo, i$, ref$, len$, elem, output, res$, x;
+    kanji_to_wordinfo = {};
+    for (i$ = 0, len$ = (ref$ = root.vocabulary).length; i$ < len$; ++i$) {
+      elem = ref$[i$];
+      kanji_to_wordinfo[elem.kanji] = elem;
+    }
+    res$ = [];
+    for (i$ = 0, len$ = kanji_list.length; i$ < len$; ++i$) {
+      x = kanji_list[i$];
+      res$.push(kanji_to_wordinfo[x]);
+    }
+    output = res$;
+    return output;
+  };
+  selectOtherOptions = function(elem){
+    var output, seenkanji, allkanji, notknown_kanji, studying_kanji, pool_of_kanji, pool_of_kanji_hash, res$, i$, len$, k, ref$, x;
+    output = [];
+    seenkanji = {};
+    seenkanji[elem.kanji] = true;
+    allkanji = root.vocabulary.map(function(it){
+      return it.kanji;
+    });
+    notknown_kanji = allkanji.filter(function(kanji){
+      return !root.srs_words[kanji].known;
+    });
+    studying_kanji = notknown_kanji.filter(function(kanji){
+      return root.srs_words[kanji].studying;
+    });
+    pool_of_kanji = studying_kanji;
+    res$ = {};
+    for (i$ = 0, len$ = pool_of_kanji.length; i$ < len$; ++i$) {
+      k = pool_of_kanji[i$];
+      res$[k] = true;
+    }
+    pool_of_kanji_hash = res$;
+    for (i$ = 0, len$ = (ref$ = studying_kanji.concat(notknown_kanji, allkanji)).length; i$ < len$; ++i$) {
+      x = ref$[i$];
+      if (pool_of_kanji.length >= 10) {
+        break;
+      }
+      if (pool_of_kanji_hash[x] != null) {
+        continue;
+      }
+      pool_of_kanji_hash[x] = true;
+      pool_of_kanji.push(x);
+    }
+    while (output.length < 3) {
+      elem = selectElem(pool_of_kanji);
+      if (seenkanji[elem] != null) {
+        continue;
+      }
+      seenkanji[elem] = true;
+      output.push(elem);
+    }
+    return to_wordinfo_list(output);
+  };
   swapIdxInList = function(list, idx1, idx2){
     var tmp;
     tmp = list[idx1];
@@ -236,8 +298,8 @@
   out$.select_kanji_from_srs = select_kanji_from_srs = function(){
     var curtime, allkanji, notknown_kanji, studying_kanji, overdue_kanji, newkanji, randidx;
     curtime = Date.now();
-    allkanji = root.vocabulary.map(function(wordinfo){
-      return wordinfo.kanji;
+    allkanji = root.vocabulary.map(function(it){
+      return it.kanji;
     });
     notknown_kanji = allkanji.filter(function(kanji){
       return !root.srs_words[kanji].known;
@@ -254,14 +316,10 @@
       return curtime >= practiced + 1000 * Math.pow(5, level);
     });
     if (overdue_kanji.length > 0) {
-      console.log('currently overdue:');
-      console.log(JSON.stringify(overdue_kanji));
       return minimumBy(function(kanji){
-        var ref$;
-        return (ref$ = root.srs_words[kanji].seen) != null ? ref$ : 0;
+        return root.srs_words[kanji].seen;
       }, overdue_kanji);
     } else {
-      console.log('no kanji currently overdue! picking new one');
       newkanji = notknown_kanji.filter(function(kanji){
         var ref$, level, practiced;
         ref$ = root.srs_words[kanji], level = ref$.level, practiced = ref$.practiced;
@@ -269,8 +327,7 @@
       });
       if (newkanji.length > 0) {
         return minimumBy(function(kanji){
-          var ref$;
-          return (ref$ = root.srs_words[kanji].seen) != null ? ref$ : 0;
+          return root.srs_words[kanji].seen;
         }, newkanji);
       } else {
         randidx = Math.floor(
@@ -351,7 +408,7 @@
       saveKanjiSeen(word.kanji);
     } else {
       otherwords = deepCopy(
-      selectNElemExceptElem(root.vocabulary, word, 3));
+      selectOtherOptions(word));
       saveKanjiSeen(word.kanji, otherwords.map(function(it){
         return it.kanji;
       }));
@@ -818,7 +875,6 @@
   };
   injectFacebookTag = function(){
     var e;
-    console.log('inject-facebook-tag called');
     e = document.createElement('script');
     e.async = true;
     e.src = '//connect.facebook.net/en_US/sdk.js';

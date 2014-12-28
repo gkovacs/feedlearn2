@@ -38,8 +38,10 @@ export saveSRS = ->
   return
 
 export saveKanjiSeen = (kanji, options_list) ->
+  #console.log 'saveKanjiSeen ' + kanji + ' ' + JSON.stringify(options_list)
   curtime = Date.now()
   root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].optseen = curtime
   if options_list?
     for opt in options_list
       root.srs_words[opt].optseen = curtime
@@ -50,6 +52,7 @@ export word_wrong = (kanji) ->
   curtime = Date.now()
   root.srs_words[kanji].practiced = curtime
   root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].optseen = curtime
   root.srs_words[kanji].level = 1
   saveSRS()
   return
@@ -61,22 +64,24 @@ export word_correct = (kanji) ->
     curlevel = 1
   root.srs_words[kanji].practiced = curtime
   root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].optseen = curtime
   root.srs_words[kanji].level = Math.max(2, curlevel + 1)
   saveSRS()
   return
 
 export introducedwordAskAgainLater = ->
   kanji = root.current-word.kanji
-  console.log 'ask again later ' + kanji
+  #console.log 'ask again later ' + kanji
   curtime = Date.now()
   root.srs_words[kanji].seen = curtime
+  root.srs_words[kanji].optseen = curtime
   saveSRS()
   new-question()
   return
 
 export introducedwordAlreadyKnow = ->
   kanji = root.current-word.kanji
-  console.log 'already know ' + kanji
+  #console.log 'already know ' + kanji
   curtime = Date.now()
   root.srs_words[kanji].known = true
   root.srs_words[kanji].seen = curtime
@@ -86,7 +91,7 @@ export introducedwordAlreadyKnow = ->
 
 export introducedwordAddToStudyList = ->
   kanji = root.current-word.kanji
-  console.log 'add to study list ' + kanji
+  #console.log 'add to study list ' + kanji
   curtime = Date.now()
   root.srs_words[kanji].seen = curtime
   root.srs_words[kanji].level = 1
@@ -101,18 +106,7 @@ is_srs_correct = (srs_words) ->
       return false
   return true
 
-load-srs-words = ->
-  if localStorage? and localStorage.getItem('srsformat_' + getvar('lang')) == 'memreflex_progressive_1'
-    stored_srs = localStorage.getItem('srs_' + getvar('lang'))
-    if stored_srs?
-      try
-        root.srs_words = JSON.parse stored_srs
-        if is_srs_correct root.srs_words
-          console.log 'srs_' + getvar('lang') + ' loaded successfully'
-          return
-        root.srs_words = null
-      catch
-        root.srs_words = null
+export resetSRS = ->
   console.log 'rebuildling srs_' + getvar('lang')
   root.srs_words = {}
   for wordinfo in flashcard_sets[getvar('lang')]
@@ -126,6 +120,21 @@ load-srs-words = ->
     }
   saveSRS()
   localStorage.setItem ('srsformat_' + getvar('lang')), 'memreflex_progressive_1'
+  return
+
+load-srs-words = ->
+  if localStorage? and localStorage.getItem('srsformat_' + getvar('lang')) == 'memreflex_progressive_1'
+    stored_srs = localStorage.getItem('srs_' + getvar('lang'))
+    if stored_srs?
+      try
+        root.srs_words = JSON.parse stored_srs
+        if is_srs_correct root.srs_words
+          console.log 'srs_' + getvar('lang') + ' loaded successfully'
+          return
+        root.srs_words = null
+      catch
+        root.srs_words = null
+  resetSRS()
   return
 
 set-flashcard-set = (new_flashcard_set) ->
@@ -167,6 +176,48 @@ select-n-elem-except-elem = (list, elem, n) ->
       output.push elem
   return output
 
+to_wordinfo_list = (kanji_list) ->
+  kanji_to_wordinfo = {}
+  for elem in root.vocabulary
+    kanji_to_wordinfo[elem.kanji] = elem
+  output = [kanji_to_wordinfo[x] for x in kanji_list]
+  #console.log output
+  return output
+
+select-other-options = (elem) ->
+  #console.log 'select-other-options ' + JSON.stringify(elem)
+  output = []
+  seenkanji = {}
+  seenkanji[elem.kanji] = true
+  allkanji = root.vocabulary.map((.kanji))
+  notknown_kanji = allkanji.filter (kanji) ->
+    return not root.srs_words[kanji].known
+  studying_kanji = notknown_kanji.filter (kanji) ->
+    return root.srs_words[kanji].studying
+  #overdue_kanji = studying_kanji.filter (kanji) ->
+  #  {level, practiced} = root.srs_words[kanji]
+  #  if level <= 0
+  #    return false
+  #  return curtime >= practiced + 1000 * 5**level
+  #console.log 'num studying: ' + studying_kanji.length
+  pool_of_kanji = studying_kanji
+  pool_of_kanji_hash = {[k,true] for k in pool_of_kanji}
+  for x in (studying_kanji ++ notknown_kanji ++ allkanji)
+    if pool_of_kanji.length >= 10
+      break
+    if pool_of_kanji_hash[x]?
+      continue
+    pool_of_kanji_hash[x] = true
+    pool_of_kanji.push x
+  #console.log 'pool_of_kanji: ' + JSON.stringify(pool_of_kanji)
+  while output.length < 3
+    elem = select-elem pool_of_kanji
+    if seenkanji[elem]?
+      continue
+    seenkanji[elem] = true
+    output.push elem
+  return to_wordinfo_list(output)
+
 swap-idx-in-list = (list, idx1, idx2) ->
   tmp = list[idx1]
   list[idx1] = list[idx2]
@@ -194,7 +245,7 @@ get_kanji_probabilities = ->
 
 export select_kanji_from_srs = ->
   curtime = Date.now()
-  allkanji = root.vocabulary.map((wordinfo) -> wordinfo.kanji)
+  allkanji = root.vocabulary.map((.kanji))
   notknown_kanji = allkanji.filter (kanji) ->
     return not root.srs_words[kanji].known
   studying_kanji = notknown_kanji.filter (kanji) ->
@@ -205,20 +256,20 @@ export select_kanji_from_srs = ->
       return false
     return curtime >= practiced + 1000 * 5**level
   if overdue_kanji.length > 0
-    console.log 'currently overdue:'
-    console.log JSON.stringify overdue_kanji
+    #console.log 'currently overdue:'
+    #console.log JSON.stringify overdue_kanji
     #randidx = Math.random() * overdue_kanji.length |> Math.floor
     #return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
-    return minimum-by ((kanji) -> root.srs_words[kanji].seen ? 0), overdue_kanji
+    return minimum-by ((kanji) -> root.srs_words[kanji].seen), overdue_kanji
   else # no overdue kanji - pick a new one
-    console.log 'no kanji currently overdue! picking new one'
+    #console.log 'no kanji currently overdue! picking new one'
     newkanji = notknown_kanji.filter (kanji) ->
       {level, practiced} = root.srs_words[kanji]
       return (level == 0)
     if newkanji.length > 0 # pick one of the new kanji
       #randidx = Math.random() * newkanji.length |> Math.floor
       #return newkanji[randidx]
-      return minimum-by ((kanji) -> root.srs_words[kanji].seen ? 0), newkanji
+      return minimum-by ((kanji) -> root.srs_words[kanji].seen), newkanji
     else # no new kanji left - pick one randomly
       randidx = Math.random() * allkanji.length |> Math.floor
       return allkanji[randidx]
@@ -280,7 +331,8 @@ export new-question = ->
     otherwords = []
     saveKanjiSeen word.kanji
   else
-    otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
+    #otherwords = select-n-elem-except-elem root.vocabulary, word, 3 |> deep-copy
+    otherwords = select-other-options(word) |> deep-copy
     saveKanjiSeen word.kanji, otherwords.map((.kanji))
   for let elem in otherwords
     elem.correct = false
@@ -641,7 +693,7 @@ have-full-name = ->
         addlog {type: 'firstmousemove'}
 
 inject-facebook-tag = ->
-  console.log 'inject-facebook-tag called'
+  #console.log 'inject-facebook-tag called'
   e = document.createElement('script')
   e.async = true
   e.src = '//connect.facebook.net/en_US/sdk.js'
