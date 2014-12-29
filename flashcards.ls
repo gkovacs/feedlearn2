@@ -728,6 +728,9 @@ export language_names = {
   'chinese1': 'Chinese'
   'korean1': 'Korean'
   'vietnamese1': 'Vietnamese'
+  'french1': 'French'
+  'french2': 'French'
+  'french3': 'French'
 }
 
 export language_codes = {
@@ -735,10 +738,13 @@ export language_codes = {
   'Chinese': 'zh-CN'
   'Korean': 'ko'
   'Vietnamese': 'vi'
+  'French': 'fr'
 }
 
 export flashcard_name_aliases = {
   'ja1': 'japanese1'
+  'ja2': 'japanese2'
+  'ja3': 'japanese3'
   'zh': 'chinese1'
   'chn': 'chinese1'
   'chinese': 'chinese1'
@@ -747,4 +753,7 @@ export flashcard_name_aliases = {
   'vi': 'vietnamese1'
   'viet': 'vietnamese1'
   'vietnamese': 'vietnamese1'
+  'fr1': 'french1'
+  'fr2': 'french2'
+  'fr3': 'french3'
 }
