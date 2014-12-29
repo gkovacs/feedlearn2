@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index, map, sort, sort-by} = require \prelude-ls
 
-{first-non-null, getUrlParameters, forcehttps, get-user-name} = root # commonlib.ls
+{first-non-null, getUrlParameters, forcehttps, get-user-name, getbaselang} = root # commonlib.ls
 {flashcard_sets, language_names, flashcard_name_aliases} = root # flashcards.ls
 {addlog, addlogquiz, post-start-event} = root # logging_client.ls
 
@@ -48,14 +48,13 @@ export getCurrentAnswers = ->
 
 get-flashcard-set = ->
   param = getUrlParameters()
-  return first-non-null param.vocab, 'japanese1'
+  return first-non-null param.vocab, getbaselang() + '1'
 
 get-pretest-num = ->
-  switch get-flashcard-set()
-  | 'japanese1' => 1
-  | 'japanese2' => 2
-  | 'japanese3' => 3
-  | _ => 0
+  output = get-flashcard-set()[*-1] |> parseInt
+  if output? and isFinite(output)
+    return output # ranges between 1 to 3
+  return 0 # took a pretest but do not know what it was for
 
 export submit-answers = ->
   param = getUrlParameters()

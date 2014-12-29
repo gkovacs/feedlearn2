@@ -1,9 +1,9 @@
 (function(){
-  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, getUserName, flashcard_sets, language_names, flashcard_name_aliases, addlog, addlogquiz, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
+  var root, J, ref$, findIndex, map, sort, sortBy, firstNonNull, getUrlParameters, forcehttps, getUserName, getbaselang, flashcard_sets, language_names, flashcard_name_aliases, addlog, addlogquiz, postStartEvent, selectChanged, getCurrentAnswers, getFlashcardSet, getPretestNum, submitAnswers, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, map = ref$.map, sort = ref$.sort, sortBy = ref$.sortBy;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps, getUserName = root.getUserName;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, forcehttps = root.forcehttps, getUserName = root.getUserName, getbaselang = root.getbaselang;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, flashcard_name_aliases = root.flashcard_name_aliases;
   addlog = root.addlog, addlogquiz = root.addlogquiz, postStartEvent = root.postStartEvent;
   out$.selectChanged = selectChanged = function(){
@@ -78,19 +78,16 @@
   getFlashcardSet = function(){
     var param;
     param = getUrlParameters();
-    return firstNonNull(param.vocab, 'japanese1');
+    return firstNonNull(param.vocab, getbaselang() + '1');
   };
   getPretestNum = function(){
-    switch (getFlashcardSet()) {
-    case 'japanese1':
-      return 1;
-    case 'japanese2':
-      return 2;
-    case 'japanese3':
-      return 3;
-    default:
-      return 0;
+    var output, ref$;
+    output = parseInt(
+    (ref$ = getFlashcardSet())[ref$.length - 1]);
+    if (output != null && isFinite(output)) {
+      return output;
     }
+    return 0;
   };
   out$.submitAnswers = submitAnswers = function(){
     var param;
