@@ -4,6 +4,7 @@ require! {
   'body-parser'
   'async'
   'fs'
+  'force-ssl'
 }
 
 {filter, maximum} = require 'prelude-ls'
@@ -84,20 +85,23 @@ get-logs-fb-collection = (callback) ->
 
 app = express()
 
-app.use bodyParser.json()
-app.use express.static(path.join(__dirname, ''))
-
-app.set 'view engine', 'jade'
-app.set 'views', __dirname
-
 app.set 'port', (process.env.PORT || 5000)
 
 if not process.env.PORT? # not heroku - is localhost
   require('self-signed-https')(app).listen(5001, '0.0.0.0') # https
   app.listen 5000, '0.0.0.0' # http
+  force-ssl.https_port = 5001
+  app.use force-ssl
 else
   app.listen app.get('port'), '0.0.0.0'
+  app.use force-ssl
 console.log 'Listening on port ' + app.get('port')
+
+app.use bodyParser.json()
+app.use express.static(path.join(__dirname, ''))
+
+app.set 'view engine', 'jade'
+app.set 'views', __dirname
 
 # GET statements
 

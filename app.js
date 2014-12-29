@@ -1,10 +1,11 @@
 (function(){
-  var express, path, bodyParser, async, fs, ref$, filter, maximum, mongo, MongoClient, Grid, mongohq, mongolab, mongosoup, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, fs, forceSsl, ref$, filter, maximum, mongo, MongoClient, Grid, mongohq, mongolab, mongosoup, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
   async = require('async');
   fs = require('fs');
+  forceSsl = require('force-ssl');
   ref$ = require('prelude-ls'), filter = ref$.filter, maximum = ref$.maximum;
   mongo = require('mongodb');
   MongoClient = mongo.MongoClient, Grid = mongo.Grid;
@@ -83,18 +84,21 @@
     });
   };
   app = express();
-  app.use(bodyParser.json());
-  app.use(express['static'](path.join(__dirname, '')));
-  app.set('view engine', 'jade');
-  app.set('views', __dirname);
   app.set('port', process.env.PORT || 5000);
   if (process.env.PORT == null) {
     require('self-signed-https')(app).listen(5001, '0.0.0.0');
     app.listen(5000, '0.0.0.0');
+    forceSsl.https_port = 5001;
+    app.use(forceSsl);
   } else {
     app.listen(app.get('port'), '0.0.0.0');
+    app.use(forceSsl);
   }
   console.log('Listening on port ' + app.get('port'));
+  app.use(bodyParser.json());
+  app.use(express['static'](path.join(__dirname, '')));
+  app.set('view engine', 'jade');
+  app.set('views', __dirname);
   get_index = function(req, res){
     return res.sendfile('index.html');
   };
