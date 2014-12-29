@@ -1,9 +1,9 @@
 (function(){
-  var root, J, ref$, findIndex, minimumBy, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, saveKanjiSeen, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, resetSRS, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, to_wordinfo_list, selectOtherOptions, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, J, ref$, findIndex, minimumBy, firstNonNull, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, getbaselang, addlog, addlogfblogin, flashcard_sets, language_names, language_codes, flashcard_name_aliases, values_over_1, values_over_1_exp, normalize_values_to_sum_to_1, saveSRS, saveKanjiSeen, word_wrong, word_correct, introducedwordAskAgainLater, introducedwordAlreadyKnow, introducedwordAddToStudyList, is_srs_correct, resetSRS, loadSrsWords, setFlashcardSet, selectIdx, selectElem, selectNElem, selectNElemExceptElem, to_wordinfo_list, selectOtherOptions, swapIdxInList, shuffleList, deepCopy, get_kanji_probabilities, select_kanji_from_srs, is_kanji_first_time, select_word_from_srs, introduceWord, newQuestion, refreshQuestion, playSound, playSoundCurrentWord, questionWithWords, gotoQuizPage, gotoOptionPage, gotoChatPage, changeLang, setInsertionFormat, changeFeedInsertionFormat, setFullName, changeFullName, setScriptFormat, changeScriptFormat, showAnswer, showAnswers, gotoPage, showControlpage, openfeedlearnlink, shallowCopy, excludeParam, getRequiredTest, openvocabtestlink, showRequiredTest, fbTryLoginManual, fbButtonOnlogin, showFbLoginPage, setVisitSource, haveFullName, injectFacebookTag, dontHaveFullName, fbTryLoginAutomatic, clearcookies, clearlocalstorage, clearcookiesandlocalstorage, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   J = $.jade;
   ref$ = require('prelude-ls'), findIndex = ref$.findIndex, minimumBy = ref$.minimumBy;
-  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents, getFBAppId = root.getFBAppId;
+  firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents, getFBAppId = root.getFBAppId, getbaselang = root.getbaselang;
   addlog = root.addlog, addlogfblogin = root.addlogfblogin;
   flashcard_sets = root.flashcard_sets, language_names = root.language_names, language_codes = root.language_codes, flashcard_name_aliases = root.flashcard_name_aliases;
   root.srs_words = null;
@@ -88,6 +88,10 @@
     root.srs_words[kanji].optseen = curtime;
     saveSRS();
     newQuestion();
+    addlog({
+      type: 'asklater',
+      word: root.currentWord
+    });
   };
   out$.introducedwordAlreadyKnow = introducedwordAlreadyKnow = function(){
     var kanji, curtime;
@@ -317,7 +321,7 @@
     });
     if (overdue_kanji.length > 0) {
       return minimumBy(function(kanji){
-        return root.srs_words[kanji].seen;
+        return root.srs_words[kanji].practiced;
       }, overdue_kanji);
     } else {
       newkanji = notknown_kanji.filter(function(kanji){
@@ -765,7 +769,7 @@
     requiredTest.split('pretest').join('').split('posttest').join(''));
     $('.requiredtestweek').text(requiredTestWeek);
     root.requiredTestLink = '/matching?' + $.param({
-      vocab: 'japanese' + requiredTestWeek,
+      vocab: getbaselang() + requiredTestWeek,
       type: requiredTestType,
       source: 'facebook'
     });
@@ -828,7 +832,7 @@
     root.openedtime = Date.now();
     return updatecookiesandevents(function(){
       var requiredTest, condition;
-      setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'));
+      setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), getbaselang() + '1'));
       setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
       setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
       setVisitSource();

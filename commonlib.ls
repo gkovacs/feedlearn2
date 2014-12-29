@@ -139,3 +139,6 @@ export getFBAppId = ->
   if window.location.href.indexOf('http://localhost') == 0
     appid = '1582095062012614'
   return appid
+
+export getbaselang = ->
+  return getvar('baselang') ? 'japanese'

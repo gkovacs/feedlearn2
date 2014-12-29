@@ -506,11 +506,206 @@ yellow | vàng
 purple | màu đỏ tía
 '''
 
+french_all_vocabulary_text = '''
+place | lieu
+Earth | Terre
+world | monde
+capital | capitale
+city | ville
+street | rue
+forest | forêt
+hill | colline
+river | rivière
+hypermarket | supermarché
+bike | vélo
+car | voiture
+air plane | avion
+house | maison
+apartment | appartement
+garden | jardin
+living room | salon
+kitchen | cuisine
+bathroom | salle de bain
+bedroom | chambre
+toilet | toilette
+window | fenêtre
+door | porte
+wall | mur
+floor | sol
+roof | plafond
+furniture | meuble
+bed | lit
+chair | chaise
+couch | canapé
+wardrobe | armoire
+device | appareil
+heater | chauffage
+washing machine | machine à laver
+fridge | frigo
+microwave | micro-onde
+oven | four
+clothes | habits
+shirt | chemise
+sweater | sweat
+sweat shirt | pull
+trousers | pantalon
+skirt | jupe
+suit | costume
+dress | robe
+shoes | chaussures
+coat | manteau
+suitcase | attaché case
+bag | sac
+object | objet
+mobile | portable
+computer | ordinateur
+camera | appareil photo
+video camera | caméra
+television | télévision
+book | livre
+ballpoint pen | stylo
+pencil | crayon
+painting | peinture
+color | couleur
+white | blanc
+black | noir
+red | rouge
+green | vert
+blue | bleu
+yellow | jaune
+body | corps
+brain | cerveau
+head | tête
+eye | oeil
+nose | nez
+mouth | bouche
+ear | oreille
+hair | cheveu
+arm | bras
+hand | main
+finger | doigt
+stomach | estomac
+back | dos
+bottom | fesse
+leg | jambe
+foot | pied
+toe | orteil
+food | nourriture
+bread | pain
+meat | viande
+vegetable | légume
+egg | oeuf
+cheese | fromage
+chocolate | chocolat
+drink | boisson
+water | eau
+milk | lait
+tea | thé
+kitchenware | ustensiles
+glass | verre
+plate | assiette
+fork | fourchette
+knive | couteau
+spoon | cuillère
+person | personne
+people | gens
+man | homme
+woman | femme
+boy | garçon
+girl | fille
+father | père
+mother | mère
+child, baby | bébé
+infant | enfant
+brother | frère
+sister | soeur
+grand father | grand-père
+grand mother | grand-mère
+friend | ami
+girlfriend | petite amie
+boyfriend | petit ami
+dog | chien
+cat | chat
+fish | poisson
+bird | oiseau
+cow | vache
+chicken | poulet
+sheep | mouton
+goat | chèvre
+turtle | tortue
+insect | insecte
+spider | araignée
+ant | fourmi
+snake | serpent
+wolf | loup
+dolphin | dauphin
+snow | neige
+idea | idée
+thing | chose
+word | mot
+sentence | phrase
+number | nombre
+life | vie
+work | travail
+leisure | loisir
+holidays | vacances
+music | musique
+game | jeu
+beginning | début
+end | fin
+money | argent
+difference | différence
+day | jour
+Monday | lundi
+Tuesday | mardi
+Wednesday | mercredi
+Thursday | jeudi
+Friday | vendredi
+Saturday | samedi
+Sunday | dimanche
+month | mois
+January | janvier
+February | février
+March | mars
+April | avril
+May | mai
+June | juin
+July | juillet
+August | aout
+September | septembre
+October | octobre
+November | novembre
+December | décembre
+season | saison
+winter | hiver
+spring | printemps
+summer | été
+autumn | automne
+week | semaine
+year | année
+century | siècle
+hour | heure
+second | seconde
+clock | horloge
+yesterday | hier
+today | aujourd'hui
+tomorrow | demain
+breakfast | petit déjeuner
+lunch | déjeuner
+dinner | diner
+North | nord
+South | sud
+East | est
+West | ouest
+'''
+
 japanese_vocab_all = parse-vocab japanese_all_vocabulary_text
 
 # console.log 'num japanese words: ' + japanese_vocab_all.length
 
 vietnamese_vocab_all = parse-vocab vietnamese_all_vocabulary_text
+
+french_vocab_all = parse-vocab french_all_vocabulary_text
 
 export flashcard_sets = {
   #'japanese1': parse-vocab japanese1_vocabulary_text
@@ -521,6 +716,9 @@ export flashcard_sets = {
   'korean1': parse-vocab korean1_vocabulary_text
   #'vietnamese1': parse-vocab vietnamese1_vocabulary_text
   'vietnamese1': vietnamese_vocab_all[0 til 50]
+  'french1': french_vocab_all[0 til 50]
+  'french2': french_vocab_all[50 til 100]
+  'french3': french_vocab_all[100 til 150]
 }
 
 export language_names = {

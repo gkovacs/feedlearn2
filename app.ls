@@ -27,6 +27,8 @@ if not mongourl?
 if not mongourl2?
   mongourl2 = mongourl
 
+root.baselang = process.env.BASELANG ? 'japanese'
+
 get-mongo-db = (callback) ->
   #MongoClient.connect mongourl, {
   #  auto_reconnect: true
@@ -297,6 +299,7 @@ getusereventsandcookies = (username, callback) ->
       output = {[k,v] for k,v of events}
       for k,v of cookies
         output[k] = v
+      output['baselang'] = root.baselang
       callback output
 
 app.get '/getusereventsandcookies', (req, res) ->
@@ -634,7 +637,7 @@ cookies-from-events-condition-username = (events, condition, username) ->
   | events.pretest3? => 2
   | events.pretest2? => 1
   | events.pretest1? => 0
-  output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum]
+  output.lang = root.baselang + ['1', '2', '3'][partnum]
   output.format = condition_to_order[condition][partnum]
   return output
 

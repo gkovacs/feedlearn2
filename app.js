@@ -23,6 +23,7 @@
   if (mongourl2 == null) {
     mongourl2 = mongourl;
   }
+  root.baselang = (ref$ = process.env.BASELANG) != null ? ref$ : 'japanese';
   getMongoDb = function(callback){
     return MongoClient.connect(mongourl, function(err, db){
       if (err) {
@@ -330,6 +331,7 @@
           v = cookies[k];
           output[k] = v;
         }
+        output['baselang'] = root.baselang;
         return callback(output);
       });
     });
@@ -826,7 +828,7 @@
         return 0;
       }
     }());
-    output.lang = ['japanese1', 'japanese2', 'japanese3'][partnum];
+    output.lang = root.baselang + ['1', '2', '3'][partnum];
     output.format = condition_to_order[condition][partnum];
     return output;
   };

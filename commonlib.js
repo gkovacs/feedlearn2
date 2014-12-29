@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, setvar, getvar, getevent, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
+  var root, firstNonNull, getUrlParameters, setvar, getvar, getevent, getUserEvents, getCondition, getUserName, printcb, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, getbaselang, out$ = typeof exports != 'undefined' && exports || this, slice$ = [].slice;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   out$.firstNonNull = firstNonNull = function(){
     var args, i$, len$, x;
@@ -207,5 +207,9 @@
       appid = '1582095062012614';
     }
     return appid;
+  };
+  out$.getbaselang = getbaselang = function(){
+    var ref$;
+    return (ref$ = getvar('baselang')) != null ? ref$ : 'japanese';
   };
 }).call(this);

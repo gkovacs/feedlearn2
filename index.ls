@@ -4,7 +4,7 @@ J = $.jade
 
 {find-index, minimum-by} = require \prelude-ls
 
-{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId} = root # commonlib.ls
+{first-non-null, getUrlParameters, getvar, setvar, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, getbaselang} = root # commonlib.ls
 {addlog, addlogfblogin} = root # logging_client.ls
 {flashcard_sets, language_names, language_codes, flashcard_name_aliases} = root # flashcards.ls
 
@@ -77,6 +77,8 @@ export introducedwordAskAgainLater = ->
   root.srs_words[kanji].optseen = curtime
   saveSRS()
   new-question()
+  addlog {type: 'asklater', word: root.current-word}
+  # todo log this
   return
 
 export introducedwordAlreadyKnow = ->
@@ -87,6 +89,7 @@ export introducedwordAlreadyKnow = ->
   root.srs_words[kanji].seen = curtime
   saveSRS()
   new-question()
+  # todo log this
   return
 
 export introducedwordAddToStudyList = ->
@@ -98,6 +101,7 @@ export introducedwordAddToStudyList = ->
   root.srs_words[kanji].studying = true
   saveSRS()
   new-question()
+  # todo log this
   return
 
 is_srs_correct = (srs_words) ->
@@ -260,7 +264,7 @@ export select_kanji_from_srs = ->
     #console.log JSON.stringify overdue_kanji
     #randidx = Math.random() * overdue_kanji.length |> Math.floor
     #return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
-    return minimum-by ((kanji) -> root.srs_words[kanji].seen), overdue_kanji
+    return minimum-by ((kanji) -> root.srs_words[kanji].practiced), overdue_kanji
   else # no overdue kanji - pick a new one
     #console.log 'no kanji currently overdue! picking new one'
     newkanji = notknown_kanji.filter (kanji) ->
@@ -619,7 +623,7 @@ show-required-test = (required-test) ->
     $('.posttestexplanation').show()
   required-test-week = required-test.split('pretest').join('').split('posttest').join('') |> parseInt
   $('.requiredtestweek').text required-test-week
-  root.required-test-link = '/matching?' + $.param({vocab: 'japanese' + required-test-week, type: required-test-type, source: 'facebook'})
+  root.required-test-link = '/matching?' + $.param({vocab: getbaselang() + required-test-week, type: required-test-type, source: 'facebook'})
   root.check-required-test-taken = setInterval ->
     updatecookiesandevents ->
       if get-required-test() != root.required-test # have taken it
@@ -662,7 +666,7 @@ have-full-name = ->
   param = getUrlParameters()
   root.openedtime = Date.now()
   updatecookiesandevents ->
-    set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), 'japanese1'
+    set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), (getbaselang() + '1')
     set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
     #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
     set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
