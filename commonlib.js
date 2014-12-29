@@ -198,15 +198,20 @@
     });
   };
   out$.getFBAppId = getFBAppId = function(){
-    var appid;
-    appid = '1582092298679557';
-    if (window.location.href.indexOf('https://feedlearn2.herokuapp.com') === 0) {
-      appid = '718471924927544';
+    var appid_map, k, v;
+    appid_map = {
+      'http://localhost': '1582095062012614',
+      'https://localhost': '1582095062012614',
+      'https://feedlearn2.herokuapp.com': '718471924927544',
+      'https://feedlearnfrench.herokuapp.com': '1393407637624307'
+    };
+    for (k in appid_map) {
+      v = appid_map[k];
+      if (window.location.href.indexOf(k) === 0) {
+        return v;
+      }
     }
-    if (window.location.href.indexOf('http://localhost') === 0) {
-      appid = '1582095062012614';
-    }
-    return appid;
+    return '1582092298679557';
   };
   out$.getbaselang = getbaselang = function(){
     var ref$;

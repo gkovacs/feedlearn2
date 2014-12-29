@@ -133,12 +133,16 @@ export updatecookiesandevents = (callback) ->
     callback() if callback?
 
 export getFBAppId = ->
-  appid = '1582092298679557'
-  if window.location.href.indexOf('https://feedlearn2.herokuapp.com') == 0
-    appid = '718471924927544'
-  if window.location.href.indexOf('http://localhost') == 0
-    appid = '1582095062012614'
-  return appid
+  appid_map = {
+    'http://localhost': '1582095062012614'
+    'https://localhost': '1582095062012614'
+    'https://feedlearn2.herokuapp.com': '718471924927544'
+    'https://feedlearnfrench.herokuapp.com': '1393407637624307'
+  }
+  for k,v of appid_map
+    if window.location.href.indexOf(k) == 0
+      return v
+  return '1582092298679557' # https://feedlearn.herokuapp.com
 
 export getbaselang = ->
   return getvar('baselang') ? 'japanese'
