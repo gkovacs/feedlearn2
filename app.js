@@ -1,5 +1,5 @@
 (function(){
-  var express, path, bodyParser, async, fs, forceSsl, ref$, filter, maximum, mongo, MongoClient, Grid, mongohq, mongolab, mongosoup, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
+  var express, path, bodyParser, async, fs, forceSsl, ref$, filter, maximum, mongo, MongoClient, Grid, mongohq, mongolab, mongosoup, mongourl, mongourl2, getMongoDb, getMongoDb2, getGrid, getVarsCollection, getEventsCollection, getLogsCollection, getLogsEmailCollection, getLogsFbloginCollection, getLogsQuizCollection, getLogsFbCollection, app, get_index, get_control, get_study1survey, get_matching, get_study1, getvar_new, setvar_new, getvar, setvar, getvardict, setvardict, postify, getify, setvar_express, getuserevents, getuserevents_old, getalluserevents_old, getalluserevents, getusereventsandcookies, getallusereventsandcookies, getallusereventsandcookies_old, settimestampforuserevent_express_old, settimestampforuserevent_express, changetimestampforuserevent_express, minidx, nextAssignedCondition, getConditionsCollection, getconditions, removeconditionforuser, setconditionforuser, conditionforuser, conditionforuser_old, condition_to_order, cookiesFromEventsConditionUsername, cookiesforuser, dictToItems, dictToKeys, addErrToCallback, getuserlist, getuserlist_old, asyncMapNoerr, cookiesforallusers, addlog, addlogemail;
   express = require('express');
   path = require('path');
   bodyParser = require('body-parser');
@@ -109,6 +109,11 @@
   };
   app.get('/control', get_control);
   app.get('/control.html', get_control);
+  get_study1survey = function(req, res){
+    return res.sendfile('study1survey.html');
+  };
+  app.get('/study1survey', get_study1survey);
+  app.get('/study1survey.html', get_study1survey);
   get_matching = function(req, res){
     return res.sendfile('matching.html');
   };

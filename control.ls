@@ -1,6 +1,6 @@
 root = exports ? this
 
-{updatecookies, getvar} = root # commonlib.ls
+{updatecookies, getvar, forcehttps} = root # commonlib.ls
 {addlog} = root # logging_client.ls
 {language_names} = root # flashcards.ls
 
@@ -10,6 +10,7 @@ export openfeedlearnlink = ->
 
 $(document).ready ->
   #updatecookies()
+  forcehttps()
   lang = getvar('lang')
   if lang? and language_names[lang]?
     langname = language_names[lang]

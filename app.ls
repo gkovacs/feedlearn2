@@ -119,6 +119,13 @@ get_control = (req, res) ->
 app.get '/control', get_control
 app.get '/control.html', get_control
 
+get_study1survey = (req, res) ->
+  #res.render 'control', {}
+  res.sendfile 'study1survey.html'
+
+app.get '/study1survey', get_study1survey
+app.get '/study1survey.html', get_study1survey
+
 get_matching = (req, res) ->
   #res.render 'matching', {}
   res.sendfile 'matching.html'
