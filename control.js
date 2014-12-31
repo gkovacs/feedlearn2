@@ -1,19 +1,15 @@
 (function(){
-  var root, updatecookies, getvar, openfeedlearnlink, language_names, out$ = typeof exports != 'undefined' && exports || this;
+  var root, updatecookies, getvar, addlog, language_names, openfeedlearnlink, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   updatecookies = root.updatecookies, getvar = root.getvar;
+  addlog = root.addlog;
+  language_names = root.language_names;
   out$.openfeedlearnlink = openfeedlearnlink = function(){
     addlog({
       type: 'linkopen',
       linkopen: 'link'
     });
-    return window.open('https://feedlearn.herokuapp.com');
-  };
-  language_names = {
-    'japanese1': 'Japanese',
-    'chinese1': 'Chinese',
-    'korean1': 'Korean',
-    'vietnamese1': 'Vietnamese'
+    return window.open('/?webvisit=true&fromfeedlink=true');
   };
   $(document).ready(function(){
     var lang, langname;
