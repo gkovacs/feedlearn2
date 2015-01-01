@@ -1,5 +1,5 @@
 (function(){
-  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, postJson, postStartEvent, addlog, addlogfblogin, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, showStudyFormatDescriptions, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
+  var root, firstNonNull, getUrlParameters, getvar, setvar, getUserEvents, getCondition, forcehttps, updatecookies, updatecookiesandevents, getFBAppId, postJson, postStartEvent, addlog, addlogfblogin, readableTestNames, alertPrereqs, consentAgreed, openPretest1, openPosttest1, openPretest2, openPosttest2, openPretest3, openPosttest3, openSurvey, chromeExtensionInstallFinished, installChromeExtension, startWeek1, configWeek1, startWeek2, configWeek2, startWeek3, configWeek3, configWeek, fullNameSubmitted, condition_to_order, interactiveDescription, linkDescription, noneDescription, getDescriptionForFormatAndWeek, setWeek1Description, setWeek2Description, setWeek3Description, setStudyorder, showPretestDone, showPosttestDone, showConsentAgreed, showStudyperiodStarted, openPartThatNeedsDoing, setupAccordionElem, preventAccordionCollapsing, refreshCompletedParts, showStudyFormatDescriptions, haveFullName, fbTryLoginAutomatic, fbTryLoginManual, injectFacebookTag, dontHaveFullName, fbButtonOnlogin, out$ = typeof exports != 'undefined' && exports || this;
   root = typeof exports != 'undefined' && exports !== null ? exports : this;
   firstNonNull = root.firstNonNull, getUrlParameters = root.getUrlParameters, getvar = root.getvar, setvar = root.setvar, getUserEvents = root.getUserEvents, getCondition = root.getCondition, forcehttps = root.forcehttps, updatecookies = root.updatecookies, updatecookiesandevents = root.updatecookiesandevents, getFBAppId = root.getFBAppId;
   postJson = root.postJson, postStartEvent = root.postStartEvent, addlog = root.addlog, addlogfblogin = root.addlogfblogin;
@@ -88,6 +88,17 @@
       return;
     }
     return window.open('matching?vocab=japanese3&type=posttest');
+  };
+  out$.openSurvey = openSurvey = function(){
+    var target;
+    target = 'https://stanforduniversity.qualtrics.com/SE/?SID=SV_6nCpYFc4aBE0Z81&' + $.param({
+      fbname: getvar('fbname'),
+      fburl: getvar('fburl'),
+      fullname: getUserName(),
+      condition: getvar('condition'),
+      lang: getvar('lang')
+    });
+    return window.open(target);
   };
   out$.chromeExtensionInstallFinished = chromeExtensionInstallFinished = function(){
     $('#extensioninstalledcheck').css('visibility', 'visible');
@@ -293,6 +304,12 @@
       return;
     }
     $('#collapseNine').data('allowcollapse', true);
+    if (true) {
+      $('#collapseTen').data('allowcollapse', false);
+      $('#collapseTen').collapse('show');
+      return;
+    }
+    $('#collapseTen').data('allowcollapse', true);
   };
   setupAccordionElem = function(elemname){
     var elem;
@@ -311,7 +328,8 @@
     setupAccordionElem('collapseThree');
     setupAccordionElem('collapseTwo');
     setupAccordionElem('collapseSix');
-    return setupAccordionElem('collapseNine');
+    setupAccordionElem('collapseNine');
+    return setupAccordionElem('collapseTen');
   };
   root.is_first_time_fetching_events = true;
   refreshCompletedParts = function(){

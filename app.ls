@@ -120,7 +120,7 @@ app.get '/control', get_control
 app.get '/control.html', get_control
 
 get_study1survey = (req, res) ->
-  #res.render 'control', {}
+  #res.render 'study1survey', {}
   res.sendfile 'study1survey.html'
 
 app.get '/study1survey', get_study1survey

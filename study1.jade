@@ -310,6 +310,20 @@ html(lang='en')
             button#posttest3button.btn.btn-lg.btn-primary(onclick='openPosttest3()') Take the post-test for Week 3 Vocabulary
 
 
+      .panel.panel-default
+        #headingTen.panel-heading(role='tab')
+          h4.panel-title
+            a(data-toggle='collapse' data-parent='#accordion' href='#collapseTen' aria-expanded='false' aria-controls='collapseTen')
+              span#surveycheck.glyphicon.glyphicon-ok(style='visibility: hidden; margin-right: 7px')
+              span Survey
+        #collapseTen.panel-collapse.collapse(role='tabpanel' aria-labelledby='headingTen')
+          .panel-body
+            h4 Survey
+            div Please follow this link to take a survey about your experiences using these tools
+            br
+            button#surveybutton.btn.btn-lg.btn-primary(onclick='openSurvey()') Take the survey
+
+
       //-.panel.panel-default
         #headingTen.panel-heading(role='tab')
           h4.panel-title

@@ -80,6 +80,16 @@ export open-posttest3 = ->
     return
   window.open('matching?vocab=japanese3&type=posttest')
 
+export open-survey = ->
+  target = 'https://stanforduniversity.qualtrics.com/SE/?SID=SV_6nCpYFc4aBE0Z81&' + $.param({
+    fbname: getvar('fbname')
+    fburl: getvar('fburl')
+    fullname: get-user-name()
+    condition: getvar('condition')
+    lang: getvar('lang')
+  })
+  window.open target
+
 export chromeExtensionInstallFinished = ->
   $('#extensioninstalledcheck').css 'visibility', 'visible'
   $('#extensioninstalleddisplay').css('color', 'green').text 'FeedLearn Chrome Extension has been installed!'
@@ -298,6 +308,12 @@ open-part-that-needs-doing = ->
     $('#collapseNine').collapse('show')
     return
   $('#collapseNine').data 'allowcollapse', true
+
+  if true # do not track currently if the survey was taken
+    $('#collapseTen').data 'allowcollapse', false
+    $('#collapseTen').collapse('show')
+    return
+  $('#collapseTen').data 'allowcollapse', true
   return
 
 setup-accordion-elem = (elemname) ->
@@ -316,6 +332,7 @@ prevent-accordion-collapsing = ->
   setup-accordion-elem 'collapseTwo'
   setup-accordion-elem 'collapseSix'
   setup-accordion-elem 'collapseNine'
+  setup-accordion-elem 'collapseTen'
 
 root.is_first_time_fetching_events = true
 
