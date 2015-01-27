@@ -769,7 +769,7 @@
           db.close();
           return;
         }
-        condition = Math.floor(Math.random() * 6);
+        condition = 0;
         return setconditionforuser(username, condition, function(){
           callback(condition);
           db.close();

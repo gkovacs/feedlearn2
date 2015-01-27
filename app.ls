@@ -593,7 +593,8 @@ conditionforuser = (username, callback) ->
         callback result.condition
         db.close()
         return
-      condition = Math.floor(Math.random() * 6)
+      #condition = Math.floor(Math.random() * 6)
+      condition = 0
       setconditionforuser username, condition, ->
         callback condition
         db.close()
