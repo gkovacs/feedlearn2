@@ -264,7 +264,8 @@ export select_kanji_from_srs = ->
     #console.log JSON.stringify overdue_kanji
     #randidx = Math.random() * overdue_kanji.length |> Math.floor
     #return overdue_kanji[randidx] # todo select the kanji with proportion to its overdue-ness
-    return minimum-by ((kanji) -> root.srs_words[kanji].practiced), overdue_kanji
+    #return minimum-by ((kanji) -> root.srs_words[kanji].practiced), overdue_kanji
+    return minimum-by ((kanji) -> root.srs_words[kanji].seen), overdue_kanji
   else # no overdue kanji - pick a new one
     #console.log 'no kanji currently overdue! picking new one'
     newkanji = notknown_kanji.filter (kanji) ->

@@ -321,7 +321,7 @@
     });
     if (overdue_kanji.length > 0) {
       return minimumBy(function(kanji){
-        return root.srs_words[kanji].practiced;
+        return root.srs_words[kanji].seen;
       }, overdue_kanji);
     } else {
       newkanji = notknown_kanji.filter(function(kanji){
