@@ -60,7 +60,7 @@
   };
   getLogsCollection = function(callback){
     return getMongoDb(function(db){
-      return callback(db.collection('logs2'), db);
+      return callback(db.collection('logs'), db);
     });
   };
   getLogsEmailCollection = function(callback){
@@ -80,7 +80,7 @@
   };
   getLogsFbCollection = function(callback){
     return getMongoDb2(function(db){
-      return callback(db.collection('fblogs8'), db);
+      return callback(db.collection('fblogs'), db);
     });
   };
   app = express();
