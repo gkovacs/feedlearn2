@@ -463,9 +463,9 @@ export goto-quiz-page = ->
   $('#quizpage').show()
   #hideoption = getvar('hideoption')
   #if hideoption? and hideoption != 'false' and hideoption != false
-  if true
-    $('#optionbutton').hide()
-    $('#showanswersbutton').css({margin-right: '0px', width: '100%'})
+  #if true
+  #  $('#optionbutton').hide()
+  #  $('#showanswersbutton').css({margin-right: '0px', width: '100%'})
   if not root.current-word?
     new-question()
   else
@@ -666,17 +666,18 @@ have-full-name = ->
   $('#mainviewpage').show()
   param = getUrlParameters()
   root.openedtime = Date.now()
-  updatecookiesandevents ->
+  #updatecookiesandevents ->
+  do ->
     set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), (getbaselang() + '1')
     set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
     #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
     set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
     set-visit-source()
-    required-test = get-required-test()
-    if required-test?
-      show-required-test(required-test)
-      addlog {type: 'showrequiredtest', requiredtest: required-test}
-      return
+    #required-test = get-required-test()
+    #if required-test?
+    #  show-required-test(required-test)
+    #  addlog {type: 'showrequiredtest', requiredtest: required-test}
+    #  return
     if param.facebook? and param.facebook != 'false' and param.facebook != false
       root.qcontext = 'facebook'
       condition = getvar('format')

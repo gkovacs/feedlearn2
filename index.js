@@ -577,13 +577,6 @@
   out$.gotoQuizPage = gotoQuizPage = function(){
     $('.mainpage').hide();
     $('#quizpage').show();
-    if (true) {
-      $('#optionbutton').hide();
-      $('#showanswersbutton').css({
-        marginRight: '0px',
-        width: '100%'
-      });
-    }
     if (root.currentWord == null) {
       newQuestion();
     } else {
@@ -830,21 +823,12 @@
     $('#mainviewpage').show();
     param = getUrlParameters();
     root.openedtime = Date.now();
-    return updatecookiesandevents(function(){
-      var requiredTest, condition;
+    return function(){
+      var condition;
       setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), getbaselang() + '1'));
       setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
       setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
       setVisitSource();
-      requiredTest = getRequiredTest();
-      if (requiredTest != null) {
-        showRequiredTest(requiredTest);
-        addlog({
-          type: 'showrequiredtest',
-          requiredtest: requiredTest
-        });
-        return;
-      }
       if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
         root.qcontext = 'facebook';
         condition = getvar('format');
@@ -875,7 +859,7 @@
           });
         }
       });
-    });
+    }();
   };
   injectFacebookTag = function(){
     var e;
