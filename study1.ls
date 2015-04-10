@@ -383,7 +383,8 @@ export showStudyFormatDescriptions = ->
   $('#week3format').text studyformatdescriptions[root.studyorder[2]]
 
 export have-full-name = ->
-  updatecookiesandevents ->
+  #updatecookiesandevents ->
+  do ->
     #setvar 'fullname', root.fullname
     $('#getfullname').hide()
     $('#fbloginpage').hide()

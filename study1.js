@@ -390,7 +390,7 @@
     return $('#week3format').text(studyformatdescriptions[root.studyorder[2]]);
   };
   out$.haveFullName = haveFullName = function(){
-    return updatecookiesandevents(function(){
+    return function(){
       $('#getfullname').hide();
       $('#fbloginpage').hide();
       $('#accordion').show();
@@ -409,7 +409,7 @@
           return refreshCompletedParts();
         }, 2000);
       });
-    });
+    }();
   };
   /*
   fb-login-status-change-callback = (response) ->
