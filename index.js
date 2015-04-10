@@ -611,6 +611,9 @@
     var newformat;
     newformat = $('#formatselect').val();
     setInsertionFormat(newformat);
+    if (newformat === 'interactive' || newformat === 'link' || newformat === 'none') {
+      setvar('format_manual', newformat);
+    }
   };
   out$.setFullName = setFullName = function(newfullname){
     if (newfullname != null && newfullname.length > 0) {
@@ -826,12 +829,12 @@
     return function(){
       var condition;
       setFlashcardSet(firstNonNull(param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), getbaselang() + '1'));
-      setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format'), 'interactive'));
+      setInsertionFormat(firstNonNull(param.format, param.condition, getvar('format_manual'), 'interactive'));
       setScriptFormat(firstNonNull(param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'));
       setVisitSource();
       if (param.facebook != null && param.facebook !== 'false' && param.facebook !== false) {
         root.qcontext = 'facebook';
-        condition = getvar('format');
+        condition = getvar('format_manual');
         addlog({
           type: 'feedinsert'
         });

@@ -501,6 +501,8 @@ export set-insertion-format = (newformat) ->
 export change-feed-insertion-format = ->
   newformat = $('#formatselect').val()
   set-insertion-format newformat
+  if newformat == 'interactive' or newformat == 'link' or newformat == 'none'
+    setvar 'format_manual', newformat
   return
 
 export set-full-name = (newfullname) ->
@@ -669,7 +671,7 @@ have-full-name = ->
   #updatecookiesandevents ->
   do ->
     set-flashcard-set <| first-non-null param.lang, param.language, param.quiz, param.lesson, param.flashcard, param.flashcardset, getvar('lang'), (getbaselang() + '1')
-    set-insertion-format <| first-non-null param.format, param.condition, getvar('format'), 'interactive'
+    set-insertion-format <| first-non-null param.format, param.condition, getvar('format_manual'), 'interactive'
     #set-full-name <| first-non-null param.fullname, param.username, param.user, param.name, getvar('fullname'), getvar('username'), 'Anonymous User'
     set-script-format <| first-non-null param.script, param.scriptformat, getvar('scriptformat'), 'show romanized only'
     set-visit-source()
@@ -680,7 +682,7 @@ have-full-name = ->
     #  return
     if param.facebook? and param.facebook != 'false' and param.facebook != false
       root.qcontext = 'facebook'
-      condition = getvar('format')
+      condition = getvar('format_manual')
       addlog {type: 'feedinsert'}
       if condition? and condition == 'link'
         #window.location = '/control'
