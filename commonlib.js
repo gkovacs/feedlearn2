@@ -87,7 +87,8 @@
     if (root.fullname != null) {
       return root.fullname;
     }
-    return 'Anonymous User';
+    root.fullname = 'Anonymous User';
+    return root.fullname;
   };
   out$.printcb = printcb = function(){
     var args, i$, len$, x, results$ = [];

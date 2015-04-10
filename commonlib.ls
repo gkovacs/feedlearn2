@@ -60,7 +60,8 @@ export get-user-name = ->
   root.fullname = getvar 'fbname'
   if root.fullname?
     return root.fullname
-  return 'Anonymous User'
+  root.fullname = 'Anonymous User'
+  return root.fullname
 
 export printcb = (...args) ->
   for x in args
