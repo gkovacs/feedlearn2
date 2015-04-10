@@ -766,7 +766,10 @@ $(document).ready ->
   #  window.location = '/study1'
   #  return
   if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
+    setvar 'fullname', root.fullname
     have-full-name()
   else
-    dont-have-full-name()
-    
+    #dont-have-full-name()
+    root.fullname = 'Anonymous User'
+    have-full-name()
+

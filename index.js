@@ -953,9 +953,11 @@
     }
     root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'), fbname);
     if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
+      setvar('fullname', root.fullname);
       return haveFullName();
     } else {
-      return dontHaveFullName();
+      root.fullname = 'Anonymous User';
+      return haveFullName();
     }
   });
 }).call(this);
