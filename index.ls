@@ -539,7 +539,12 @@ show-answer = (optiondiv) ->
   elem = optiondiv.data 'wordinfo'
   notediv = optiondiv.find '.answeroptionnote'
   if langname == 'English'
-    notediv.html(' = ' + elem.romaji)
+    if root.scriptformat == 'show romanized only' or elem.romaji == elem.kanji
+      notediv.html(' = ' + elem.romaji)
+    else if root.scriptformat == 'show native script'
+      notediv.html(' = ' + elem.kanji)
+    else
+      notediv.html(' = ' + elem.romaji + ' (' + elem.kanji + ')')
   else
     notediv.html(' = ' + elem.english)
   return
