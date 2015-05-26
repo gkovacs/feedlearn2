@@ -385,6 +385,8 @@
     word = root.currentWord;
     if (root.scriptformat === 'show romanized only' || word.romaji === word.kanji) {
       $('.introducedword').text(word.romaji);
+    } else if (root.scriptformat === 'show native script') {
+      $('.introducedword').text(word.kanji);
     } else {
       $('.introducedword').text(word.romaji + ' (' + word.kanji + ')');
     }
@@ -482,6 +484,8 @@
       $('#questionmessage').html("What does this word mean");
       if (root.scriptformat === 'show romanized only' || word.romaji === word.kanji) {
         $('#questionword').html("<b>" + word.romaji + "</b>");
+      } else if (root.scriptformat === 'show native script') {
+        $('#questionword').html("<b>" + word.kanji + "</b>");
       } else {
         $('#questionword').html("<b>" + word.romaji + " (" + word.kanji + ")</b>");
       }
@@ -516,6 +520,8 @@
         worddiv.text(elem.english);
       } else if (root.scriptformat === 'show romanized only' || word.romaji === word.kanji) {
         worddiv.text(elem.romaji);
+      } else if (root.scriptformat === 'show native script') {
+        worddiv.text(elem.kanji);
       } else {
         worddiv.text(elem.romaji + ' (' + elem.kanji + ')');
       }
