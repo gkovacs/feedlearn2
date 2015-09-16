@@ -1,0 +1,68 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<dom-module id="small-edv">
+  <style>
+  :host {
+    display: block;
+    width: 200px;
+    height: 90px;
+    background-color: white;
+    overflow: hidden;
+  }
+  #firstline {
+    height: 15px;
+    text-align: center;
+  }
+  #secondline {
+    height: 15px;
+    text-align: center;
+  }
+  #englishword_container {
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+  }
+  #japaneseword_container {
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+  }
+  #englishword {
+    font-size: 24px;
+  }
+  #japaneseword {
+    font-size: 24px;
+  }
+  #nextbutton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 28px;
+    width: 10px;
+    height: 90px;
+  }
+  #prevbutton {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 28px;
+    width: 10px;
+    height: 90px;
+  }
+  </style>
+  <template>
+    <div style="position: relative">
+      <div id="nextbutton" type="button" on-click="nextword">
+        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true" style="margin-top: 30px; margin-left: -15px"></span>
+      </div>
+      <div id="prevbutton" type="button" on-click="nextword">
+        <span class="glyphicon glyphicon-triangle-left" aria-hidden="true" style="margin-top: 30px; margin-left: -3px"></span>
+      </div>
+    </div>
+    <div id="firstline">English:</div>
+    <div id="englishword_container"><span id="englishword"></span> <span id="speaker1" class="glyphicon glyphicon-volume-up" style="font-size: 20px; line-height: 26px"></div>
+    <div id="secondline">Japanese:</div>
+    <div id="japaneseword_container"><span id="japaneseword"></span> <span id="speaker2" class="glyphicon glyphicon-volume-up" style="font-size: 20px; line-height: 26px"></span></div>
+  </template>
+  <script src="small-edv.js"></script>
+</dom-module>

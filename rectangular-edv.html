@@ -1,0 +1,21 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<dom-module id="rectangular-edv">
+  <style>
+  :host {
+    display: block;
+    width: 500px;
+    height: 300px;
+  }
+  #edvframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  </style>
+  <template>
+    <iframe id="edvframe" src="/" frameborder="0">
+    </iframe>
+  </template>
+  <script src="rectangular-edv.js"></script>
+</dom-module>

@@ -141,7 +141,7 @@ load-srs-words = ->
   resetSRS()
   return
 
-set-flashcard-set = (new_flashcard_set) ->
+export set-flashcard-set = (new_flashcard_set) ->
   new_flashcard_set = first-non-null flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set
   if new_flashcard_set != getvar('lang')
     setvar('lang', new_flashcard_set)
@@ -674,7 +674,7 @@ set-visit-source = ->
     root.visitsource = 'direct'
   return
 
-have-full-name = ->
+export have-full-name = ->
   $('.outermainpage').hide()
   $('#mainviewpage').show()
   param = getUrlParameters()
@@ -756,31 +756,4 @@ export clearlocalstorage = ->
 export clearcookiesandlocalstorage = ->
   clearcookies()
   clearlocalstorage()
-
-$(document).ready ->
-  forcehttps()
-  param = getUrlParameters()
-  root.fullname = first-non-null param.fullname, param.username, param.user, param.name
-  root.quizid = param.quizid ? randstr(25)
-  if root.fullname?
-    setvar 'fullname', root.fullname
-    window.location = '/?' + $.param(exclude-param('fullname', 'username', 'user', 'name'))
-    return
-  fbname = getvar 'fbname'
-  if fbname?
-    setvar 'fbname', fbname
-  fburl = getvar 'fburl'
-  if fburl?
-    setvar 'fburl', fburl
-  root.fullname = first-non-null root.fullname, getvar('fullname'), getvar('username'), fbname
-  #if not getvar('fullname')? and not getvar('username')
-  #  window.location = '/study1'
-  #  return
-  if root.fullname? and root.fullname != 'Anonymous User' and root.fullname.length > 0
-    setvar 'fullname', root.fullname
-    have-full-name()
-  else
-    #dont-have-full-name()
-    root.fullname = 'Anonymous User'
-    have-full-name()
 

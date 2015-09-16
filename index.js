@@ -160,7 +160,7 @@
     }
     resetSRS();
   };
-  setFlashcardSet = function(new_flashcard_set){
+  out$.setFlashcardSet = setFlashcardSet = function(new_flashcard_set){
     new_flashcard_set = firstNonNull(flashcard_name_aliases[new_flashcard_set.toLowerCase()], new_flashcard_set);
     if (new_flashcard_set !== getvar('lang')) {
       setvar('lang', new_flashcard_set);
@@ -832,7 +832,7 @@
       root.visitsource = 'direct';
     }
   };
-  haveFullName = function(){
+  out$.haveFullName = haveFullName = function(){
     var param;
     $('.outermainpage').hide();
     $('#mainviewpage').show();
@@ -942,34 +942,4 @@
     clearcookies();
     return clearlocalstorage();
   };
-  $(document).ready(function(){
-    var param, ref$, fbname, fburl;
-    forcehttps();
-    param = getUrlParameters();
-    root.fullname = firstNonNull(param.fullname, param.username, param.user, param.name);
-    root.quizid = (ref$ = param.quizid) != null
-      ? ref$
-      : randstr(25);
-    if (root.fullname != null) {
-      setvar('fullname', root.fullname);
-      window.location = '/?' + $.param(excludeParam('fullname', 'username', 'user', 'name'));
-      return;
-    }
-    fbname = getvar('fbname');
-    if (fbname != null) {
-      setvar('fbname', fbname);
-    }
-    fburl = getvar('fburl');
-    if (fburl != null) {
-      setvar('fburl', fburl);
-    }
-    root.fullname = firstNonNull(root.fullname, getvar('fullname'), getvar('username'), fbname);
-    if (root.fullname != null && root.fullname !== 'Anonymous User' && root.fullname.length > 0) {
-      setvar('fullname', root.fullname);
-      return haveFullName();
-    } else {
-      root.fullname = 'Anonymous User';
-      return haveFullName();
-    }
-  });
 }).call(this);
