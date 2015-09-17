@@ -45,13 +45,13 @@
     return resize_scale;
   };
   get_size_type = function(width, height){
-    if (width === 728 && height === 90) {
+    if (width >= 300 && height >= 250) {
+      return 'rectangular';
+    }
+    if (width >= 728 && height >= 90) {
       return 'banner';
     }
-    if (width === 200 && height === 90) {
-      return 'small';
-    }
-    return 'rectangular';
+    return 'small';
   };
   out$.scale_content = scale_content = function(scaleval){
     return $('#contents').css({

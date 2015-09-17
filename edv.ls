@@ -43,11 +43,14 @@ get_scale_info = (size_type, width, height) ->
   return resize_scale
 
 get_size_type = (width, height) ->
-  if width == 728 and height == 90
+  if width >= 300 and height >= 250
+    return 'rectangular'
+  if width >= 728 and height >= 90
     return 'banner'
-  if width == 200 and height == 90
-    return 'small'
-  return 'rectangular'
+  return 'small'
+  #if width == 200 and height == 90
+  #  return 'small'
+  #return 'rectangular'
 
 export scale_content = (scaleval) ->
   $('#contents').css {
